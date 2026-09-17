@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card } from '../../common/Card';
-import { ClinicalDocumentationSVG } from './vectors/ClinicalDocumentationSVG';
-import { FileText, ShieldCheck } from 'lucide-react';
+import { FileText, ShieldCheck, CheckCircle2, UserCheck } from 'lucide-react';
 
 export const DailyChartPreview: React.FC = () => {
   const chartRows = [
@@ -82,7 +81,18 @@ export const DailyChartPreview: React.FC = () => {
             <div className="rounded-2xl overflow-hidden h-52 border border-border-default shadow-card">
               <img src="/assets/services/home-nursing/pulse-n-care-documentation.webp" alt="Shift Documentation" className="w-full h-full object-cover" />
             </div>
-            <ClinicalDocumentationSVG />
+            <div className="p-4 bg-white rounded-2xl border border-border-default shadow-xs space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-teal-900">
+                <UserCheck className="w-4 h-4 text-brand-teal" />
+                <span>Verified Shift Handover Protocol</span>
+              </div>
+              <p className="text-xs text-text-secondary">
+                Shift logs are digitally timestamped and reviewed by Pulse n Care Clinical Operations Supervisors.
+              </p>
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Compliance Audit: 100% Passed
+              </div>
+            </div>
           </div>
         </div>
       </div>

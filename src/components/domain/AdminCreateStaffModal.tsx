@@ -86,7 +86,7 @@ export const AdminCreateStaffModal: React.FC<AdminCreateStaffModalProps> = ({
       isVerified: true,
       kycStatus: 'approved',
       availabilityStatus: 'active',
-      profilePhoto: 'https://images.unsplash.com/photo-1594824813566-88855ce78905?w=300&q=80',
+      profilePhoto: 'https://images.unsplash.com/photo-1638202993928-7267aad84c31?w=300&q=80',
       documents: [
         {
           id: `doc-${Date.now()}-1`,

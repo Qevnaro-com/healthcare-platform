@@ -171,7 +171,7 @@ export const ServiceDetailPage: React.FC = () => {
               <div className="bg-white p-6 rounded-3xl border border-border-default shadow-card space-y-4">
                 <div className="aspect-video rounded-2xl bg-canvas-teal flex items-center justify-center border border-teal-200 overflow-hidden relative">
                   <img
-                    src={service.heroMedia || service.cardMedia || 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80'}
+                    src={service.heroMedia || service.cardMedia || 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80'}
                     alt={service.name}
                     className="w-full h-full object-cover"
                   />

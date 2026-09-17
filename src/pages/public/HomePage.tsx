@@ -595,7 +595,7 @@ export const HomePage: React.FC = () => {
           <div className="lg:col-span-5 relative">
             <div className="rounded-3xl overflow-hidden shadow-card border-4 border-white">
               <img
-                src="/assets/services/home-nursing/pulse-n-care-vitals.webp"
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
                 alt="Pulse n Care Clinical Care"
                 className="w-full h-[400px] object-cover"
               />

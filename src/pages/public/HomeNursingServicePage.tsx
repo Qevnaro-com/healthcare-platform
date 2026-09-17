@@ -5,8 +5,6 @@ import { PulseNCareHeroVisual } from '../../components/domain/pulse-n-care/Pulse
 import { ClinicalCareGrid } from '../../components/domain/pulse-n-care/ClinicalCareGrid';
 import { PersonalCareSection } from '../../components/domain/pulse-n-care/PersonalCareSection';
 import { DailyChartPreview } from '../../components/domain/pulse-n-care/DailyChartPreview';
-import { ShiftHandoverSVG } from '../../components/domain/pulse-n-care/vectors/ShiftHandoverSVG';
-import { EmergencyEscalationSVG } from '../../components/domain/pulse-n-care/vectors/EmergencyEscalationSVG';
 import { RealDelhiNCRMap } from '../../components/domain/RealDelhiNCRMap';
 import { CareDurationSelector } from '../../components/domain/pulse-n-care/CareDurationSelector';
 import { PulseNCareFAQ } from '../../components/domain/pulse-n-care/PulseNCareFAQ';
@@ -22,7 +20,11 @@ import {
   PhoneCall,
   Calendar,
   Heart,
-  Send
+  Send,
+  AlertTriangle,
+  RefreshCw,
+  UserCheck,
+  Clock
 } from 'lucide-react';
 
 export const HomeNursingServicePage: React.FC = () => {
@@ -90,13 +92,13 @@ export const HomeNursingServicePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 04. Clinical & Medical Care (With 6 Domain SVGs & Photography) */}
+      {/* 04. Clinical & Medical Care */}
       <ClinicalCareGrid />
 
-      {/* 05. Patient Support & Hygiene (With 2 Domain SVGs & Photography) */}
+      {/* 05. Patient Support & Hygiene */}
       <PersonalCareSection />
 
-      {/* 06. Daily Charting Preview (With ClinicalDocumentationSVG) */}
+      {/* 06. Daily Charting Preview */}
       <DailyChartPreview />
 
       {/* 07 & 08. Safety Escalation & 24×7 Shift Handover Protocol */}
@@ -115,10 +117,39 @@ export const HomeNursingServicePage: React.FC = () => {
                 Our nursing staff identify subtle clinical changes (fever, low SpO₂, breathlessness) and follow an early escalation protocol with family and attending physicians.
               </p>
             </div>
-            <EmergencyEscalationSVG />
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 bg-amber-50/60 rounded-2xl border border-amber-200 space-y-2">
+                <div className="flex items-center gap-2 text-amber-900 font-bold text-xs">
+                  <AlertTriangle className="w-4 h-4 text-amber-700" />
+                  <span>Early Symptom Detection</span>
+                </div>
+                <p className="text-[11px] text-amber-800 leading-snug">
+                  Immediate logging of abnormal BP spikes, temperature drops, or respiratory distress.
+                </p>
+              </div>
+              <div className="p-4 bg-teal-50/60 rounded-2xl border border-teal-200 space-y-2">
+                <div className="flex items-center gap-2 text-teal-900 font-bold text-xs">
+                  <UserCheck className="w-4 h-4 text-brand-teal" />
+                  <span>Family & Physician Briefing</span>
+                </div>
+                <p className="text-[11px] text-teal-800 leading-snug">
+                  Structured call to primary emergency contacts and attending hospital doctor.
+                </p>
+              </div>
+              <div className="p-4 bg-blue-50/60 rounded-2xl border border-blue-200 space-y-2">
+                <div className="flex items-center gap-2 text-blue-900 font-bold text-xs">
+                  <Clock className="w-4 h-4 text-blue-700" />
+                  <span>24×7 Ops Escalation Desk</span>
+                </div>
+                <p className="text-[11px] text-blue-800 leading-snug">
+                  Pulse n Care operations dispatch back-up nursing or ambulance transport if needed.
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Shift Handover Diagram */}
+          {/* Shift Handover Protocol */}
           <div className="space-y-4 pt-4 border-t border-border-light">
             <div className="max-w-3xl space-y-1">
               <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest block">
@@ -131,7 +162,31 @@ export const HomeNursingServicePage: React.FC = () => {
                 When care is arranged in rotational shifts, outgoing nurses provide a structured 15-minute clinical briefing to incoming nurses.
               </p>
             </div>
-            <ShiftHandoverSVG />
+            
+            <div className="p-5 bg-canvas-secondary rounded-2xl border border-border-default space-y-3">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-text-primary">
+                <RefreshCw className="w-4 h-4 text-brand-teal" />
+                <span>Standardized 15-Minute Nurse Shift Handover Protocol</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                <div className="p-3 bg-white rounded-xl border border-border-light">
+                  <span className="text-[10px] font-mono font-bold text-brand-teal block">STEP 1</span>
+                  <span className="font-extrabold text-text-primary">Vitals Review</span>
+                </div>
+                <div className="p-3 bg-white rounded-xl border border-border-light">
+                  <span className="text-[10px] font-mono font-bold text-brand-teal block">STEP 2</span>
+                  <span className="font-extrabold text-text-primary">Medication Status</span>
+                </div>
+                <div className="p-3 bg-white rounded-xl border border-border-light">
+                  <span className="text-[10px] font-mono font-bold text-brand-teal block">STEP 3</span>
+                  <span className="font-extrabold text-text-primary">Incision / Dressing Audit</span>
+                </div>
+                <div className="p-3 bg-white rounded-xl border border-border-light">
+                  <span className="text-[10px] font-mono font-bold text-brand-teal block">STEP 4</span>
+                  <span className="font-extrabold text-text-primary">Sign-off & Digital Log</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

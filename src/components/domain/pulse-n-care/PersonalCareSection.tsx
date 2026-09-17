@@ -1,8 +1,6 @@
 import React from 'react';
 import { Card } from '../../common/Card';
-import { PersonalCareSVG } from './vectors/PersonalCareSVG';
-import { MobilitySupportSVG } from './vectors/MobilitySupportSVG';
-import { Heart, ShieldAlert, Activity } from 'lucide-react';
+import { Heart, ShieldAlert, Activity, CheckCircle2 } from 'lucide-react';
 
 export const PersonalCareSection: React.FC = () => {
   return (
@@ -35,7 +33,10 @@ export const PersonalCareSection: React.FC = () => {
             <div className="rounded-xl overflow-hidden h-36 border border-border-default mt-2">
               <img src="/assets/services/home-nursing/pulse-n-care-bedside-support.webp" alt="Bedside Support" className="w-full h-full object-cover" />
             </div>
-            <PersonalCareSVG className="mt-2" />
+            <div className="p-2.5 bg-white rounded-xl border border-teal-200/80 text-[11px] font-bold text-teal-900 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-brand-teal shrink-0" />
+              <span>Pressure Injury & Ulcer Prevention Protocol</span>
+            </div>
           </Card>
 
           {/* Personal Grooming */}
@@ -51,6 +52,10 @@ export const PersonalCareSection: React.FC = () => {
             </div>
             <div className="rounded-xl overflow-hidden h-36 border border-border-default mt-2">
               <img src="/assets/services/home-nursing/pulse-n-care-nurse-portrait.webp" alt="Grooming & Hygiene Support" className="w-full h-full object-cover" />
+            </div>
+            <div className="p-2.5 bg-white rounded-xl border border-teal-200/80 text-[11px] font-bold text-teal-900 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-brand-teal shrink-0" />
+              <span>Dignified Hygiene & Bed Bath Support</span>
             </div>
           </Card>
 
@@ -68,7 +73,10 @@ export const PersonalCareSection: React.FC = () => {
             <div className="rounded-xl overflow-hidden h-36 border border-border-default mt-2">
               <img src="/assets/services/home-nursing/pulse-n-care-mobility.webp" alt="Mobility Support" className="w-full h-full object-cover" />
             </div>
-            <MobilitySupportSVG className="mt-2" />
+            <div className="p-2.5 bg-white rounded-xl border border-teal-200/80 text-[11px] font-bold text-teal-900 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-brand-teal shrink-0" />
+              <span>Safe Transfer & Ambulatory Support</span>
+            </div>
           </Card>
         </div>
       </div>

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  /* Surface & Canvas Tokens */
   --color-canvas-primary: #FFFFFF;
   --color-canvas-secondary: #F8FAFC;
   --color-canvas-tertiary: #F1F5F9;
@@ -11,6 +12,7 @@
   --color-canvas-green: #F0FDF4;
   --color-canvas-orange: #FFF7ED;
 
+  /* Typography Tokens */
   --color-text-primary: #0F172A;
   --color-text-secondary: #334155;
   --color-text-tertiary: #475569;
@@ -18,48 +20,96 @@
   --color-text-placeholder: #94A3B8;
   --color-text-disabled: #CBD5E1;
 
+  /* Border Tokens */
   --color-border-default: #E2E8F0;
   --color-border-light: #EDF2F7;
   --color-border-emphasis: #CBD5E1;
+  --color-border-strong: #CBD5E1;
 
+  /* Brand Colors */
   --color-brand-teal: #0EA5A4;
   --color-brand-teal-dark: #0F766E;
   --color-brand-blue: #2563EB;
   --color-brand-blue-dark: #1D4ED8;
 
+  /* Status Tokens */
   --color-status-success: #16A34A;
-  --color-status-info: #2563EB;
+  --color-status-info: #0284C7;
   --color-status-warning: #D97706;
   --color-status-danger: #DC2626;
   --color-status-neutral: #64748B;
+  --color-status-purple: #7C3AED;
 
-  --font-sans: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  --radius-btn: 12px;
-  --radius-card: 16px;
-  --radius-card-lg: 20px;
-  --radius-hero: 24px;
+  /* Radius Tokens (Restrained Institutional Scale: 8px controls, 12px cards, 16px surface) */
+  --radius-sm: 6px;
+  --radius-control: 8px;
+  --radius-btn: 10px;
+  --radius-card: 12px;
+  --radius-surface: 16px;
+  --radius-dialog: 18px;
   --radius-badge: 9999px;
 
-  --shadow-subtle: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-card: 0 8px 24px rgba(15, 23, 42, 0.05);
-  --shadow-floating: 0 16px 40px rgba(15, 23, 42, 0.08);
+  /* Shadow Scale (Restrained & Subtle) */
+  --shadow-subtle: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
+  --shadow-floating: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
 }
 
-/* Global Reset & Base Rules */
+/* Custom Root Semantic Tokens */
 :root {
   color-scheme: light;
+  --color-bg: #FFFFFF;
+  --color-surface: #F8FAFC;
+  --color-surface-muted: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-text: #0F172A;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748B;
+  --color-primary: #0EA5A4;
+  --color-primary-hover: #0F766E;
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-danger: #DC2626;
+  --color-info: #0284C7;
 }
 
 body {
-  background-color: var(--color-canvas-primary);
-  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Scrollbar for Light Theme */
+/* Tabular Numerals for Dashboards & Metrics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* SUBTLE TEXTURE SYSTEM (CSS Implementation) */
+
+/* A. Healthcare Grid (Subtle 1px Grid for Hero & Headers) */
+.bg-texture-grid {
+  background-image: linear-gradient(to right, rgba(14, 165, 164, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(14, 165, 164, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* B. Blueprint Dot Texture (Tiny dots for section backgrounds & admin/org headers) */
+.bg-texture-dots {
+  background-image: radial-gradient(rgba(51, 65, 85, 0.07) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* C. Soft Medical Wave (Curved subtle gradient fill) */
+.bg-texture-wave {
+  background-image: radial-gradient(circle at 10% 20%, rgba(240, 253, 250, 0.8) 0%, transparent 60%),
+                    radial-gradient(circle at 90% 80%, rgba(239, 246, 255, 0.8) 0%, transparent 60%);
+}
+
+/* Scrollbar Customization */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -75,7 +125,16 @@ body {
   background: #94A3B8;
 }
 
-/* Reduced Motion Support */
+/* Accessibility: Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Accessibility: Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;

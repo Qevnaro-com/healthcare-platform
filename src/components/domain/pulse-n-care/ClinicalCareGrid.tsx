@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { Card } from '../../common/Card';
-import { VitalsWaveformSVG } from './vectors/VitalsWaveformSVG';
-import { MedicationTraySVG } from './vectors/MedicationTraySVG';
-import { WoundCareSVG } from './vectors/WoundCareSVG';
-import { TubeFeedingSVG } from './vectors/TubeFeedingSVG';
-import { CatheterStomaSVG } from './vectors/CatheterStomaSVG';
-import { RespiratoryEquipmentSVG } from './vectors/RespiratoryEquipmentSVG';
-import { Activity, Pill, ShieldCheck, Stethoscope, Droplet, Wind, ChevronDown, ChevronUp } from 'lucide-react';
+import { Activity, Pill, ShieldCheck, Stethoscope, Droplet, Wind, ChevronDown, ChevronUp, HeartPulse, CheckCircle2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 export const ClinicalCareGrid: React.FC = () => {
@@ -25,7 +19,17 @@ export const ClinicalCareGrid: React.FC = () => {
         'Body Temperature recording',
         'Blood Glucose (GRBS) monitoring via glucometer'
       ],
-      microUI: <VitalsWaveformSVG className="mt-3" />,
+      microUI: (
+        <div className="p-3 bg-teal-50/70 border border-teal-200/80 rounded-xl space-y-2 mt-3 text-xs">
+          <div className="flex items-center justify-between font-bold text-teal-900">
+            <span className="flex items-center gap-1.5"><HeartPulse className="w-4 h-4 text-brand-teal" /> Live Vitals Metric Stream</span>
+            <span className="text-[10px] text-teal-700 bg-teal-100 px-2 py-0.5 rounded-full font-mono">SpO₂: 98% | BP: 120/80</span>
+          </div>
+          <div className="w-full bg-teal-200/50 h-1.5 rounded-full overflow-hidden">
+            <div className="bg-brand-teal h-full w-[85%] rounded-full animate-pulse" />
+          </div>
+        </div>
+      ),
       image: '/assets/services/home-nursing/pulse-n-care-vitals.webp'
     },
     {
@@ -39,7 +43,14 @@ export const ClinicalCareGrid: React.FC = () => {
         'Intramuscular (IM) injection administration',
         'Intravenous (IV) fluids & IV medication management as prescribed'
       ],
-      microUI: <MedicationTraySVG className="mt-3" />,
+      microUI: (
+        <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-xl space-y-2 mt-3 text-xs">
+          <div className="flex items-center justify-between font-bold text-emerald-900">
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-600" /> Prescribed Dose Verification</span>
+            <span className="text-[10px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full font-mono">5-Rights Checked</span>
+          </div>
+        </div>
+      ),
       image: '/assets/services/home-nursing/pulse-n-care-medication.webp'
     },
     {
@@ -53,7 +64,14 @@ export const ClinicalCareGrid: React.FC = () => {
         'Diabetic foot ulcer cleaning & protective care',
         'Aseptic technique adherence for infection prevention'
       ],
-      microUI: <WoundCareSVG className="mt-3" />,
+      microUI: (
+        <div className="p-3 bg-blue-50/70 border border-blue-200/80 rounded-xl space-y-2 mt-3 text-xs">
+          <div className="flex items-center justify-between font-bold text-blue-900">
+            <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-blue-600" /> Sterile Dressing Protocol</span>
+            <span className="text-[10px] text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full font-mono">Aseptic Tech</span>
+          </div>
+        </div>
+      ),
       image: '/assets/services/home-nursing/pulse-n-care-wound-care.webp'
     },
     {
@@ -67,8 +85,15 @@ export const ClinicalCareGrid: React.FC = () => {
         'Tube flushing & blockage prevention routines',
         'Sanitization of feeding equipment & posture positioning'
       ],
-      microUI: <TubeFeedingSVG className="mt-3" />,
-      image: '/assets/services/home-nursing/pulse-n-care-tube-feeding.webp'
+      microUI: (
+        <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-2 mt-3 text-xs">
+          <div className="flex items-center justify-between font-bold text-amber-900">
+            <span className="flex items-center gap-1.5"><Droplet className="w-4 h-4 text-amber-600" /> NG/PEG Nutrition Schedule</span>
+            <span className="text-[10px] text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full font-mono">Flushed & Sanitized</span>
+          </div>
+        </div>
+      ),
+      image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80'
     },
     {
       id: 'catheter',
@@ -81,8 +106,15 @@ export const ClinicalCareGrid: React.FC = () => {
         'Stoma-site hygiene & infection monitoring',
         'Perineal hygiene routines'
       ],
-      microUI: <CatheterStomaSVG className="mt-3" />,
-      image: '/assets/services/home-nursing/pulse-n-care-catheter-stoma.webp'
+      microUI: (
+        <div className="p-3 bg-purple-50/70 border border-purple-200/80 rounded-xl space-y-2 mt-3 text-xs">
+          <div className="flex items-center justify-between font-bold text-purple-900">
+            <span className="flex items-center gap-1.5"><Stethoscope className="w-4 h-4 text-purple-600" /> Hygiene & Output Logging</span>
+            <span className="text-[10px] text-purple-800 bg-purple-100 px-2 py-0.5 rounded-full font-mono">Daily Charted</span>
+          </div>
+        </div>
+      ),
+      image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80'
     },
     {
       id: 'respiratory',
@@ -95,8 +127,15 @@ export const ClinicalCareGrid: React.FC = () => {
         'CPAP / BiPAP mask fitting & compliance',
         'Home ventilator monitoring & alarm awareness'
       ],
-      microUI: <RespiratoryEquipmentSVG className="mt-3" />,
-      image: '/assets/services/home-nursing/pulse-n-care-equipment.webp'
+      microUI: (
+        <div className="p-3 bg-cyan-50/70 border border-cyan-200/80 rounded-xl space-y-2 mt-3 text-xs">
+          <div className="flex items-center justify-between font-bold text-cyan-900">
+            <span className="flex items-center gap-1.5"><Wind className="w-4 h-4 text-cyan-600" /> O₂ Flow & Suction Protocol</span>
+            <span className="text-[10px] text-cyan-800 bg-cyan-100 px-2 py-0.5 rounded-full font-mono">Equipment Verified</span>
+          </div>
+        </div>
+      ),
+      image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&q=80'
     }
   ];
 

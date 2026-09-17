@@ -306,7 +306,7 @@ export const BookingWizardPage: React.FC = () => {
         displayName: 'Priya Sharma, RN',
         qualification: 'B.Sc Nursing (KNC Reg #88419)',
         experienceYears: 6,
-        photo: 'https://images.unsplash.com/photo-1594824813566-88855ce78905?w=300&q=80',
+        photo: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=300&q=80',
         employeeId: 'EMP-1042',
         rating: 4.9,
         activeHub: 'South Delhi Operations Center'

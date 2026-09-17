@@ -122,7 +122,7 @@ export const ServicesPage: React.FC = () => {
             <div className="lg:col-span-5 relative">
               <div className="relative rounded-3xl overflow-hidden border border-border-default shadow-card bg-white p-2">
                 <img
-                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"
+                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
                   alt="Pulse n Care Clinical Home Care"
                   className="w-full h-80 sm:h-96 object-cover rounded-2xl"
                 />
@@ -229,7 +229,7 @@ export const ServicesPage: React.FC = () => {
               </div>
               <div className="lg:col-span-5">
                 <img
-                  src={featuredService.cardMedia || 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80'}
+                  src={featuredService.cardMedia || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80'}
                   alt={featuredService.name}
                   className="w-full h-56 sm:h-64 object-cover rounded-2xl border border-teal-200 shadow-subtle"
                 />

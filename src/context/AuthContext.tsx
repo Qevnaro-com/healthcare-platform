@@ -99,7 +99,7 @@ const DEMO_USERS: Record<UserRole, User> = {
     firstName: 'Anita',
     lastName: 'Sharma',
     role: 'staff',
-    avatar: 'https://images.unsplash.com/photo-1594824813566-88855ce78905?w=150&q=80',
+    avatar: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=150&q=80',
     isActive: true,
     isEmailVerified: true,
     isPhoneVerified: true,
