@@ -17,7 +17,6 @@ import {
   Building2,
   Activity,
   UserCheck,
-  Stethoscope,
   ShieldPlus,
   ArrowRight,
   HeartPulse
@@ -73,16 +72,16 @@ export const PublicLayout: React.FC = () => {
       path: '/services/orthopedic-joint-rehab-physio'
     },
     {
-      title: 'Doctor Home Visit',
-      desc: 'MBBS/MD physician evaluation & prescriptions',
-      icon: <Stethoscope className="w-5 h-5 text-brand-teal" />,
-      path: '/services/general-physician-home-visit'
+      title: 'Senior Skilled Nursing Visit',
+      desc: 'Insulin, vital monitoring & chronic care checks',
+      icon: <HeartPulse className="w-5 h-5 text-brand-teal" />,
+      path: '/services/senior-skilled-nursing-visit'
     },
     {
-      title: 'Specialized ICU Care',
-      desc: '24/7 ventilator, tracheostomy & critical monitoring',
+      title: '24-Hour Live-In Caregiver',
+      desc: 'Round-the-clock continuous bedside care',
       icon: <ShieldPlus className="w-5 h-5 text-brand-teal" />,
-      path: '/services/home-icu-critical-care-nurse'
+      path: '/services/24-hour-live-in-caregiver'
     }
   ];
 
@@ -121,7 +120,7 @@ export const PublicLayout: React.FC = () => {
                 <img
                   src="/assets/brand/pulse-n-care/pulse-n-care-logo.svg"
                   alt="Pulse n Care"
-                  className="h-7 lg:h-8 w-auto group-hover:scale-[1.02] transition-transform duration-200"
+                  className="h-8 sm:h-9 lg:h-10 w-auto group-hover:scale-[1.02] transition-transform duration-200"
                 />
               </Link>
             </div>
@@ -453,9 +452,12 @@ export const PublicLayout: React.FC = () => {
         <Outlet />
       </main>
 
-      {/* Global Footer */}
-      <footer className="bg-slate-900 text-white border-t border-slate-800 pt-16 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      {/* Global Footer — Premium Navy Closing Surface (#050F33 + Textured Depth + Care Accent Line) */}
+      <footer className="bg-surface-dark-textured text-white border-t border-white/10 relative overflow-hidden pt-16 pb-12">
+        {/* Top Care Gradient Accent Line */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-care" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
             
             {/* Col 1: Brand & Operational Governance */}
@@ -465,54 +467,54 @@ export const PublicLayout: React.FC = () => {
                 alt="Pulse n Care"
                 className="h-10 w-auto"
               />
-              <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
+              <p className="text-xs text-slate-300 leading-relaxed max-w-sm font-medium">
                 Nurse care at doorstep. Managed home nursing, attendant care, physical therapy, and physician visits across Delhi NCR.
               </p>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 text-teal-400 text-xs font-bold border border-slate-700">
-                <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-300 text-xs font-bold border border-white/15">
+                <ShieldCheck className="w-3.5 h-3.5 text-brand-teal-400" />
                 <span>100% In-House Managed Workforce</span>
               </div>
             </div>
 
             {/* Col 2: Services */}
             <div className="space-y-3">
-              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-400">Home Care Services</h4>
-              <ul className="space-y-2 text-xs text-slate-400">
-                <li><Link to="/services/home-nursing" className="hover:text-white transition-colors">24×7 Home Nursing</Link></li>
-                <li><Link to="/services/12-hour-caregiver-attendant" className="hover:text-white transition-colors">12h / 24h Caregiver Attendant</Link></li>
-                <li><Link to="/services/orthopedic-joint-rehab-physio" className="hover:text-white transition-colors">Orthopedic & Stroke Physiotherapy</Link></li>
-                <li><Link to="/services/general-physician-home-visit" className="hover:text-white transition-colors">General Physician Home Visit</Link></li>
-                <li><Link to="/services/home-icu-critical-care-nurse" className="hover:text-white transition-colors">Home ICU & Tracheostomy Care</Link></li>
+              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-300">Home Care Services</h4>
+              <ul className="space-y-2 text-xs text-slate-300">
+                <li><Link to="/services/post-operative-nursing-care" className="hover:text-teal-300 transition-colors">Post-Operative Nursing Care</Link></li>
+                <li><Link to="/services/senior-skilled-nursing-visit" className="hover:text-teal-300 transition-colors">Senior Skilled Nursing Visit</Link></li>
+                <li><Link to="/services/12-hour-caregiver-attendant" className="hover:text-teal-300 transition-colors">12-Hour Day / Night Caregiver</Link></li>
+                <li><Link to="/services/24-hour-live-in-caregiver" className="hover:text-teal-300 transition-colors">24-Hour Live-In Caregiver</Link></li>
+                <li><Link to="/services/high-dependency-nursing-care" className="hover:text-teal-300 transition-colors">High-Dependency Nursing Care</Link></li>
               </ul>
             </div>
 
             {/* Col 3: Delhi NCR Hub Coverage */}
             <div className="space-y-3">
-              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-400">Delhi NCR Service Hubs</h4>
-              <ul className="space-y-2 text-xs text-slate-400">
-                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal" /> Delhi (South, Central, West, East)</li>
-                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal" /> Gurugram (DLF 1-5, Golf Course, Cyber City)</li>
-                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal" /> Noida & Greater Noida (Sectors 1-150)</li>
-                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal" /> Faridabad (Sectors 1-30, Green Fields)</li>
+              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-300">Service Coverage</h4>
+              <ul className="space-y-2 text-xs text-slate-300">
+                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal-400" /> Delhi & NCR Regions</li>
+                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal-400" /> Gurugram Care Zones</li>
+                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal-400" /> Noida & Greater Noida</li>
+                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal-400" /> Faridabad & Neighboring Areas</li>
               </ul>
             </div>
 
             {/* Col 4: Operations Contact & Support */}
             <div className="space-y-3">
-              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-400">Central Operations</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-300">Central Operations</h4>
+              <p className="text-xs text-slate-300 leading-relaxed">
                 24/7 Operations Desk for emergency nursing requisitions & scheduling queries.
               </p>
-              <div className="space-y-1.5 text-xs text-slate-300 font-semibold">
-                <p className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-brand-teal" /> +91-11-4920-8800</p>
-                <p>support@pulsen-care.com</p>
+              <div className="space-y-1.5 text-xs text-white font-bold">
+                <p className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-brand-teal-400" /> +91-11-4920-8800</p>
+                <p className="text-teal-200">support@pulsen-care.com</p>
               </div>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-slate-800 text-center sm:flex sm:justify-between text-xs text-slate-500 font-medium">
+          <div className="pt-8 border-t border-white/10 text-center sm:flex sm:justify-between text-xs text-slate-400 font-medium">
             <p>© 2026 Pulse n Care — Nurse Care at Doorstep. All rights reserved.</p>
-            <p className="mt-2 sm:mt-0">Managed Clinical Operations • Delhi NCR Dispatch Network</p>
+            <p className="mt-2 sm:mt-0">Managed Clinical Operations • Doorstep Healthcare Network</p>
           </div>
         </div>
       </footer>
@@ -521,12 +523,12 @@ export const PublicLayout: React.FC = () => {
       <Modal
         isOpen={locationModalOpen}
         onClose={() => setLocationModalOpen(false)}
-        title="Active Delhi NCR Dispatch Hubs"
+        title="Service Availability & Coverage"
         maxWidth="md"
       >
         <div className="space-y-4 text-left">
           <p className="text-xs text-text-secondary">
-            Pulse n Care operates an internal, managed healthcare workforce strictly within <strong>Delhi, Noida, Gurugram, and Faridabad (NCR)</strong>. Select your active locality hub below:
+            Pulse n Care operates an internal, managed healthcare workforce. Select your primary service region below:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { DemoRoleSwitcher } from '../common/DemoRoleSwitcher';
 import {
-  Building2,
   LayoutDashboard,
   Users,
   Calendar,
@@ -121,17 +120,14 @@ export const OrgLayout: React.FC = () => {
           {/* Logo & Facility Identity */}
           <div className="flex items-center gap-3">
             <Link to="/organization/dashboard" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold shadow-sm group-hover:bg-blue-700 transition-colors">
-                <Building2 className="w-5 h-5" />
-              </div>
-              <div className="hidden sm:flex flex-col text-left">
-                <span className="text-sm font-extrabold text-slate-900 leading-tight">
-                  Pulse n Care
-                </span>
-                <span className="text-[10px] font-extrabold text-blue-700 tracking-wider uppercase">
-                  Institutional Partner OS
-                </span>
-              </div>
+              <img
+                src="/assets/brand/pulse-n-care/pulse-n-care-logo.svg"
+                alt="Pulse n Care"
+                className="h-8 w-auto"
+              />
+              <span className="text-[10px] font-black text-blue-700 tracking-wider uppercase bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                Institutional Partner OS
+              </span>
             </Link>
 
             <div className="h-6 w-px bg-slate-200 hidden md:block" />

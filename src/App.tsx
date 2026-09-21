@@ -81,6 +81,7 @@ import { OrgProfilePage } from './pages/organization/OrgProfilePage';
 import { OrgSupportPage } from './pages/organization/OrgSupportPage';
 
 // Utility Pages
+import { DesignSystemPage } from './pages/utility/DesignSystemPage';
 import { NotFoundPage } from './pages/utility/NotFoundPage';
 import { UnauthorizedPage } from './pages/utility/UnauthorizedPage';
 
@@ -165,6 +166,8 @@ export const App: React.FC = () => {
                 <Route path="matching" element={<AdminMatchingPage />} />
                 <Route path="payments" element={<AdminPaymentsPage />} />
                 <Route path="payouts" element={<AdminPayoutsPage />} />
+                <Route path="timesheets" element={<AdminPaymentsPage />} />
+                <Route path="invoices" element={<AdminPaymentsPage />} />
                 <Route path="reviews" element={<AdminReviewsPage />} />
                 <Route path="support" element={<AdminSupportDeskPage />} />
                 <Route path="notifications" element={<AdminNotificationsPage />} />
@@ -174,6 +177,7 @@ export const App: React.FC = () => {
               </Route>
 
               {/* Utility Pages */}
+              <Route path="/design-system" element={<DesignSystemPage />} />
               <Route path="/unauthorized" element={<UnauthorizedPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

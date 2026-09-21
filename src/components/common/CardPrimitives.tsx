@@ -15,6 +15,7 @@ export interface MetricCardProps {
   subtitle?: string;
   className?: string;
   badge?: string;
+  accent?: 'teal' | 'blue' | 'navy' | 'warm';
   onClick?: () => void;
 }
 
@@ -27,23 +28,44 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   subtitle,
   className,
   badge,
+  accent = 'teal',
   onClick
 }) => {
+  const iconBgStyles = {
+    teal: 'bg-brand-teal-50 border-brand-teal-100 text-brand-teal-700',
+    blue: 'bg-care-blue-50 border-care-blue-100 text-care-blue-700',
+    navy: 'bg-slate-900 border-slate-700 text-teal-400',
+    warm: 'bg-warm-soft border-amber-200 text-amber-800'
+  };
+
+  const accentLineStyles = {
+    teal: 'bg-brand-teal',
+    blue: 'bg-care-blue-600',
+    navy: 'bg-brand-navy',
+    warm: 'bg-warm-care'
+  };
+
   return (
     <Card
       variant={onClick ? 'interactive' : 'default'}
       onClick={onClick}
-      className={clsx('p-5 space-y-3 relative overflow-hidden bg-white border border-border-default shadow-subtle', className)}
+      className={clsx(
+        'p-5 space-y-3 relative overflow-hidden bg-white border border-border-default shadow-subtle rounded-card transition-all hover:border-border-emphasis',
+        className
+      )}
     >
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-bold text-text-muted uppercase tracking-wider">{label}</span>
+      {/* Top Accent Line */}
+      <div className={clsx('absolute top-0 left-0 right-0 h-0.5', accentLineStyles[accent])} />
+
+      <div className="flex items-center justify-between gap-2 pt-0.5">
+        <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{label}</span>
         {badge && (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-canvas-cool text-brand-teal border border-border-default">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-brand-teal-50 text-brand-teal-700 border border-brand-teal-200">
             {badge}
           </span>
         )}
         {icon && (
-          <div className="w-9 h-9 rounded-xl bg-canvas-cool text-brand-teal flex items-center justify-center shrink-0 border border-border-default/60">
+          <div className={clsx('w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border text-sm', iconBgStyles[accent])}>
             {icon}
           </div>
         )}
@@ -55,14 +77,14 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         </div>
         
         {(change || subtitle) && (
-          <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-2 text-xs pt-1 border-t border-border-default/50">
             {change && (
               <span
                 className={clsx(
-                  'inline-flex items-center gap-1 font-extrabold px-1.5 py-0.5 rounded-md text-[11px]',
-                  changeType === 'positive' && 'bg-emerald-50 text-emerald-700',
-                  changeType === 'negative' && 'bg-rose-50 text-rose-700',
-                  changeType === 'neutral' && 'bg-slate-100 text-slate-700'
+                  'inline-flex items-center gap-1 font-extrabold px-1.5 py-0.5 rounded text-[10px] tracking-tight',
+                  changeType === 'positive' && 'bg-emerald-50 text-emerald-800 border border-emerald-200/60',
+                  changeType === 'negative' && 'bg-rose-50 text-rose-800 border border-rose-200/60',
+                  changeType === 'neutral' && 'bg-slate-100 text-slate-700 border border-slate-200/60'
                 )}
               >
                 {changeType === 'positive' && <TrendingUp className="w-3 h-3" />}
@@ -88,6 +110,7 @@ export interface OperationalCardProps {
   metadata?: { label: string; value: string; icon?: React.ReactNode }[];
   actionButtons?: React.ReactNode;
   children?: React.ReactNode;
+  accentBorder?: 'none' | 'teal' | 'blue' | 'navy';
   className?: string;
   onClick?: () => void;
 }
@@ -99,19 +122,31 @@ export const OperationalCard: React.FC<OperationalCardProps> = ({
   metadata,
   actionButtons,
   children,
+  accentBorder = 'none',
   className,
   onClick
 }) => {
+  const borderLeftClasses = {
+    none: '',
+    teal: 'border-l-4 border-l-brand-teal',
+    blue: 'border-l-4 border-l-care-blue-600',
+    navy: 'border-l-4 border-l-brand-navy'
+  };
+
   return (
     <Card
       variant={onClick ? 'interactive' : 'default'}
       onClick={onClick}
-      className={clsx('p-5 space-y-4 bg-white border border-border-default shadow-subtle rounded-card', className)}
+      className={clsx(
+        'p-5 space-y-4 bg-white border border-border-default shadow-subtle rounded-card transition-all',
+        borderLeftClasses[accentBorder],
+        className
+      )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-0.5">
           {category && (
-            <span className="text-[10px] font-extrabold text-brand-teal uppercase tracking-widest block">
+            <span className="text-[10px] font-extrabold text-brand-teal-700 uppercase tracking-widest block">
               {category}
             </span>
           )}
@@ -162,21 +197,21 @@ export const AlertCard: React.FC<AlertCardProps> = ({
   className
 }) => {
   const styles = {
-    warning: 'bg-amber-50/80 border-amber-200 text-amber-950',
-    danger: 'bg-rose-50/80 border-rose-200 text-rose-950',
-    info: 'bg-sky-50/80 border-sky-200 text-sky-950',
-    success: 'bg-emerald-50/80 border-emerald-200 text-emerald-950'
+    warning: 'bg-amber-50/90 border-amber-200 text-amber-950',
+    danger: 'bg-rose-50/90 border-rose-200 text-rose-950',
+    info: 'bg-care-blue-50/90 border-care-blue-200 text-care-blue-950',
+    success: 'bg-emerald-50/90 border-emerald-200 text-emerald-950'
   };
 
   const icons = {
     warning: <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />,
     danger: <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />,
-    info: <Info className="w-5 h-5 text-sky-600 shrink-0 mt-0.5" />,
+    info: <Info className="w-5 h-5 text-care-blue-600 shrink-0 mt-0.5" />,
     success: <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
   };
 
   return (
-    <div className={clsx('p-4 rounded-xl border text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3', styles[severity], className)}>
+    <div className={clsx('p-4 rounded-card border text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-subtle', styles[severity], className)}>
       <div className="flex items-start gap-3">
         {icons[severity]}
         <div className="space-y-0.5">
@@ -201,9 +236,10 @@ export interface SummaryCardProps {
 
 export const SummaryCard: React.FC<SummaryCardProps> = ({ title, items, footer, className }) => {
   return (
-    <Card className={clsx('p-5 space-y-4 bg-white border border-border-default shadow-subtle', className)}>
-      <h4 className="text-xs font-black text-text-muted uppercase tracking-widest border-b border-border-default pb-2">
-        {title}
+    <Card className={clsx('p-5 space-y-4 bg-white border border-border-default shadow-subtle rounded-card', className)}>
+      <h4 className="text-xs font-black text-text-muted uppercase tracking-widest border-b border-border-default pb-2 flex items-center justify-between">
+        <span>{title}</span>
+        <span className="w-2 h-2 rounded-full bg-brand-teal" />
       </h4>
       <div className="space-y-2.5 text-xs">
         {items.map((item, idx) => (

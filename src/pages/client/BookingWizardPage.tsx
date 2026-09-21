@@ -23,21 +23,25 @@ import {
 import { clsx } from 'clsx';
 import type { Service, PatientProfile } from '../../types';
 import { validateNCRServiceLocation } from '../../data/serviceAreaMatrix';
+import { MOCK_PROFESSIONALS } from '../../data/mockData';
+import { DynamicFormRenderer } from '../../components/domain/DynamicFormRenderer';
 
 const DRAFT_STORAGE_KEY = 'pulsen_care_b2c_booking_draft_v3';
 
 export const BookingWizardPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { services, createBooking } = useBookings();
+  const { services, createCareRequest, createBooking } = useBookings();
   const { currentUser, switchRole } = useAuth();
 
-  const initialServiceId = searchParams.get('serviceId') || services[0]?.id;
+  const activeServices = services.filter((s) => s.active !== false);
+  const initialServiceId = searchParams.get('serviceId') || activeServices[0]?.id;
 
   const [step, setStep] = useState(1);
   const [selectedService, setSelectedService] = useState<Service>(
-    services.find((s) => s.id === initialServiceId) || services[0]
+    activeServices.find((s) => s.id === initialServiceId) || activeServices[0] || services[0]
   );
+  const [dynamicAnswers, setDynamicAnswers] = useState<Record<string, any>>({});
 
   // Step 2: Contextual Care Requirements & Tasks
   const [careCategory, setCareCategory] = useState<string>('post_surgery');
@@ -48,7 +52,6 @@ export const BookingWizardPage: React.FC = () => {
   ]);
   const [physioAffectedArea, setPhysioAffectedArea] = useState<string>('Knee Joint (Post-TKR)');
   const [physioMobilityStatus, setPhysioMobilityStatus] = useState<string>('Walker Assisted');
-  const [doctorComplaint, setDoctorComplaint] = useState<string>('Post-Hospitalization Follow-up & Vitals Assessment');
 
   // Step 3: Patient Profile
   const [patient, setPatient] = useState<PatientProfile>({
@@ -68,22 +71,29 @@ export const BookingWizardPage: React.FC = () => {
   // Step 4: Location & NCR Validation
   const [locationData, setLocationData] = useState<LocationData>({
     addressType: 'Home Apartment',
-    line1: 'A-124, Defence Colony',
-    line2: 'Near Lajpat Nagar Metro Station',
-    landmark: 'Opposite Flyover Pillar 14',
+    line1: '',
+    line2: 'Defence Colony / Lajpat Nagar',
+    landmark: '',
     city: 'New Delhi',
     state: 'Delhi NCR',
     pincode: '110024',
-    accessNotes: 'Elevator active 24/7. Visitor parking inside gate.',
+    accessNotes: '',
     latitude: 28.6139,
     longitude: 77.2090,
     isVerified: true
   });
 
-  // Step 5: Schedule & Recurrence
+  // Schedule & Recurrence State
+  const getTodayStr = () => new Date().toISOString().split('T')[0];
+  const getFutureDateStr = (daysAhead: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() + daysAhead);
+    return d.toISOString().split('T')[0];
+  };
+
   const [scheduleType, setScheduleType] = useState<'single' | 'range' | 'recurring'>('range');
-  const [startDate, setStartDate] = useState('2026-03-20');
-  const [endDate, setEndDate] = useState('2026-03-27');
+  const [startDate, setStartDate] = useState(getTodayStr());
+  const [endDate, setEndDate] = useState(getFutureDateStr(7));
   const [recurringDays, setRecurringDays] = useState<string[]>(['Mon', 'Wed', 'Fri']);
 
   // Step 6: Time & Shift Type
@@ -111,8 +121,34 @@ export const BookingWizardPage: React.FC = () => {
   const [assignmentState, setAssignmentState] = useState<'reviewing' | 'finding' | 'assigned'>('reviewing');
   const [assignedStaff, setAssignedStaff] = useState<any>(null);
 
-  // Load draft from localStorage & location query params on mount
+  // Load draft from localStorage & location/pro query params on mount
   useEffect(() => {
+    const proIdParam = searchParams.get('proId');
+    const serviceIdParam = searchParams.get('serviceId');
+    if (proIdParam) {
+      const foundPro = MOCK_PROFESSIONALS.find((p) => p.id === proIdParam);
+      if (foundPro) {
+        setPreferredRole(foundPro.qualification);
+        if (serviceIdParam) {
+          const srv = services.find((s) => s.id === serviceIdParam);
+          if (srv) setSelectedService(srv);
+        } else if (foundPro.servicesOffered.length > 0) {
+          const srv = services.find((s) => s.id === foundPro.servicesOffered[0]);
+          if (srv) setSelectedService(srv);
+        }
+        setAssignedStaff({
+          displayName: foundPro.displayName,
+          qualification: `${foundPro.qualification} (DNC Reg #${foundPro.registrationNumber})`,
+          experienceYears: foundPro.experienceYears,
+          photo: foundPro.profilePhoto,
+          employeeId: `EMP-${foundPro.id.toUpperCase()}`,
+          rating: foundPro.rating,
+          assignedZone: 'Delhi NCR Care Area'
+        });
+        setStep(2);
+      }
+    }
+
     const locParam = searchParams.get('location');
     if (locParam) {
       const decodedLoc = decodeURIComponent(locParam).trim();
@@ -302,21 +338,23 @@ export const BookingWizardPage: React.FC = () => {
 
     setTimeout(() => {
       setAssignmentState('assigned');
-      setAssignedStaff({
-        displayName: 'Priya Sharma, RN',
-        qualification: 'B.Sc Nursing (KNC Reg #88419)',
-        experienceYears: 6,
-        photo: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=300&q=80',
-        employeeId: 'EMP-1042',
-        rating: 4.9,
-        activeHub: 'South Delhi Operations Center'
-      });
+      setAssignedStaff((prev: any) =>
+        prev || {
+          displayName: 'Priya Sharma, RN',
+          qualification: 'B.Sc Nursing (DNC Reg #88419)',
+          experienceYears: 6,
+          photo: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=300&q=80',
+          employeeId: 'EMP-1042',
+          rating: 4.9,
+          assignedZone: 'South Delhi Care Zone'
+        }
+      );
     }, 3600);
   };
 
   const handleFinalRedirect = () => {
     localStorage.removeItem(DRAFT_STORAGE_KEY);
-    const newBooking = createBooking({
+    const careReqPayload = {
       service: selectedService,
       patient,
       address: {
@@ -348,95 +386,104 @@ export const BookingWizardPage: React.FC = () => {
         languages: selectedLanguages
       },
       specialInstructions
-    });
+    };
 
-    navigate(`/client/bookings/${newBooking.id}`);
+    const newCareReq = createCareRequest(careReqPayload);
+    const newBooking = createBooking(careReqPayload);
+
+    navigate(`/client/bookings/${newCareReq.id || newBooking.id}`);
   };
 
   const stepsList = [
-    '1. Service',
-    '2. Care Tasks',
-    '3. Patient',
-    '4. Location',
-    '5. Dates',
-    '6. Shift',
-    '7. Staff Prefs',
-    '8. Notes',
-    '9. Price',
-    '10. Review'
+    { num: '01', title: 'SERVICE & CONTEXT' },
+    { num: '02', title: 'TIMING & DURATION' },
+    { num: '03', title: 'CARE REQUIREMENTS' },
+    { num: '04', title: 'PATIENT & LOCATION' },
+    { num: '05', title: 'INVOICE & REVIEW' }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-left relative bg-white pb-24 lg:pb-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-left relative bg-surface-page pb-24 lg:pb-8">
       <HealthcareTexture type="care-pathway" opacity={0.03} />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border-default pb-4 gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border-default pb-4 gap-3 bg-white p-6 rounded-surface border shadow-subtle">
         <div>
-          <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest flex items-center gap-1.5">
+          <span className="text-xs font-extrabold text-brand-teal-700 uppercase tracking-widest flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-brand-teal" /> Care Concierge Guided Experience
           </span>
-          <h1 className="text-2xl font-extrabold text-text-primary">Schedule Managed Clinical Home Care</h1>
+          <h1 className="text-2xl font-extrabold text-text-primary">Request Managed Clinical Home Care</h1>
           <p className="text-xs text-text-muted mt-0.5">
             Specify patient requirements. Pulse n Care Operations assigns qualified internal staff in Delhi NCR.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-text-secondary bg-canvas-tertiary px-3.5 py-1.5 rounded-full border border-border-default">
-            Step {step} of 10
+          <span className="text-xs font-extrabold text-brand-teal-700 bg-brand-teal-50 px-3.5 py-1.5 rounded-full border border-brand-teal-200">
+            Step {step} of 5
           </span>
         </div>
       </div>
 
       {/* Stepper Progress Bar */}
-      <div className="grid grid-cols-5 md:grid-cols-10 gap-1.5">
-        {stepsList.map((label, idx) => {
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+        {stepsList.map((item, idx) => {
           const stepNum = idx + 1;
           const isActive = step === stepNum;
           const isDone = step > stepNum;
 
           return (
             <button
-              key={label}
+              key={item.num}
               onClick={() => isDone && setStep(stepNum)}
               disabled={!isDone && !isActive}
-              className="text-left space-y-1 focus:outline-none disabled:cursor-not-allowed cursor-pointer"
+              className={clsx(
+                'text-left p-3 rounded-card border transition-all cursor-pointer focus:outline-none disabled:cursor-not-allowed',
+                isActive && 'bg-brand-teal-50 border-brand-teal-400 text-brand-teal-900 shadow-subtle',
+                isDone && 'bg-white border-border-default text-text-primary hover:border-brand-teal-300',
+                !isDone && !isActive && 'bg-white/60 border-border-default text-text-muted opacity-80'
+              )}
             >
-              <div
-                className={clsx(
-                  'h-2 rounded-full transition-all',
+              <div className="flex items-center justify-between gap-2">
+                <span className={clsx(
+                  'text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full',
+                  isActive && 'bg-brand-teal text-white',
+                  isDone && 'bg-emerald-100 text-emerald-800',
+                  !isDone && !isActive && 'bg-slate-100 text-slate-500'
+                )}>
+                  {isDone ? '✓ Done' : item.num}
+                </span>
+                <div className={clsx(
+                  'h-1.5 flex-1 rounded-full',
                   isDone && 'bg-brand-teal',
-                  isActive && 'bg-brand-teal ring-2 ring-brand-teal/30 animate-pulse',
-                  !isDone && !isActive && 'bg-border-default'
-                )}
-              />
-              <span
-                className={clsx(
-                  'text-[10px] font-bold block truncate',
-                  isActive ? 'text-brand-teal font-extrabold' : isDone ? 'text-text-primary' : 'text-text-muted'
-                )}
-              >
-                {label}
+                  isActive && 'bg-brand-teal animate-pulse',
+                  !isDone && !isActive && 'bg-slate-200'
+                )} />
+              </div>
+              <span className={clsx('text-[11px] font-black block mt-2 tracking-tight line-clamp-1', isActive ? 'text-brand-teal-900' : 'text-text-primary')}>
+                {item.title}
               </span>
             </button>
           );
         })}
       </div>
 
-      {/* Main Layout Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Main Layout Container: Centered max-w-4xl for Steps 1-4, 2-column grid for Step 5 */}
+      <div className={clsx(
+        step === 5 ? 'grid grid-cols-1 lg:grid-cols-12 gap-8' : 'max-w-4xl mx-auto space-y-6'
+      )}>
         {/* Step Interactive Decision Card */}
-        <div className="lg:col-span-8 space-y-6">
+        <div className={clsx(step === 5 ? 'lg:col-span-8 space-y-6' : 'space-y-6')}>
           <Card className="p-6 space-y-6 border-border-default shadow-subtle bg-white">
-            {/* STEP 1: Service Selection */}
+            {/* STEP 1: Service Selection & Dynamic Questions */}
             {step === 1 && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
                   <h2 className="text-lg font-extrabold text-text-primary">Step 1: Select Home Care Service</h2>
                   <p className="text-xs text-text-muted">Select from our internal clinical & caregiver workforce catalog.</p>
                 </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {services.map((srv) => {
+                  {activeServices.map((srv) => {
                     const isSelected = selectedService.id === srv.id;
                     return (
                       <div
@@ -464,15 +511,188 @@ export const BookingWizardPage: React.FC = () => {
                     );
                   })}
                 </div>
+
+                {/* Service Specific Dynamic Question Form */}
+                <div className="pt-4 border-t border-border-default space-y-3">
+                  <h3 className="text-xs font-extrabold text-text-primary uppercase tracking-wider">
+                    {selectedService.name} Clinical Context Questions
+                  </h3>
+                  <DynamicFormRenderer
+                    questions={selectedService.serviceQuestions}
+                    answers={dynamicAnswers}
+                    onAnswerChange={(fieldId, val) =>
+                      setDynamicAnswers((prev) => ({ ...prev, [fieldId]: val }))
+                    }
+                  />
+                </div>
               </div>
             )}
 
-            {/* STEP 2: Smart Contextual Care Requirements */}
+            {/* STEP 2: Timing, Schedule & Duration (kis timing ka liya chahiya, kitna din ka liya chahiya) */}
             {step === 2 && (
-              <div className="space-y-5">
+              <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-extrabold text-text-primary">Step 2: Smart Care Requirement & Specific Tasks</h2>
-                  <p className="text-xs text-text-muted">Customized questions based on your selected service category.</p>
+                  <h2 className="text-lg font-extrabold text-text-primary">Step 2: Care Timing, Dates & Duration</h2>
+                  <p className="text-xs text-text-muted">Specify start date, total duration in days, and daily shift timing.</p>
+                </div>
+
+                {/* Schedule Type Selection */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Schedule Type</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[
+                      { id: 'single', label: 'Single Day Visit', desc: '1-day visit or procedure' },
+                      { id: 'range', label: 'Contiguous Dates', desc: 'Continuous daily care' },
+                      { id: 'recurring', label: 'Weekly Recurring', desc: 'Specific days each week' }
+                    ].map((st) => (
+                      <button
+                        key={st.id}
+                        type="button"
+                        onClick={() => setScheduleType(st.id as any)}
+                        className={clsx(
+                          'p-3.5 rounded-xl border text-left cursor-pointer transition-all space-y-1',
+                          scheduleType === st.id
+                            ? 'border-brand-teal bg-canvas-teal ring-2 ring-brand-teal/20'
+                            : 'border-border-default bg-white hover:border-border-hover'
+                        )}
+                      >
+                        <span className="text-xs font-extrabold text-text-primary block">{st.label}</span>
+                        <span className="text-[10px] text-text-muted block">{st.desc}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Date Inputs */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Start Date</label>
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
+                    />
+                  </div>
+
+                  {scheduleType !== 'single' && (
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">End Date</label>
+                      <input
+                        type="date"
+                        value={endDate}
+                        min={startDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {scheduleType === 'recurring' && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                        Select Weekdays
+                      </label>
+                      <span className="text-xs font-extrabold text-brand-teal">
+                        {daysCount} Shifts Total
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => {
+                        const isSelected = recurringDays.includes(day);
+                        return (
+                          <button
+                            key={day}
+                            type="button"
+                            onClick={() => {
+                              if (isSelected) setRecurringDays(recurringDays.filter((d) => d !== day));
+                              else setRecurringDays([...recurringDays, day]);
+                            }}
+                            className={clsx(
+                              'w-10 h-10 rounded-xl text-xs font-bold border flex items-center justify-center cursor-pointer transition-all',
+                              isSelected
+                                ? 'bg-brand-teal text-white border-brand-teal'
+                                : 'bg-canvas-secondary border-border-default text-text-secondary'
+                            )}
+                          >
+                            {day}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Duration Badge Summary */}
+                <div className="p-3.5 bg-canvas-teal rounded-xl border border-teal-200 flex items-center justify-between text-xs">
+                  <span className="font-bold text-teal-900">Calculated Care Duration:</span>
+                  <span className="font-extrabold text-brand-teal bg-white px-3 py-1 rounded-lg border border-teal-200 shadow-xs">
+                    {daysCount} Day(s) ({daysCount * durationHours} total care hours)
+                  </span>
+                </div>
+
+                {/* Shift Timing Selection */}
+                <div className="space-y-3 pt-2">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                    Select Daily Shift Timing
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { label: 'Night Shift (10 PM - 8 AM)', time: '10:00 PM - 08:00 AM', hours: 10, isNight: true },
+                      { label: 'Day Shift (12 Hours)', time: '08:00 AM - 08:00 PM', hours: 12 },
+                      { label: 'Half Day (6 Hours)', time: '08:00 AM - 02:00 PM', hours: 6 },
+                      { label: '24-Hour Live-in Care', time: 'Round the Clock (24h)', hours: 24 }
+                    ].map((s) => (
+                      <div
+                        key={s.label}
+                        onClick={() => {
+                          setShiftType(s.label);
+                          setTimeSlot(s.time);
+                          setDurationHours(s.hours);
+                        }}
+                        className={clsx(
+                          'p-4 rounded-2xl border cursor-pointer transition-all flex items-center justify-between',
+                          shiftType === s.label
+                            ? 'border-brand-teal bg-canvas-teal ring-2 ring-brand-teal/20'
+                            : 'border-border-default bg-white hover:border-border-hover'
+                        )}
+                      >
+                        <div>
+                          <span className="font-extrabold text-text-primary text-xs flex items-center gap-1.5">
+                            {s.isNight && <Moon className="w-4 h-4 text-amber-500" />} {s.label}
+                          </span>
+                          <span className="text-[11px] text-text-muted flex items-center gap-1 mt-1">
+                            <Clock className="w-3 h-3 text-brand-teal" /> {s.time}
+                          </span>
+                        </div>
+                        {shiftType === s.label && <CheckCircle2 className="w-5 h-5 text-brand-teal" />}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Night Shift Rollover Card */}
+                  {isNightShift && (
+                    <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-1">
+                      <span className="font-extrabold block flex items-center gap-1.5">
+                        <Moon className="w-4 h-4 text-amber-600" /> Overnight Shift Schedule Banner
+                      </span>
+                      <p className="font-medium">
+                        Shift Start: <span className="font-bold">{startDate} 10:00 PM</span> → Shift End: <span className="font-bold">{nextDayStr} 08:00 AM</span> (Duration: 10 Hours)
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* STEP 3: Care Requirements & Specific Tasks (kya required h wosab add karna h) */}
+            {step === 3 && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-lg font-extrabold text-text-primary">Step 3: Care Requirements, Tasks & Equipment</h2>
+                  <p className="text-xs text-text-muted">Specify patient care focus, required procedures, medical equipment, and staff preferences.</p>
                 </div>
 
                 {/* Service Category: Nursing */}
@@ -550,6 +770,47 @@ export const BookingWizardPage: React.FC = () => {
                   </div>
                 )}
 
+                {/* Service Category: Caregiver / Attendant */}
+                {selectedService.category === 'caregiver_attendant' && (
+                  <div className="space-y-4">
+                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Bedside Attendant Duties</label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {[
+                        'Bedside hygiene & daily sponge bath',
+                        'Oral feeding & hydration assistance',
+                        'Diaper changes & commode assistance',
+                        'Position rotation & bed transfer support',
+                        'Walking assistance & mobility guard',
+                        'Night supervision & bed alarm monitoring'
+                      ].map((task) => {
+                        const isChecked = selectedTasks.includes(task);
+                        return (
+                          <div
+                            key={task}
+                            onClick={() => handleTaskToggle(task)}
+                            className={clsx(
+                              'p-3 rounded-xl border cursor-pointer flex items-center justify-between text-xs font-semibold transition-all',
+                              isChecked
+                                ? 'bg-canvas-teal border-brand-teal text-brand-teal font-bold'
+                                : 'bg-white border-border-default text-text-secondary hover:border-border-hover'
+                            )}
+                          >
+                            <span>{task}</span>
+                            <div
+                              className={clsx(
+                                'w-4 h-4 rounded flex items-center justify-center border',
+                                isChecked ? 'bg-brand-teal border-brand-teal text-white' : 'border-border-hover'
+                              )}
+                            >
+                              {isChecked && <CheckCircle2 className="w-3 h-3 text-white" />}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 {/* Service Category: Physiotherapy */}
                 {selectedService.category === 'physiotherapy' && (
                   <div className="space-y-4">
@@ -592,322 +853,8 @@ export const BookingWizardPage: React.FC = () => {
                   </div>
                 )}
 
-                {/* Service Category: Doctor Visit */}
-                {selectedService.category === 'doctor_visit' && (
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Chief Medical Complaint / Purpose</label>
-                      <input
-                        type="text"
-                        value={doctorComplaint}
-                        onChange={(e) => setDoctorComplaint(e.target.value)}
-                        className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
-                        placeholder="e.g., High fever review, post-hospitalization check, medication audit..."
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Service Category: Caregiver / Attendant */}
-                {selectedService.category === 'caregiver_attendant' && (
-                  <div className="space-y-4">
-                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Bedside Attendant Duties</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {[
-                        'Bedside hygiene & daily sponge bath',
-                        'Oral feeding & hydration assistance',
-                        'Diaper changes & commode assistance',
-                        'Position rotation & bed transfer support',
-                        'Walking assistance & mobility guard',
-                        'Night supervision & bed alarm monitoring'
-                      ].map((task) => {
-                        const isChecked = selectedTasks.includes(task);
-                        return (
-                          <div
-                            key={task}
-                            onClick={() => handleTaskToggle(task)}
-                            className={clsx(
-                              'p-3 rounded-xl border cursor-pointer flex items-center justify-between text-xs font-semibold transition-all',
-                              isChecked
-                                ? 'bg-canvas-teal border-brand-teal text-brand-teal font-bold'
-                                : 'bg-white border-border-default text-text-secondary hover:border-border-hover'
-                            )}
-                          >
-                            <span>{task}</span>
-                            <div
-                              className={clsx(
-                                'w-4 h-4 rounded flex items-center justify-center border',
-                                isChecked ? 'bg-brand-teal border-brand-teal text-white' : 'border-border-hover'
-                              )}
-                            >
-                              {isChecked && <CheckCircle2 className="w-3 h-3 text-white" />}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* STEP 3: Patient Selection */}
-            {step === 3 && (
-              <SavedPatientSelector
-                selectedPatientId={patient.id}
-                onSelectPatient={(selected) => setPatient(selected)}
-              />
-            )}
-
-            {/* STEP 4: Location & Access */}
-            {step === 4 && (
-              <LocationPicker
-                value={locationData}
-                onChange={(updated) => setLocationData(updated)}
-              />
-            )}
-
-            {/* STEP 5: Dates & Recurrence */}
-            {step === 5 && (
-              <div className="space-y-5">
-                <div>
-                  <h2 className="text-lg font-extrabold text-text-primary">Step 5: Schedule & Recurrence Pattern</h2>
-                  <p className="text-xs text-text-muted">Choose single visits, contiguous dates, or recurring weekly shifts.</p>
-                </div>
-
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { id: 'single', label: 'Single Day Visit', desc: 'One-off appointment' },
-                    { id: 'range', label: 'Contiguous Dates', desc: 'Multiple consecutive days' },
-                    { id: 'recurring', label: 'Weekly Recurring', desc: 'Selected days every week' }
-                  ].map((st) => (
-                    <button
-                      key={st.id}
-                      type="button"
-                      onClick={() => setScheduleType(st.id as any)}
-                      className={clsx(
-                        'p-3.5 rounded-xl border text-left cursor-pointer transition-all space-y-1',
-                        scheduleType === st.id
-                          ? 'border-brand-teal bg-canvas-teal ring-2 ring-brand-teal/20'
-                          : 'border-border-default bg-white hover:border-border-hover'
-                      )}
-                    >
-                      <span className="text-xs font-extrabold text-text-primary block">{st.label}</span>
-                      <span className="text-[10px] text-text-muted block">{st.desc}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Start Date</label>
-                    <input
-                      type="date"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
-                    />
-                  </div>
-
-                  {scheduleType !== 'single' && (
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">End Date</label>
-                      <input
-                        type="date"
-                        value={endDate}
-                        min={startDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {scheduleType === 'recurring' && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-                        Select Weekdays
-                      </label>
-                      <span className="text-xs font-extrabold text-brand-teal">
-                        {daysCount} Shifts Total
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => {
-                        const isSelected = recurringDays.includes(day);
-                        return (
-                          <button
-                            key={day}
-                            type="button"
-                            onClick={() => {
-                              if (isSelected) setRecurringDays(recurringDays.filter((d) => d !== day));
-                              else setRecurringDays([...recurringDays, day]);
-                            }}
-                            className={clsx(
-                              'w-10 h-10 rounded-xl text-xs font-bold border flex items-center justify-center cursor-pointer transition-all',
-                              isSelected
-                                ? 'bg-brand-teal text-white border-brand-teal'
-                                : 'bg-canvas-secondary border-border-default text-text-secondary'
-                            )}
-                          >
-                            {day}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* STEP 6: Shift Timing & Night Rollover UX */}
-            {step === 6 && (
-              <div className="space-y-5">
-                <div>
-                  <h2 className="text-lg font-extrabold text-text-primary">Step 6: Shift Timing & Overnight Rollover</h2>
-                  <p className="text-xs text-text-muted">Choose your shift timing. Night shifts calculate overnight date rollover automatically.</p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {[
-                    { label: 'Night Shift (10 PM - 8 AM)', time: '10:00 PM - 08:00 AM', hours: 10, isNight: true },
-                    { label: 'Day Shift (12 Hours)', time: '08:00 AM - 08:00 PM', hours: 12 },
-                    { label: 'Half Day (6 Hours)', time: '08:00 AM - 02:00 PM', hours: 6 },
-                    { label: '24-Hour Live-in Care', time: 'Round the Clock (24h)', hours: 24 }
-                  ].map((s) => (
-                    <div
-                      key={s.label}
-                      onClick={() => {
-                        setShiftType(s.label);
-                        setTimeSlot(s.time);
-                        setDurationHours(s.hours);
-                      }}
-                      className={clsx(
-                        'p-4 rounded-2xl border cursor-pointer transition-all flex items-center justify-between',
-                        shiftType === s.label
-                          ? 'border-brand-teal bg-canvas-teal ring-2 ring-brand-teal/20'
-                          : 'border-border-default bg-white hover:border-border-hover'
-                      )}
-                    >
-                      <div>
-                        <span className="font-extrabold text-text-primary text-xs flex items-center gap-1.5">
-                          {s.isNight && <Moon className="w-4 h-4 text-amber-500" />} {s.label}
-                        </span>
-                        <span className="text-[11px] text-text-muted flex items-center gap-1 mt-1">
-                          <Clock className="w-3 h-3 text-brand-teal" /> {s.time}
-                        </span>
-                      </div>
-                      {shiftType === s.label && <CheckCircle2 className="w-5 h-5 text-brand-teal" />}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Night Shift Rollover Card */}
-                {isNightShift && (
-                  <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-1">
-                    <span className="font-extrabold block flex items-center gap-1.5">
-                      <Moon className="w-4 h-4 text-amber-600" /> Overnight Shift Schedule Banner
-                    </span>
-                    <p className="font-medium">
-                      Shift Start: <span className="font-bold">{startDate} 10:00 PM</span> → Shift End: <span className="font-bold">{nextDayStr} 08:00 AM</span> (Duration: 10 Hours)
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* STEP 7: Staff Preferences */}
-            {step === 7 && (
-              <div className="space-y-5">
-                <div>
-                  <h2 className="text-lg font-extrabold text-text-primary">Step 7: Staff Qualification & Preferences</h2>
-                  <p className="text-xs text-text-muted">Define preferences for internal staff assignment.</p>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-                    Required Staff Qualification / Role
-                  </label>
-                  <select
-                    value={preferredRole}
-                    onChange={(e) => setPreferredRole(e.target.value)}
-                    className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
-                  >
-                    <option value="B.Sc Registered Nurse">B.Sc Registered Nurse (RN)</option>
-                    <option value="GNM Staff Nurse">GNM Staff Nurse</option>
-                    <option value="Certified Caregiver">Certified Bedside Caregiver / Attendant</option>
-                    <option value="Senior Physiotherapist">Senior Physiotherapist (BPT/MPT)</option>
-                  </select>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-                      Staff Gender Preference
-                    </label>
-                    <select
-                      value={preferredGender}
-                      onChange={(e) => setPreferredGender(e.target.value as any)}
-                      className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
-                    >
-                      <option value="female">Female Staff Preferred</option>
-                      <option value="male">Male Staff Preferred</option>
-                      <option value="no_preference">No Preference (First Available)</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-                      Languages Spoken
-                    </label>
-                    <div className="flex flex-wrap gap-2 pt-1">
-                      {['English', 'Hindi', 'Punjabi', 'Bengali'].map((lang) => {
-                        const isSelected = selectedLanguages.includes(lang);
-                        return (
-                          <button
-                            key={lang}
-                            type="button"
-                            onClick={() => handleLanguageToggle(lang)}
-                            className={clsx(
-                              'px-3 py-1.5 rounded-full text-xs font-bold border cursor-pointer transition-all',
-                              isSelected
-                                ? 'bg-canvas-teal text-brand-teal border-teal-300'
-                                : 'bg-white text-text-secondary border-border-default'
-                            )}
-                          >
-                            {lang}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* STEP 8: Special Instructions & Equipment */}
-            {step === 8 && (
-              <div className="space-y-5">
-                <div>
-                  <h2 className="text-lg font-extrabold text-text-primary">Step 8: Special Instructions & Medical Equipment</h2>
-                  <p className="text-xs text-text-muted">Clinical handling notes and equipment at home.</p>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-                    Care Notes for Assigned Nurse / Caregiver
-                  </label>
-                  <textarea
-                    rows={4}
-                    value={specialInstructions}
-                    onChange={(e) => setSpecialInstructions(e.target.value)}
-                    className="w-full p-3.5 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
-                    placeholder="Enter any special requests, diet instructions, or patient behavioral tips..."
-                  />
-                </div>
-
-                <div className="space-y-2 pt-2">
+                {/* Medical Equipment Available at Home */}
+                <div className="space-y-2 pt-2 border-t border-border-default">
                   <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                     Medical Equipment Available at Home
                   </label>
@@ -940,74 +887,190 @@ export const BookingWizardPage: React.FC = () => {
                     })}
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* STEP 9: Transparent Price Breakdown */}
-            {step === 9 && (
-              <div className="space-y-5">
-                <div>
-                  <h2 className="text-lg font-extrabold text-text-primary">Step 9: Price Estimate Breakdown</h2>
-                  <p className="text-xs text-text-muted">Transparent itemized pricing for your care request.</p>
+                {/* Special Instructions & Notes */}
+                <div className="space-y-1.5 pt-2 border-t border-border-default">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                    Special Care Notes for Assigned Nurse / Caregiver
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={specialInstructions}
+                    onChange={(e) => setSpecialInstructions(e.target.value)}
+                    className="w-full p-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
+                    placeholder="Enter any special requests, diet instructions, or patient handling notes..."
+                  />
                 </div>
 
-                <div className="bg-canvas-secondary p-5 rounded-2xl border border-border-default space-y-3 text-xs">
-                  <div className="flex justify-between font-extrabold text-text-primary text-sm border-b border-border-default pb-2">
-                    <span>{selectedService.name} ({shiftType})</span>
-                    <span>₹{subtotalBeforeNight}</span>
-                  </div>
-                  <div className="flex justify-between text-text-secondary">
-                    <span>Duration & Shifts</span>
-                    <span>{daysCount} Day(s) × {durationHours} Hours</span>
-                  </div>
-                  {isNightShift && (
-                    <div className="flex justify-between text-amber-700 font-semibold">
-                      <span>Night Shift Adjustment (+20%)</span>
-                      <span>₹{nightSurcharge}</span>
+                {/* Staff Preferences */}
+                <div className="space-y-4 pt-2 border-t border-border-default">
+                  <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+                    Staff Qualification & Preferences
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-text-muted">Required Staff Qualification / Role</label>
+                      <select
+                        value={preferredRole}
+                        onChange={(e) => setPreferredRole(e.target.value)}
+                        className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
+                      >
+                        <option value="B.Sc Registered Nurse">B.Sc Registered Nurse (RN)</option>
+                        <option value="GNM Staff Nurse">GNM Staff Nurse</option>
+                        <option value="Certified Caregiver">Certified Bedside Caregiver / Attendant</option>
+                        <option value="Senior Physiotherapist">Senior Physiotherapist (BPT/MPT)</option>
+                      </select>
                     </div>
-                  )}
-                  <div className="flex justify-between text-text-secondary">
-                    <span>GST (18% Statutory Tax)</span>
-                    <span>₹{gst}</span>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-text-muted">Gender Preference</label>
+                      <select
+                        value={preferredGender}
+                        onChange={(e) => setPreferredGender(e.target.value as any)}
+                        className="w-full h-11 px-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
+                      >
+                        <option value="female">Female Staff Preferred</option>
+                        <option value="male">Male Staff Preferred</option>
+                        <option value="no_preference">No Preference (First Available)</option>
+                      </select>
+                    </div>
                   </div>
-                  <div className="flex justify-between font-extrabold text-brand-teal text-base border-t border-border-default pt-2">
-                    <span>Estimated Total Amount</span>
-                    <span>₹{grandTotal}</span>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-text-muted">Languages Spoken</label>
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {['English', 'Hindi', 'Punjabi', 'Bengali'].map((lang) => {
+                        const isSelected = selectedLanguages.includes(lang);
+                        return (
+                          <button
+                            key={lang}
+                            type="button"
+                            onClick={() => handleLanguageToggle(lang)}
+                            className={clsx(
+                              'px-3 py-1.5 rounded-full text-xs font-bold border cursor-pointer transition-all',
+                              isSelected
+                                ? 'bg-canvas-teal text-brand-teal border-teal-300'
+                                : 'bg-white text-text-secondary border-border-default'
+                            )}
+                          >
+                            {lang}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-
-                <p className="text-[11px] text-text-muted italic">
-                  * Final amount verified by Operations Desk. No hidden fees or cash demands at home.
-                </p>
               </div>
             )}
 
-            {/* STEP 10: Review & Post-Submission Interactive Tracker */}
-            {step === 10 && (
+            {/* STEP 4: Patient Selection & Location Details */}
+            {step === 4 && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-lg font-extrabold text-text-primary">Step 4: Patient Profile & Care Location</h2>
+                  <p className="text-xs text-text-muted">Select patient details and specify the Delhi NCR care delivery address.</p>
+                </div>
+
+                <SavedPatientSelector
+                  selectedPatientId={patient.id}
+                  onSelectPatient={(selected) => setPatient(selected)}
+                />
+
+                <div className="pt-4 border-t border-border-default">
+                  <LocationPicker
+                    value={locationData}
+                    onChange={(updated) => setLocationData(updated)}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* STEP 5: Final Review & Itemized Care Tax Invoice (invoices last step hona chahiya) */}
+            {step === 5 && (
               <div className="space-y-6">
                 {!submitting ? (
-                  <div className="space-y-5">
+                  <div className="space-y-6">
                     <div>
-                      <h2 className="text-lg font-extrabold text-text-primary">Step 10: Review & Submit Request</h2>
-                      <p className="text-xs text-text-muted">Review your booking details before submitting to Pulse n Care Operations.</p>
+                      <h2 className="text-lg font-extrabold text-text-primary">Step 5: Review Care Request & Itemized Invoice</h2>
+                      <p className="text-xs text-text-muted">Review all care parameters and transparent tax invoice before submitting.</p>
                     </div>
 
+                    {/* Care Request Details Summary Card */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                       <div className="p-4 bg-canvas-secondary rounded-xl border border-border-default space-y-2">
-                        <span className="font-bold text-text-primary block border-b border-border-light pb-1">
-                          Service & Patient
+                        <span className="font-bold text-text-primary block border-b border-border-light pb-1 uppercase tracking-wider text-[10px]">
+                          Care Service & Patient
                         </span>
                         <p className="font-extrabold text-text-primary">{selectedService.name}</p>
-                        <p className="text-text-muted">Patient: {patient.firstName} {patient.lastName} ({patient.relationship})</p>
+                        <p className="text-text-muted">Patient: <span className="font-bold text-text-primary">{patient.firstName} {patient.lastName}</span> ({patient.relationship})</p>
+                        <p className="text-text-muted">Medical Context: {patient.medicalNotes}</p>
                       </div>
 
                       <div className="p-4 bg-canvas-secondary rounded-xl border border-border-default space-y-2">
-                        <span className="font-bold text-text-primary block border-b border-border-light pb-1">
+                        <span className="font-bold text-text-primary block border-b border-border-light pb-1 uppercase tracking-wider text-[10px]">
                           Location & Schedule
                         </span>
                         <p className="font-semibold text-text-primary">{locationData.line1}, {locationData.city}</p>
-                        <p className="text-text-muted">{startDate} • {shiftType}</p>
+                        <p className="text-text-muted">Dates: <span className="font-bold text-text-primary">{startDate}</span> to <span className="font-bold text-text-primary">{endDate}</span> ({daysCount} Days)</p>
+                        <p className="text-brand-teal font-bold">Shift: {shiftType} ({timeSlot})</p>
                       </div>
+                    </div>
+
+                    {/* Specific Requirements & Equipment Summary */}
+                    <div className="p-4 bg-slate-50 rounded-xl border border-border-default space-y-2 text-xs">
+                      <span className="font-bold text-text-primary block border-b border-border-light pb-1 uppercase tracking-wider text-[10px]">
+                        Selected Tasks & Equipment Needed
+                      </span>
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {selectedTasks.map((t) => (
+                          <span key={t} className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg font-medium text-slate-800">
+                            ✓ {t}
+                          </span>
+                        ))}
+                      </div>
+                      {selectedEquipment.length > 0 && (
+                        <p className="text-text-muted pt-1">
+                          Home Equipment: <span className="font-bold text-slate-900">{selectedEquipment.join(', ')}</span>
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Official Care Tax Invoice Breakdown Card */}
+                    <div className="p-5 bg-white rounded-2xl border border-teal-300 shadow-md space-y-3 text-left">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <div>
+                          <span className="text-[9px] font-extrabold uppercase tracking-widest text-brand-teal block">OFFICIAL CARE TAX INVOICE PREVIEW</span>
+                          <h4 className="font-heading font-black text-slate-900 text-sm">Estimated Care Invoice Breakdown</h4>
+                        </div>
+                        <span className="px-2.5 py-0.5 bg-brand-teal-50 text-brand-teal-800 rounded-full text-[10px] font-black border border-brand-teal-200">
+                          PROVISIONAL INVOICE
+                        </span>
+                      </div>
+
+                      <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+                        <div className="flex justify-between text-slate-700">
+                          <span>Base Care Service ({daysCount} Days × ₹{selectedService.pricing.basePrice}/day)</span>
+                          <span className="font-bold text-slate-900">₹{subtotalBeforeNight}</span>
+                        </div>
+                        {isNightShift && (
+                          <div className="flex justify-between text-amber-800 font-bold">
+                            <span>Night Shift Adjustment (+20%)</span>
+                            <span>₹{nightSurcharge}</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between text-slate-600">
+                          <span>GST (18% Statutory Tax)</span>
+                          <span className="font-bold text-slate-900">₹{gst}</span>
+                        </div>
+                        <div className="flex justify-between text-sm font-black text-slate-900 pt-2 border-t border-slate-200">
+                          <span>Estimated Total Amount</span>
+                          <span className="text-brand-teal text-base">₹{grandTotal}</span>
+                        </div>
+                      </div>
+
+                      <p className="text-[10px] text-slate-500 italic">
+                        * Pulse n Care operates on an offline manual payment ledger model. Formal receipt is issued after Operations desk assignment and payment registration.
+                      </p>
                     </div>
                   </div>
                 ) : (
@@ -1019,12 +1082,12 @@ export const BookingWizardPage: React.FC = () => {
 
                     <div className="space-y-1">
                       <h3 className="text-xl font-extrabold text-teal-950">
-                        {assignmentState === 'assigned' ? 'Staff Successfully Assigned!' : 'Your Request is with Operations'}
+                        {assignmentState === 'assigned' ? 'Staff Successfully Assigned!' : 'Your Care Request is with Operations'}
                       </h3>
                       <p className="text-xs text-teal-800">
                         {assignmentState === 'assigned'
-                          ? 'Your care team is confirmed for dispatch.'
-                          : 'Matching rule engine is selecting available internal staff...'}
+                          ? 'Your qualified care team is confirmed for dispatch.'
+                          : 'Pulse n Care matching engine is selecting available internal staff...'}
                       </p>
                     </div>
 
@@ -1037,33 +1100,33 @@ export const BookingWizardPage: React.FC = () => {
                       </span>
                     </div>
 
-                    {/* Assigned Staff Reveal Card */}
+                    {/* Assigned Staff Reveal Card & Issued Invoice */}
                     {assignedStaff && (
-                      <div className="p-4 bg-white rounded-2xl border border-teal-300 shadow-subtle flex items-center justify-between text-left animate-in zoom-in duration-300">
-                        <div className="flex items-center gap-3">
-                          <img src={assignedStaff.photo} alt="" className="w-12 h-12 rounded-xl object-cover border border-teal-200" />
-                          <div>
-                            <span className="font-extrabold text-text-primary text-sm flex items-center gap-1">
-                              {assignedStaff.displayName} <ShieldCheck className="w-4 h-4 text-brand-teal" />
-                            </span>
-                            <span className="text-xs text-text-muted block">{assignedStaff.qualification}</span>
-                            <span className="text-[10px] font-mono font-bold text-brand-teal">Staff ID: {assignedStaff.employeeId}</span>
+                      <div className="space-y-4">
+                        <div className="p-4 bg-white rounded-2xl border border-teal-300 shadow-subtle flex items-center justify-between text-left animate-in zoom-in duration-300">
+                          <div className="flex items-center gap-3">
+                            <img src={assignedStaff.photo} alt="" className="w-12 h-12 rounded-xl object-cover border border-teal-200" />
+                            <div>
+                              <span className="font-extrabold text-text-primary text-sm flex items-center gap-1">
+                                {assignedStaff.displayName} <ShieldCheck className="w-4 h-4 text-brand-teal" />
+                              </span>
+                              <span className="text-xs text-text-muted block">{assignedStaff.qualification}</span>
+                              <span className="text-[10px] font-mono font-bold text-brand-teal">Staff ID: {assignedStaff.employeeId}</span>
+                            </div>
                           </div>
+                          <span className="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                            CONFIRMED
+                          </span>
                         </div>
-                        <span className="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                          CONFIRMED
-                        </span>
-                      </div>
-                    )}
 
-                    {assignedStaff && (
-                      <Button
-                        onClick={handleFinalRedirect}
-                        variant="primary"
-                        className="bg-brand-teal hover:bg-brand-teal-hover text-white font-bold px-8 py-3 rounded-xl cursor-pointer"
-                      >
-                        View Active Care Booking Detail
-                      </Button>
+                        <Button
+                          onClick={handleFinalRedirect}
+                          variant="primary"
+                          className="bg-brand-teal hover:bg-brand-teal-hover text-white font-bold px-8 py-3 rounded-xl cursor-pointer"
+                        >
+                          View Active Care Booking Detail & Invoice
+                        </Button>
+                      </div>
                     )}
                   </div>
                 )}
@@ -1083,7 +1146,7 @@ export const BookingWizardPage: React.FC = () => {
                   Back
                 </Button>
 
-                {step < 10 ? (
+                {step < 5 ? (
                   <Button
                     variant="primary"
                     onClick={() => setStep(step + 1)}
@@ -1099,7 +1162,7 @@ export const BookingWizardPage: React.FC = () => {
                     leftIcon={<CheckCircle2 className="w-4 h-4" />}
                     className="bg-brand-teal hover:bg-brand-teal-hover text-white font-bold px-8 py-3 cursor-pointer shadow-subtle text-sm"
                   >
-                    Submit Care Request
+                    Request Care & Issue Invoice
                   </Button>
                 )}
               </div>
@@ -1107,73 +1170,83 @@ export const BookingWizardPage: React.FC = () => {
           </Card>
         </div>
 
-        {/* Live Persistent Desktop Booking Summary Sidebar */}
-        <div className="lg:col-span-4">
-          <div className="bg-white p-5 rounded-2xl border border-border-default shadow-subtle space-y-4 sticky top-6 text-left">
-            <h3 className="font-extrabold text-text-primary text-sm border-b border-border-light pb-2 uppercase tracking-wider">
-              Live Care Request Summary
-            </h3>
+        {/* Live Persistent Desktop Booking Summary Sidebar - Rendered Exclusively on Step 5 */}
+        {step === 5 && (
+          <div className="lg:col-span-4">
+            <div className="bg-white p-5 rounded-2xl border border-border-default shadow-subtle space-y-4 sticky top-6 text-left">
+              <h3 className="font-extrabold text-text-primary text-sm border-b border-border-light pb-2 uppercase tracking-wider">
+                Live Care Request Summary
+              </h3>
 
-            <div className="space-y-3 text-xs">
-              <div className="flex justify-between">
-                <span className="text-text-muted font-medium">Service:</span>
-                <span className="font-bold text-text-primary text-right">{selectedService.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-muted font-medium">Patient:</span>
-                <span className="font-bold text-text-primary">{patient.firstName} {patient.lastName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-muted font-medium">Location:</span>
-                <span className="font-semibold text-text-primary text-right">{locationData.city} ({locationData.addressType})</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-muted font-medium">Start Date:</span>
-                <span className="font-bold text-text-primary">{startDate}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-muted font-medium">Shift:</span>
-                <span className="font-bold text-brand-teal">{shiftType}</span>
-              </div>
-
-              {/* Itemized Price Presentation */}
-              <div className="border-t border-border-default pt-3 space-y-1.5">
-                <div className="flex justify-between text-text-secondary">
-                  <span>Base Service ({daysCount} d)</span>
-                  <span>₹{subtotalBeforeNight}</span>
+              <div className="space-y-3 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-text-muted font-medium">Service:</span>
+                  <span className="font-bold text-text-primary text-right">{selectedService.name}</span>
                 </div>
-                {isNightShift && (
-                  <div className="flex justify-between text-amber-700 font-semibold">
-                    <span>Night Shift Adjustment</span>
-                    <span>₹{nightSurcharge}</span>
+                <div className="flex justify-between">
+                  <span className="text-text-muted font-medium">Patient:</span>
+                  <span className="font-bold text-text-primary">{patient.firstName} {patient.lastName}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-muted font-medium">Location:</span>
+                  <span className="font-semibold text-text-primary text-right">{locationData.city} ({locationData.addressType})</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-muted font-medium">Start Date:</span>
+                  <span className="font-bold text-text-primary">{startDate}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-muted font-medium">Duration:</span>
+                  <span className="font-bold text-text-primary">{daysCount} Day(s)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-muted font-medium">Shift:</span>
+                  <span className="font-bold text-brand-teal">{shiftType}</span>
+                </div>
+
+                {/* Itemized Price Presentation - Calculated & Displayed Exclusively on Step 5 */}
+                <div className="border-t border-border-default pt-3 space-y-1.5">
+                  <div className="flex justify-between text-text-secondary">
+                    <span>Base Service ({daysCount} d)</span>
+                    <span>₹{subtotalBeforeNight}</span>
                   </div>
-                )}
-                <div className="flex justify-between text-text-secondary">
-                  <span>GST (18%)</span>
-                  <span>₹{gst}</span>
-                </div>
-                <div className="flex justify-between font-extrabold text-text-primary text-sm pt-2 border-t border-border-light">
-                  <span>Estimated Total</span>
-                  <span className="text-brand-teal text-base">₹{grandTotal}</span>
+                  {isNightShift && (
+                    <div className="flex justify-between text-amber-700 font-semibold">
+                      <span>Night Shift Adjustment</span>
+                      <span>₹{nightSurcharge}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-text-secondary">
+                    <span>GST (18%)</span>
+                    <span>₹{gst}</span>
+                  </div>
+                  <div className="flex justify-between font-extrabold text-text-primary text-sm pt-2 border-t border-border-light">
+                    <span>Estimated Total</span>
+                    <span className="text-brand-teal text-base">₹{grandTotal}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-canvas-teal p-3 rounded-xl border border-teal-200 flex items-center gap-2 text-[11px] text-teal-800 font-semibold">
-              <ShieldCheck className="w-4 h-4 text-brand-teal shrink-0" />
-              <span>Assigned staff background checked & council verified.</span>
+              <div className="bg-canvas-teal p-3 rounded-xl border border-teal-200 flex items-center gap-2 text-[11px] text-teal-800 font-semibold">
+                <ShieldCheck className="w-4 h-4 text-brand-teal shrink-0" />
+                <span>Assigned staff background checked & council verified.</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Mobile Bottom Sticky Bar */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border-default p-4 flex items-center justify-between z-40 shadow-lg">
         <div>
-          <span className="text-[10px] text-text-muted block font-bold uppercase">Step {step} of 10</span>
-          <span className="text-sm font-extrabold text-brand-teal">₹{grandTotal}</span>
+          <span className="text-[10px] text-text-muted block font-bold uppercase">Step {step} of 5</span>
+          {step === 5 ? (
+            <span className="text-sm font-extrabold text-brand-teal">Total: ₹{grandTotal}</span>
+          ) : (
+            <span className="text-xs font-bold text-text-secondary">Step {step}: {stepsList[step - 1]?.title}</span>
+          )}
         </div>
-        {step < 10 ? (
+        {step < 5 ? (
           <Button
             variant="primary"
             onClick={() => setStep(step + 1)}

@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { Loader2 } from 'lucide-react';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline' | 'ops' | 'navy' | 'darkCTA';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -22,14 +22,17 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-bold transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none rounded-xl';
+    'inline-flex items-center justify-center font-bold transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none rounded-btn';
 
   const variantStyles = {
-    primary: 'bg-teal-600 text-white hover:bg-teal-700 active:scale-[0.97] shadow-xs',
-    secondary: 'bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200/80 hover:border-slate-400 active:scale-[0.97]',
-    ghost: 'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:scale-[0.97]',
-    danger: 'bg-red-600 text-white hover:bg-red-700 active:scale-[0.97]',
-    outline: 'bg-transparent border border-teal-600 text-teal-700 hover:bg-teal-50 active:scale-[0.97]'
+    primary: 'bg-brand-teal text-white hover:bg-brand-teal-700 active:scale-[0.98] shadow-subtle hover:shadow-card',
+    secondary: 'bg-white text-text-primary border border-border-default hover:border-brand-teal-300 hover:bg-canvas-cool shadow-subtle active:scale-[0.98]',
+    ghost: 'bg-transparent text-brand-teal-700 hover:bg-brand-teal-50 hover:text-brand-teal-800 active:scale-[0.98]',
+    danger: 'bg-rose-600 text-white hover:bg-rose-700 active:scale-[0.98] shadow-subtle',
+    outline: 'bg-transparent border border-brand-teal text-brand-teal-700 hover:bg-brand-teal-50 active:scale-[0.98]',
+    ops: 'bg-care-blue-600 text-white hover:bg-care-blue-700 active:scale-[0.98] shadow-subtle hover:shadow-card',
+    navy: 'bg-brand-navy text-white hover:bg-brand-navy-light active:scale-[0.98] shadow-subtle',
+    darkCTA: 'bg-white text-brand-navy hover:bg-brand-teal-50 font-extrabold active:scale-[0.98] shadow-subtle',
   };
 
   const sizeStyles = {

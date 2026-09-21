@@ -65,7 +65,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
               src={service.cardMedia}
               alt={service.name}
               onError={() => setImageError(true)}
-              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+              className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
             />
           ) : (
             // Designed Healthcare SVG Fallback (Never broken icon)

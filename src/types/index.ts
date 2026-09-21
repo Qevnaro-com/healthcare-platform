@@ -258,6 +258,17 @@ export interface ServiceCareTaskOption {
   category: string;
 }
 
+export interface ConfigurableQuestion {
+  id: string;
+  label: string;
+  type: 'single_choice' | 'multi_choice' | 'yes_no' | 'text' | 'textarea' | 'number' | 'date';
+  required: boolean;
+  options?: string[];
+  dependsOn?: { fieldId: string; value: string };
+  active: boolean;
+  helpText?: string;
+}
+
 export interface Service {
   id: string;
   slug?: string;
@@ -284,27 +295,201 @@ export interface Service {
   faqList?: { q: string; a: string }[];
   featured?: boolean;
   isActive: boolean;
+  active?: boolean; // Synced with isActive for Admin toggle
+  allowedShifts?: string[];
+  allowedFrequencies?: string[];
+  serviceQuestions?: ConfigurableQuestion[];
+  dutyChecklist?: string[];
 }
 
 // ==========================================
-// 6. BOOKING & VISIT STATE MACHINE (14 STATES)
+// 6. CANONICAL V2.1 OPERATIONAL DOMAIN MODELS
 // ==========================================
 
-export type BookingStatus =
+export type RequestStatus =
   | 'DRAFT'
   | 'REQUESTED'
-  | 'MATCHING'
+  | 'REQUEST_SUBMITTED'
+  | 'SUBMITTED'
+  | 'UNDER_REVIEW'
+  | 'UNDER_OPERATIONS_REVIEW'
+  | 'CLARIFICATION_REQUIRED'
+  | 'STAFF_ASSIGNMENT_PENDING'
+  | 'STAFF_ASSIGNED'
   | 'ASSIGNED'
-  | 'ACCEPTED'
-  | 'ON_THE_WAY'
-  | 'CHECKED_IN'
+  | 'CLIENT_CONFIRMATION_PENDING'
+  | 'CLIENT_CONFIRMATION_REQUIRED'
+  | 'CONFIRMED'
+  | 'UPCOMING'
+  | 'STAFF_EN_ROUTE'
+  | 'STAFF_ARRIVED'
+  | 'CARE_IN_PROGRESS'
   | 'IN_PROGRESS'
+  | 'CARE_COMPLETED'
   | 'COMPLETED'
+  | 'TIMESHEET_PENDING'
+  | 'CARE_RECORD_PENDING'
+  | 'INVOICE_GENERATED'
   | 'PAYMENT_PENDING'
+  | 'PAID'
   | 'CLOSED'
-  | 'REJECTED'
   | 'CANCELLED'
-  | 'DISPUTED';
+  | 'REJECTED';
+
+export type DutyStatus =
+  | 'ASSIGNED'
+  | 'ACKNOWLEDGED'
+  | 'EN_ROUTE'
+  | 'ARRIVED'
+  | 'IN_CARE'
+  | 'COMPLETED'
+  | 'CANCELLED';
+
+export interface PriceSnapshot {
+  snapshotId: string;
+  serviceId: string;
+  basePrice: number; // INR (₹)
+  priceUnit: 'per_visit' | 'per_day' | 'per_shift' | 'per_hour' | 'per_session';
+  durationUnits: number;
+  shiftMultiplier: number;
+  subtotal: number;
+  taxRate: number; // e.g. 0.18 for 18% GST
+  taxAmount: number;
+  totalAmount: number;
+  snapshotTimestamp: string;
+}
+
+export interface CareRequest {
+  id: string; // Stable ID, e.g. "req-2026-8819"
+  requestRef: string; // Human readable, e.g. "PNC-REQ-8819"
+  clientId: string;
+  clientName: string;
+  clientPhone: string;
+  patientId: string;
+  patientName: string;
+  patientAge?: number;
+  relationship?: string;
+  patientProfile?: PatientProfile;
+  serviceId: string;
+  serviceName: string;
+  serviceCategory: ServiceCategory;
+  address: Address;
+  startDate: string; // YYYY-MM-DD
+  endDate?: string; // YYYY-MM-DD
+  shiftType: '12hr_day' | '12hr_night' | '24hr_livein' | 'single_visit' | string;
+  frequency: 'single' | 'date_range' | 'recurring' | string;
+  careTasks: string[];
+  patientCareContext?: string;
+  staffPreferences?: {
+    gender?: 'no_preference' | 'female' | 'male';
+    language?: string;
+    role?: string;
+    minExperienceYears?: number;
+  };
+  status: RequestStatus;
+  statusHistory: BookingStatusHistory[];
+  priceSnapshot: PriceSnapshot;
+  assignedStaffId?: string;
+  assignedStaffName?: string;
+  specialInstructions?: string;
+  cancellationReason?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CareAssignment {
+  assignmentId: string;
+  careRequestId: string;
+  staffId: string;
+  staffName: string;
+  staffRole: string;
+  staffPhone?: string;
+  assignedBy: string; // Admin User ID
+  assignedAt: string;
+  status: 'active' | 'reassigned' | 'cancelled';
+  notes?: string;
+}
+
+export interface CareDuty {
+  dutyId: string;
+  careRequestId: string;
+  assignmentId: string;
+  staffId: string;
+  staffName: string;
+  patientName: string;
+  locationAddress: Address;
+  scheduledStart: string; // ISO 8601
+  scheduledEnd: string; // ISO 8601
+  shiftType: '12hr_day' | '12hr_night' | '24hr_livein' | 'single_visit' | string;
+  status: DutyStatus;
+  dutyEvents?: Array<{ eventId: string; eventType: string; timestamp: string; actorId: string; note?: string }>;
+  completionNotes?: string;
+  vitalsObserved?: {
+    bloodPressure?: string;
+    pulseRate?: number;
+    temperature?: number;
+    spo2?: number;
+    sugarLevel?: number;
+  };
+}
+
+export interface CareTimesheet {
+  timesheetId: string;
+  dutyId: string;
+  careRequestId: string;
+  staffId: string;
+  scheduledHours: number;
+  actualStart?: string;
+  actualEnd?: string;
+  actualHoursWorked: number;
+  overtimeHours: number;
+  status: 'submitted' | 'approved' | 'disputed';
+  approvedBy?: string;
+  approvedAt?: string;
+}
+
+export interface CareInvoice {
+  id: string; // Internal UUID
+  invoiceNumber: string; // Formatted ref e.g. "PNC-INV-2026-0041"
+  careRequestId: string;
+  clientId: string;
+  clientName: string;
+  patientName: string;
+  billingAddress: Address;
+  issueDate: string; // YYYY-MM-DD
+  dueDate: string; // YYYY-MM-DD
+  lineItems: Array<{
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    amount: number;
+  }>;
+  subtotal: number;
+  taxAmount: number;
+  totalAmount: number;
+  status: 'DRAFT' | 'ISSUED' | 'VOID';
+  createdAt: string;
+}
+
+export interface PaymentRecord {
+  id: string;
+  invoiceId: string;
+  careRequestId: string;
+  clientId: string;
+  amount: number;
+  paymentMethod: 'cash' | 'bank_transfer' | 'upi_manual' | 'cheque';
+  status: 'UNPAID' | 'PAID' | 'PARTIALLY_PAID' | 'REFUNDED';
+  paymentReference?: string;
+  paidAt?: string;
+  recordedBy?: string;
+  createdAt: string;
+}
+
+// ==========================================
+// 6B. LEGACY BOOKING ALIASES (COMPATIBILITY)
+// ==========================================
+
+export type BookingStatus = RequestStatus | 'MATCHING' | 'ACCEPTED' | 'ON_THE_WAY' | 'CHECKED_IN' | 'PAYMENT_PENDING' | 'CLOSED' | 'DISPUTED';
 
 export interface BookingStatusHistory {
   status: BookingStatus;

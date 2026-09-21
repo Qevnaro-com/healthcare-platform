@@ -20,7 +20,7 @@ export interface ServiceAreaHub {
 export const DELHI_NCR_SERVICE_HUBS: ServiceAreaHub[] = [
   {
     id: 'hub-delhi-south',
-    name: 'South Delhi Hub',
+    name: 'South Delhi Care Zone',
     city: 'Delhi',
     hubAddress: 'Defence Colony, Ring Road, New Delhi',
     pincodePrefixes: ['110001', '110003', '110014', '110016', '110017', '110019', '110020', '110024', '110048', '110065', '110070'],
@@ -32,7 +32,7 @@ export const DELHI_NCR_SERVICE_HUBS: ServiceAreaHub[] = [
   },
   {
     id: 'hub-delhi-west',
-    name: 'West & North Delhi Hub',
+    name: 'West & North Delhi Care Zone',
     city: 'Delhi',
     hubAddress: 'Rajouri Garden / Rohini Sector 7, New Delhi',
     pincodePrefixes: ['110015', '110027', '110058', '110063', '110085', '110088'],
@@ -44,7 +44,7 @@ export const DELHI_NCR_SERVICE_HUBS: ServiceAreaHub[] = [
   },
   {
     id: 'hub-gurugram-cyber',
-    name: 'Gurugram Central Hub',
+    name: 'Gurugram Central Care Zone',
     city: 'Gurugram',
     hubAddress: 'DLF Cyber City, Phase 2, Gurugram',
     pincodePrefixes: ['122001', '122002', '122003', '122008', '122011', '122018', '122051'],
@@ -56,7 +56,7 @@ export const DELHI_NCR_SERVICE_HUBS: ServiceAreaHub[] = [
   },
   {
     id: 'hub-noida-sec62',
-    name: 'Noida Express Hub',
+    name: 'Noida Express Care Zone',
     city: 'Noida',
     hubAddress: 'Sector 62 / Sector 18, Noida',
     pincodePrefixes: ['201301', '201303', '201304', '201307', '201309', '201313'],
@@ -68,7 +68,7 @@ export const DELHI_NCR_SERVICE_HUBS: ServiceAreaHub[] = [
   },
   {
     id: 'hub-faridabad-sec15',
-    name: 'Faridabad Central Hub',
+    name: 'Faridabad Central Care Zone',
     city: 'Faridabad',
     hubAddress: 'Sector 15 / Mathura Road, Faridabad',
     pincodePrefixes: ['121001', '121002', '121003', '121006', '121007'],

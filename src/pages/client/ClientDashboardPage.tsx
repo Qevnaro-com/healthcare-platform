@@ -191,9 +191,9 @@ export const ClientDashboardPage: React.FC = () => {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <h4 className="font-extrabold text-text-primary text-xs group-hover:text-brand-teal transition-colors">
-                    Care Locations & Hubs
+                    Saved Addresses & Locations
                   </h4>
-                  <p className="text-[11px] text-text-muted">Delhi NCR addresses & dispatch hubs.</p>
+                  <p className="text-[11px] text-text-muted">Manage your care delivery addresses.</p>
                 </Card>
               </Link>
 
@@ -246,12 +246,12 @@ export const ClientDashboardPage: React.FC = () => {
           </Card>
         </div>
 
-        {/* Right 4 Columns: Delhi NCR Hub Status & Quick Support */}
+        {/* Right 4 Columns: Regional Operations & Quick Support */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Active NCR Dispatch Hub Status Banner */}
+          {/* Active Regional Operations Center Banner */}
           <Card className="p-5 space-y-3 border-border-default shadow-subtle bg-white">
             <h4 className="font-extrabold text-text-primary text-xs uppercase tracking-wider flex items-center gap-1.5 border-b border-border-light pb-2">
-              <Building2 className="w-4 h-4 text-brand-teal" /> Active Dispatch Hub
+              <Building2 className="w-4 h-4 text-brand-teal" /> Regional Operations Center
             </h4>
 
             <div className="p-3 bg-canvas-teal rounded-xl border border-teal-200 space-y-1.5 text-xs">

@@ -22,6 +22,7 @@ import type {
   PlatformSettings,
   ServiceArea
 } from '../types';
+import { VISUAL_ASSETS } from './visualAssets';
 
 // ==========================================
 // 1. SERVICES CATALOG (11 SERVICES)
@@ -37,8 +38,8 @@ export const MOCK_SERVICES: Service[] = [
     shortDescription: 'Dedicated wound care, vital monitoring, and IV administration following surgery.',
     fullDescription: 'Comprehensive post-surgical care provided by registered B.Sc Nurses. Includes sterile surgical dressing changes, medication administration, pain management monitoring, catheter care, and coordination with operating surgeon notes.',
     iconName: 'Activity',
-    cardMedia: '/assets/services/home-nursing/pulse-n-care-wound-care.webp',
-    heroMedia: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.webp',
+    cardMedia: VISUAL_ASSETS.servicePostOpCard.url,
+    heroMedia: VISUAL_ASSETS.servicePostOpHero.url,
     featured: true,
     pricing: {
       basePrice: 1200,
@@ -89,6 +90,56 @@ export const MOCK_SERVICES: Service[] = [
       'Provide clean workspace with bright lighting'
     ],
     isActive: true,
+    active: true,
+    allowedShifts: ['12hr_day', '12hr_night', '24hr_livein', 'single_visit'],
+    allowedFrequencies: ['single', 'date_range', 'recurring'],
+    dutyChecklist: [
+      'Sterile wound dressing & incision check',
+      'Vital signs (BP, Pulse, SpO2, Temp) charting',
+      'Prescribed medication / injection administration',
+      'Catheter / drain hygiene check',
+      'Post-op progress log entry'
+    ],
+    serviceQuestions: [
+      {
+        id: 'q_postop_reason',
+        label: 'Surgery or recovery reason',
+        type: 'text',
+        required: true,
+        active: true,
+        helpText: 'e.g. Total Knee Replacement, Abdominal Surgery, Cardiac Bypass'
+      },
+      {
+        id: 'q_postop_wound',
+        label: 'Is sterile wound dressing required?',
+        type: 'yes_no',
+        required: true,
+        active: true
+      },
+      {
+        id: 'q_postop_dressing_type',
+        label: 'Select dressing care type',
+        type: 'single_choice',
+        required: false,
+        options: ['Surgical Incision Dressing', 'Drainage Site Dressing', 'Staples / Suture Removal Prep'],
+        dependsOn: { fieldId: 'q_postop_wound', value: 'yes' },
+        active: true
+      },
+      {
+        id: 'q_postop_catheter',
+        label: 'Is urinary catheter or surgical drain care required?',
+        type: 'yes_no',
+        required: true,
+        active: true
+      },
+      {
+        id: 'q_postop_injection',
+        label: 'Is prescribed IV or IM injection administration required?',
+        type: 'yes_no',
+        required: true,
+        active: true
+      }
+    ]
   },
   {
     id: 'srv-nursing-elderly',
@@ -98,8 +149,8 @@ export const MOCK_SERVICES: Service[] = [
     shortDescription: 'Routine clinical checkup, medication management, and chronic care for seniors.',
     fullDescription: 'Tailored home nursing for elderly patients managing hypertension, diabetes, COPD, or dementia. Covers daily injections (e.g., insulin), sugar monitoring, bedridden patient hygiene support, and tube feeding.',
     iconName: 'HeartPulse',
-    cardMedia: '/assets/services/home-nursing/pulse-n-care-vitals.webp',
-    heroMedia: '/assets/services/home-nursing/pulse-n-care-vitals.webp',
+    cardMedia: VISUAL_ASSETS.serviceElderlyNursingCard.url,
+    heroMedia: VISUAL_ASSETS.serviceElderlyNursingHero.url,
     featured: false,
     pricing: {
       basePrice: 800,
@@ -145,8 +196,8 @@ export const MOCK_SERVICES: Service[] = [
     shortDescription: 'Continuous compassionate daily living support for elderly or recovering patients.',
     fullDescription: 'Experienced bedside caregiver for 12-hour shifts. Assists with personal hygiene, bathing, diaper changes, mobility/transfer assistance, feeding, medication reminders, and companionship.',
     iconName: 'UserCheck',
-    cardMedia: '/assets/services/home-nursing/pulse-n-care-bedside-support.webp',
-    heroMedia: '/assets/services/home-nursing/pulse-n-care-bedside-support.webp',
+    cardMedia: VISUAL_ASSETS.serviceAttendant12hCard.url,
+    heroMedia: VISUAL_ASSETS.serviceAttendant12hHero.url,
     featured: true,
     pricing: {
       basePrice: 1800,
@@ -192,8 +243,8 @@ export const MOCK_SERVICES: Service[] = [
     shortDescription: 'Full 24-hour round-the-clock personal care for bedridden or elderly family members.',
     fullDescription: 'Uninterrupted 24-hour live-in support for total assistance cases. Ensures patient safety overnight, frequent position shifts to prevent bedsores, hygiene management, and peace of mind for family.',
     iconName: 'Clock',
-    cardMedia: '/assets/services/home-nursing/pulse-n-care-handover.webp',
-    heroMedia: '/assets/services/home-nursing/pulse-n-care-handover.webp',
+    cardMedia: VISUAL_ASSETS.serviceAttendant24x7Card.url,
+    heroMedia: VISUAL_ASSETS.serviceAttendant24x7Hero.url,
     featured: false,
     pricing: {
       basePrice: 2800,
@@ -227,8 +278,8 @@ export const MOCK_SERVICES: Service[] = [
     shortDescription: 'Specialized physiotherapy for knee replacement, fractures, back pain, and arthritis.',
     fullDescription: 'Evidence-based physical therapy performed at home by certified BPT/MPT physiotherapists. Focuses on joint mobilization, gait training, muscle strengthening, and pain relief exercises.',
     iconName: 'Activity',
-    cardMedia: '/assets/services/home-nursing/pulse-n-care-wound-care.webp',
-    heroMedia: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.webp',
+    cardMedia: VISUAL_ASSETS.servicePhysioOrthoCard.url,
+    heroMedia: VISUAL_ASSETS.servicePhysioOrthoHero.url,
     featured: false,
     pricing: {
       basePrice: 950,
@@ -260,8 +311,8 @@ export const MOCK_SERVICES: Service[] = [
     shortDescription: 'Specialized therapy for stroke recovery, Parkinson’s disease, and spinal injuries.',
     fullDescription: 'Advanced neurological physiotherapy aimed at neuromuscular re-education, motor recovery post-stroke, coordination improvement, and fall prevention.',
     iconName: 'Zap',
-    cardMedia: '/assets/services/home-nursing/pulse-n-care-vitals.webp',
-    heroMedia: '/assets/services/home-nursing/pulse-n-care-vitals.webp',
+    cardMedia: VISUAL_ASSETS.servicePhysioNeuroCard.url,
+    heroMedia: VISUAL_ASSETS.servicePhysioNeuroHero.url,
     featured: false,
     pricing: {
       basePrice: 1250,
@@ -286,73 +337,39 @@ export const MOCK_SERVICES: Service[] = [
   },
 
   // Doctor Visit
+  // High-Dependency Nursing Care
   {
-    id: 'srv-doc-general',
-    slug: 'general-physician-home-visit',
-    category: 'doctor_visit',
-    name: 'General Physician Home Visit',
-    shortDescription: 'In-home clinical consultation, physical exam, and prescription writing by MBBS Doctor.',
-    fullDescription: 'Comprehensive home consultation for acute illnesses, chronic disease management, post-discharge review, or bedridden elders unable to visit clinics.',
-    iconName: 'Stethoscope',
-    cardMedia: '/assets/services/home-nursing/pulse-n-care-medication.webp',
-    heroMedia: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.webp',
-    featured: false,
-    pricing: {
-      basePrice: 1500,
-      priceUnit: 'per_visit',
-      minHours: 1,
-      platformCommissionPercent: 15,
-    },
-    estimatedDuration: '30 - 45 Mins',
-    requiredQualifications: ['MBBS', 'MCI / State Medical Council Registered'],
-    idealFor: ['Acute fever / infection assessment', 'Bedridden seniors', 'Post-discharge physician review'],
-    keyInclusions: [
-      'Full systemic physical examination',
-      'Medical history evaluation',
-      'Digital prescription issuance',
-      'Lab investigation orders',
-      'Referral guidance if needed'
-    ],
-    shiftOptions: [
-      { id: 'sh-doc-visit', label: 'In-Home Doctor Consultation', durationLabel: '30-45 Mins', hours: 1, priceMultiplier: 1.0 }
-    ],
-    serviceAreas: ['Delhi', 'Noida', 'Gurugram', 'Faridabad'],
-    isActive: true,
-  },
-
-  // Specialized Care
-  {
-    id: 'srv-specialized-icu',
-    slug: 'home-icu-critical-care-nurse',
-    category: 'specialized_care',
-    name: 'Home ICU Critical Care Nurse',
-    shortDescription: '24/7 or 12-hour high-dependency critical care nursing for ventilator/tracheostomy patients.',
-    fullDescription: 'Hospital-level intensive nursing care delivered at home. Experienced with mechanical ventilators, tracheostomy suctioning, arterial lines, multipara monitoring, and emergency response.',
+    id: 'srv-nursing-high-dependency',
+    slug: 'high-dependency-nursing-care',
+    category: 'home_nursing',
+    name: 'High-Dependency Nursing Care',
+    shortDescription: '12-hour or 24-hour skilled nursing care for patients requiring continuous monitoring and support.',
+    fullDescription: 'Dedicated bedside nursing care delivered at home by experienced B.Sc / GNM Registered Nurses. Covers vital sign monitoring, catheter hygiene, Ryle tube/PEG feeding support, and surgeon note adherence.',
     iconName: 'Activity',
-    cardMedia: '/assets/services/home-nursing/pulse-n-care-wound-care.webp',
-    heroMedia: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.webp',
+    cardMedia: VISUAL_ASSETS.clinicalVitals.url,
+    heroMedia: VISUAL_ASSETS.servicePhysioOrthoHero.url,
     featured: false,
     pricing: {
-      basePrice: 2500,
+      basePrice: 2200,
       priceUnit: 'per_day',
       minHours: 12,
       nightShiftSurchargePercent: 20,
       platformCommissionPercent: 15,
     },
     estimatedDuration: '12 Hours',
-    requiredQualifications: ['B.Sc Nursing', 'Critical Care / ICU Certification'],
-    idealFor: ['Ventilator patients', 'Tracheostomy suctioning', 'High-dependency ICU setup'],
+    requiredQualifications: ['B.Sc Nursing', 'GNM Nursing'],
+    idealFor: ['High-dependency recovery', 'Post-discharge monitoring', 'Continuous bedside nursing'],
     keyInclusions: [
-      'Ventilator & oxygen management',
-      'Tracheostomy care & suctioning',
-      'Multipara monitor observation',
-      'Critical drug administration'
+      'Continuous vital sign observation',
+      'Airway & catheter hygiene',
+      'Prescribed medication administration',
+      'Shift progress logging'
     ],
     shiftOptions: [
-      { id: 'sh-icu-12h', label: '12-Hour Critical Care Shift', durationLabel: '12 Hours', hours: 12, priceMultiplier: 1.0 },
-      { id: 'sh-icu-24h', label: '24-Hour ICU Care', durationLabel: '24 Hours', hours: 24, priceMultiplier: 1.9 }
+      { id: 'sh-icu-12h', label: '12-Hour Nursing Shift', durationLabel: '12 Hours', hours: 12, priceMultiplier: 1.0 },
+      { id: 'sh-icu-24h', label: '24-Hour Continuous Care', durationLabel: '24 Hours', hours: 24, priceMultiplier: 1.9 }
     ],
-    serviceAreas: ['Delhi', 'Gurugram'], // Note: Configured active in Delhi & Gurugram
+    serviceAreas: ['Delhi', 'Noida', 'Gurugram', 'Faridabad'],
     isActive: true,
   }
 ];
@@ -374,7 +391,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     experienceYears: 7,
     servicesOffered: ['srv-physio-ortho', 'srv-physio-neuro'],
     serviceRadius: 12,
-    location: { latitude: 12.9716, longitude: 77.5946, addressName: 'Defence Colony, New Delhi' },
+    location: { latitude: 28.5800, longitude: 77.2300, addressName: 'Defence Colony, New Delhi' },
     languages: ['English', 'Hindi', 'Kannada'],
     hourlyRate: 950,
     rating: 4.9,
@@ -384,14 +401,14 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     isVerified: true,
     kycStatus: 'approved',
     availabilityStatus: 'active',
-    profilePhoto: 'https://images.unsplash.com/photo-1594824813566-88855ce78905?w=300&q=80',
+    profilePhoto: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&q=80',
     badge: 'Top Rated Specialist',
     documents: [
       {
         id: 'doc-001-1',
         type: 'degree_certificate',
         documentNumber: 'BPT-2017-RGUHS-441',
-        fileUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=500',
+        fileUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=500&doc=cert1',
         fileName: 'BPT_Degree_Certificate.pdf',
         uploadedAt: '2025-01-10T09:30:00Z',
         verificationStatus: 'verified'
@@ -400,7 +417,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
         id: 'doc-001-2',
         type: 'nursing_license',
         documentNumber: 'DCPT-88912',
-        fileUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=500',
+        fileUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=500&doc=cert2',
         fileName: 'State_Council_Registration.pdf',
         uploadedAt: '2025-01-10T09:35:00Z',
         verificationStatus: 'verified'
@@ -420,15 +437,15 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     id: 'pro-002',
     userId: 'usr-pro-002',
     displayName: 'Karthik Rao, RN',
-    bio: 'Registered Critical Care Nurse with 5 years hospital ICU experience at Max Super Speciality Hospital.',
-    qualification: 'B.Sc Nursing, Critical Care Certified',
+    bio: 'Registered Nursing Specialist with 5 years clinical experience in high-dependency recovery and post-operative monitoring.',
+    qualification: 'B.Sc Nursing, High-Dependency Nursing Certified',
     qualificationDetails: 'KNC Registered Nurse #66412',
     registrationNumber: 'DNC-66412',
-    specializations: ['ICU & Ventilator Care', 'Tracheostomy', 'Post-Op Wound Care'],
+    specializations: ['High-Dependency Care', 'Catheter Hygiene', 'Post-Op Wound Care'],
     experienceYears: 5,
-    servicesOffered: ['srv-nursing-post-op', 'srv-specialized-icu'],
+    servicesOffered: ['srv-nursing-post-op', 'srv-nursing-high-dependency'],
     serviceRadius: 15,
-    location: { latitude: 12.9352, longitude: 77.6245, addressName: 'DLF Phase 5, Gurugram' },
+    location: { latitude: 28.4590, longitude: 77.0910, addressName: 'DLF Phase 5, Gurugram' },
     languages: ['English', 'Kannada', 'Tamil'],
     hourlyRate: 1200,
     rating: 4.8,
@@ -439,7 +456,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     kycStatus: 'approved',
     availabilityStatus: 'active',
     profilePhoto: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=300&q=80',
-    badge: 'ICU Verified',
+    badge: 'Council Verified',
     documents: [],
     availability: [],
     createdAt: '2025-01-12T10:00:00Z',
@@ -457,7 +474,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     experienceYears: 8,
     servicesOffered: ['srv-nursing-elderly', 'srv-caregiver-12hr'],
     serviceRadius: 10,
-    location: { latitude: 12.9250, longitude: 77.5897, addressName: 'Sector 62, Noida' },
+    location: { latitude: 28.6280, longitude: 77.3750, addressName: 'Sector 62, Noida' },
     languages: ['Kannada', 'Telugu', 'Hindi', 'English'],
     hourlyRate: 800,
     rating: 4.95,
@@ -477,16 +494,16 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
   {
     id: 'pro-004',
     userId: 'usr-pro-004',
-    displayName: 'Dr. Vikramaditya Hegde, MBBS',
-    bio: 'General Physician focused on home-based clinical evaluations, preventive health, and geriatric care.',
-    qualification: 'MBBS, MD (Internal Medicine)',
-    qualificationDetails: 'AIIMS New Delhi, KMC #89104',
-    registrationNumber: 'DMC-89104',
-    specializations: ['General Medicine', 'Geriatric Health', 'Post-Hospitalization Checkup'],
+    displayName: 'Vikramaditya Hegde, B.Sc Nursing',
+    bio: 'Senior Nurse Supervisor focused on home-based clinical nursing, senior care checkups, and post-discharge recovery.',
+    qualification: 'B.Sc Nursing, Clinical Supervision Dip.',
+    qualificationDetails: 'AIIMS Nursing Alumnus, DNC #89104',
+    registrationNumber: 'DNC-89104',
+    specializations: ['Geriatric Nursing', 'Post-Op Recovery', 'Vitals Supervision'],
     experienceYears: 11,
-    servicesOffered: ['srv-doc-general', 'srv-doc-geriatric'],
+    servicesOffered: ['srv-nursing-elderly', 'srv-nursing-post-op'],
     serviceRadius: 20,
-    location: { latitude: 13.0358, longitude: 77.5970, addressName: 'Green Fields, Faridabad' },
+    location: { latitude: 28.4089, longitude: 77.3178, addressName: 'Sector 15, Faridabad' },
     languages: ['English', 'Kannada', 'Hindi'],
     hourlyRate: 1500,
     rating: 4.9,
@@ -497,7 +514,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     kycStatus: 'approved',
     availabilityStatus: 'active',
     profilePhoto: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&q=80',
-    badge: 'Senior Doctor',
+    badge: 'Senior Nurse',
     documents: [],
     availability: [],
     createdAt: '2024-11-01T10:00:00Z',
@@ -515,7 +532,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     experienceYears: 6,
     servicesOffered: ['srv-specialized-chemo', 'srv-nursing-post-op'],
     serviceRadius: 15,
-    location: { latitude: 12.9784, longitude: 77.6408, addressName: 'Vasant Kunj, New Delhi' },
+    location: { latitude: 28.5200, longitude: 77.1500, addressName: 'Vasant Kunj, New Delhi' },
     languages: ['English', 'Malayalam', 'Kannada'],
     hourlyRate: 1400,
     rating: 4.85,
@@ -544,7 +561,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     experienceYears: 4,
     servicesOffered: ['srv-physio-ortho'],
     serviceRadius: 8,
-    location: { latitude: 12.9141, longitude: 77.6411, addressName: 'Golf Course Road, Gurugram' },
+    location: { latitude: 28.4700, longitude: 77.1000, addressName: 'Golf Course Road, Gurugram' },
     languages: ['English', 'Kannada', 'Hindi'],
     hourlyRate: 900,
     rating: 4.7,
@@ -572,7 +589,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     experienceYears: 9,
     servicesOffered: ['srv-specialized-maternal'],
     serviceRadius: 10,
-    location: { latitude: 12.9698, longitude: 77.7499, addressName: 'Noida Expressway, Noida' },
+    location: { latitude: 28.5350, longitude: 77.3910, addressName: 'Noida Expressway, Noida' },
     languages: ['English', 'Tamil', 'Kannada'],
     hourlyRate: 1300,
     rating: 4.9,
@@ -582,7 +599,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     isVerified: true,
     kycStatus: 'approved',
     availabilityStatus: 'active',
-    profilePhoto: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=300&q=80',
+    profilePhoto: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=300&q=80',
     badge: 'Maternal Expert',
     documents: [],
     availability: [],
@@ -611,13 +628,13 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     isVerified: false,
     kycStatus: 'under_review',
     availabilityStatus: 'pending_verification',
-    profilePhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80',
+    profilePhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80&staff=rajesh_g',
     documents: [
       {
         id: 'doc-008-1',
         type: 'nursing_license',
         documentNumber: 'DNC-10293',
-        fileUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=500',
+        fileUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=500&doc=cert3',
         fileName: 'Rajesh_KNC_License.pdf',
         uploadedAt: '2026-03-14T10:00:00Z',
         verificationStatus: 'pending'
@@ -649,7 +666,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     isVerified: true,
     kycStatus: 'approved',
     availabilityStatus: 'active',
-    profilePhoto: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80',
+    profilePhoto: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80&staff=suresh_p',
     documents: [],
     availability: [],
     createdAt: '2025-02-10T10:00:00Z',
@@ -677,7 +694,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     isVerified: true,
     kycStatus: 'approved',
     availabilityStatus: 'active',
-    profilePhoto: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&q=80',
+    profilePhoto: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&q=80&staff=deepa',
     badge: 'Neuro Specialist',
     documents: [],
     availability: [],
@@ -708,7 +725,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     isVerified: true,
     kycStatus: 'approved',
     availabilityStatus: 'active',
-    profilePhoto: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&q=80',
+    profilePhoto: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&q=80&staff=ramesh',
     documents: [],
     availability: [],
     createdAt: '2024-10-01T10:00:00Z',
@@ -736,7 +753,7 @@ export const MOCK_PROFESSIONALS: ProfessionalProfile[] = [
     isVerified: true,
     kycStatus: 'approved',
     availabilityStatus: 'active',
-    profilePhoto: 'https://images.unsplash.com/photo-1594824813566-88855ce78905?w=300&q=80',
+    profilePhoto: 'https://images.unsplash.com/photo-1594824813566-88855ce78905?w=300&q=80&staff=kavitha',
     documents: [],
     availability: [],
     createdAt: '2025-02-20T10:00:00Z',
@@ -1120,7 +1137,7 @@ export const MOCK_BOOKINGS: Booking[] = [
     serviceCategory: 'physiotherapy',
     professionalId: 'pro-001',
     professionalName: 'Dr. Anjali Sharma, BPT',
-    professionalPhoto: 'https://images.unsplash.com/photo-1594824813566-88855ce78905?w=300&q=80',
+    professionalPhoto: 'https://images.unsplash.com/photo-1594824813566-88855ce78905?w=300&q=80&bkg=b1',
     professionalPhone: '+91-XXXXX-X0001',
     address: {
       id: 'addr-001-1',
@@ -1184,7 +1201,7 @@ export const MOCK_BOOKINGS: Booking[] = [
     serviceCategory: 'home_nursing',
     professionalId: 'pro-003',
     professionalName: 'Sunita Reddy, GNM',
-    professionalPhoto: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&q=80',
+    professionalPhoto: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&q=80&bkg=b2',
     address: {
       id: 'addr-002-1',
       label: 'Home',
@@ -1237,9 +1254,9 @@ export const MOCK_BOOKINGS: Booking[] = [
       gender: 'female',
       createdAt: '2026-01-15T10:00:00Z'
     },
-    serviceId: 'srv-doc-general',
-    serviceName: 'General Physician Home Visit',
-    serviceCategory: 'doctor_visit',
+    serviceId: 'srv-nursing-elderly',
+    serviceName: 'Senior Skilled Nursing Visit',
+    serviceCategory: 'home_nursing',
     address: {
       id: 'addr-001-1',
       label: 'Home',

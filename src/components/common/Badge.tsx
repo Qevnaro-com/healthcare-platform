@@ -67,24 +67,43 @@ export const BookingStatusBadge: React.FC<{ status: BookingStatus; className?: s
   status,
   className
 }) => {
-  const statusConfig: Record<BookingStatus, { label: string; variant: BadgeVariant }> = {
+  const statusConfig: Partial<Record<BookingStatus, { label: string; variant: BadgeVariant }>> = {
     DRAFT: { label: 'Draft Request', variant: 'neutral' },
     REQUESTED: { label: 'Request Received', variant: 'warning' },
+    REQUEST_SUBMITTED: { label: 'Request Received', variant: 'warning' },
+    SUBMITTED: { label: 'Request Received', variant: 'warning' },
+    UNDER_REVIEW: { label: 'Operations Reviewing', variant: 'info' },
+    UNDER_OPERATIONS_REVIEW: { label: 'Operations Reviewing', variant: 'info' },
+    CLARIFICATION_REQUIRED: { label: 'Clarification Needed', variant: 'warning' },
+    STAFF_ASSIGNMENT_PENDING: { label: 'Finding Staff', variant: 'info' },
+    STAFF_ASSIGNED: { label: 'Staff Assigned', variant: 'info' },
+    ASSIGNED: { label: 'Staff Assigned', variant: 'info' },
+    CLIENT_CONFIRMATION_PENDING: { label: 'Confirmation Pending', variant: 'warning' },
+    CLIENT_CONFIRMATION_REQUIRED: { label: 'Confirmation Pending', variant: 'warning' },
+    CONFIRMED: { label: 'Care Scheduled', variant: 'teal' },
+    UPCOMING: { label: 'Upcoming Duty', variant: 'teal' },
     MATCHING: { label: 'Operations Reviewing', variant: 'info' },
-    ASSIGNED: { label: 'Care Team Assigned', variant: 'info' },
     ACCEPTED: { label: 'Shift Confirmed', variant: 'success' },
+    STAFF_EN_ROUTE: { label: 'Staff En Route', variant: 'info' },
     ON_THE_WAY: { label: 'En Route', variant: 'info' },
+    STAFF_ARRIVED: { label: 'Staff Arrived', variant: 'teal' },
     CHECKED_IN: { label: 'Arrival Verified', variant: 'teal' },
+    CARE_IN_PROGRESS: { label: 'Care Active', variant: 'teal' },
     IN_PROGRESS: { label: 'Care Active', variant: 'teal' },
+    CARE_COMPLETED: { label: 'Care Completed', variant: 'success' },
     COMPLETED: { label: 'Care Completed', variant: 'success' },
+    TIMESHEET_PENDING: { label: 'Timesheet Pending', variant: 'info' },
+    CARE_RECORD_PENDING: { label: 'Care Record Pending', variant: 'info' },
+    INVOICE_GENERATED: { label: 'Invoice Issued', variant: 'warning' },
     PAYMENT_PENDING: { label: 'Payment Pending', variant: 'warning' },
+    PAID: { label: 'Paid', variant: 'success' },
     CLOSED: { label: 'Closed', variant: 'neutral' },
     REJECTED: { label: 'Unable to Fulfill', variant: 'danger' },
     CANCELLED: { label: 'Request Cancelled', variant: 'danger' },
     DISPUTED: { label: 'Support Review', variant: 'danger' }
   };
 
-  const config = statusConfig[status] || { label: status, variant: 'neutral' };
+  const config = statusConfig[status] || { label: String(status).replace(/_/g, ' '), variant: 'neutral' };
   return (
     <Badge variant={config.variant} className={className}>
       {config.label}

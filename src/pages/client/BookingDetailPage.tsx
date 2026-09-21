@@ -284,9 +284,10 @@ export const BookingDetailPage: React.FC = () => {
               variant="outline"
               size="sm"
               leftIcon={<Download className="w-4 h-4 text-brand-teal" />}
+              onClick={() => window.print()}
               className="w-full font-bold cursor-pointer text-xs"
             >
-              Download PDF Tax Invoice
+              Print / Download Tax Invoice & Receipt
             </Button>
           </Card>
         </div>

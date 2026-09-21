@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useBookings } from '../../context/BookingContext';
 import { ProfessionalCard } from '../../components/domain/ProfessionalCard';
 import { Input } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import type { ProfessionalProfile } from '../../types';
-import { MapPin, Search, ShieldCheck, Map as MapIcon, List } from 'lucide-react';
+import { MapPin, Search, Map as MapIcon, List } from 'lucide-react';
 import { clsx } from 'clsx';
+import { RealDelhiNCRMap } from '../../components/domain/RealDelhiNCRMap';
 
 export const SearchPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { professionals } = useBookings();
 
   const [locationQuery, setLocationQuery] = useState('Defence Colony, New Delhi');
@@ -18,19 +20,32 @@ export const SearchPage: React.FC = () => {
   const [selectedProId, setSelectedProId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'split' | 'list' | 'map'>('split');
 
+  useEffect(() => {
+    const loc = searchParams.get('location');
+    if (loc) {
+      setLocationQuery(decodeURIComponent(loc));
+    }
+    const cat = searchParams.get('serviceId');
+    if (cat) {
+      setSelectedCategory('all');
+    }
+  }, [searchParams]);
+
   const filteredPros = professionals.filter((pro) => {
     if (!pro.isVerified) return false;
     return true;
   });
 
+  const selectedPro = filteredPros.find((p) => p.id === selectedProId) || filteredPros[0];
+
   const handleBookPro = (pro: ProfessionalProfile) => {
-    navigate(`/client/booking/wizard?proId=${pro.id}`);
+    navigate(`/client/booking/wizard?proId=${pro.id}&serviceId=${pro.servicesOffered[0] || 'srv-nursing-post-op'}&location=${encodeURIComponent(locationQuery)}`);
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Search Header */}
-      <div className="bg-white p-4 sm:p-6 rounded-card border border-border-default shadow-subtle space-y-4">
+      <div className="bg-white p-4 sm:p-6 rounded-card border border-border-default shadow-subtle space-y-4 text-left">
         <div className="flex flex-col md:flex-row items-center gap-4">
           <div className="flex-1 w-full">
             <Input
@@ -49,18 +64,16 @@ export const SearchPage: React.FC = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full h-11 px-3 text-sm bg-white text-text-primary border border-border-default rounded-btn focus:outline-none focus:border-brand-teal"
             >
-              <option value="all">All Healthcare Categories</option>
-              <option value="home_nursing">Home Nursing</option>
+              <option value="all">All Home Care Categories</option>
+              <option value="home_nursing">Home Nursing Care</option>
               <option value="caregiver_attendant">Caregiver / Attendant</option>
-              <option value="physiotherapy">Physiotherapy</option>
-              <option value="doctor_visit">Doctor Home Visit</option>
-              <option value="specialized_care">Specialized Care</option>
+              <option value="specialized_care">High-Dependency Nursing</option>
             </select>
           </div>
 
           <div className="w-full md:w-auto flex items-end pt-6">
             <Button variant="primary" className="w-full md:w-auto" leftIcon={<Search className="w-4 h-4" />}>
-              Search
+              Search Care
             </Button>
           </div>
         </div>
@@ -68,7 +81,7 @@ export const SearchPage: React.FC = () => {
         {/* View Toggle Bar */}
         <div className="flex items-center justify-between pt-3 border-t border-border-light text-xs">
           <span className="font-semibold text-text-secondary">
-            Found <strong className="text-brand-teal">{filteredPros.length} Verified Professionals</strong> within 15km
+            Found <strong className="text-brand-teal">{filteredPros.length} Verified Care Professionals</strong> near {locationQuery}
           </span>
 
           <div className="flex items-center gap-1 bg-canvas-secondary p-1 rounded-lg border border-border-default">
@@ -97,84 +110,39 @@ export const SearchPage: React.FC = () => {
       {/* Main Grid / Map Split Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Results List */}
-        <div className={clsx(viewMode === 'map' ? 'hidden' : viewMode === 'split' ? 'lg:col-span-7' : 'lg:col-span-12', 'space-y-4')}>
+        <div className={clsx(viewMode === 'map' ? 'hidden' : viewMode === 'split' ? 'lg:col-span-7' : 'lg:col-span-12', 'space-y-4 text-left')}>
           {filteredPros.map((pro) => (
-            <ProfessionalCard
-              key={pro.id}
-              professional={pro}
-              selected={selectedProId === pro.id}
-              onSelect={() => handleBookPro(pro)}
-              onViewProfile={() => navigate(`/client/pro/${pro.id}`)}
-            />
+            <div key={pro.id} onMouseEnter={() => setSelectedProId(pro.id)}>
+              <ProfessionalCard
+                professional={pro}
+                selected={selectedProId === pro.id}
+                onSelect={() => handleBookPro(pro)}
+                onViewProfile={() => navigate(`/pros/${pro.id}`)}
+              />
+            </div>
           ))}
         </div>
 
-        {/* Interactive Abstract SVG Map Component */}
-        <div className={clsx(viewMode === 'list' ? 'hidden' : viewMode === 'split' ? 'lg:col-span-5' : 'lg:col-span-12', 'sticky top-20')}>
-          <Card padding="none" className="overflow-hidden border border-border-default shadow-card">
-            <div className="bg-canvas-cool p-4 border-b border-border-default flex items-center justify-between">
+        {/* Real Interactive Leaflet Map Component */}
+        <div className={clsx(viewMode === 'list' ? 'hidden' : viewMode === 'split' ? 'lg:col-span-5' : 'lg:col-span-12', 'sticky top-20 text-left')}>
+          <Card padding="none" className="overflow-hidden border border-border-default shadow-card space-y-0">
+            <div className="bg-canvas-cool p-3.5 border-b border-border-default flex items-center justify-between">
               <span className="text-xs font-bold text-text-primary flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-brand-teal" /> Service Area Map: {locationQuery}
+                <MapPin className="w-4 h-4 text-brand-teal" /> Care Network Map: {locationQuery}
               </span>
-              <span className="text-[10px] bg-canvas-teal text-brand-teal px-2 py-0.5 rounded-full font-bold uppercase">
+              <span className="text-[10px] bg-canvas-teal text-brand-teal px-2 py-0.5 rounded-full font-extrabold uppercase border border-teal-200">
                 Live Coverage
               </span>
             </div>
 
-            {/* Custom SVG Abstract Healthcare Map */}
-            <div className="relative w-full h-[520px] bg-slate-100 flex items-center justify-center overflow-hidden">
-              <svg className="w-full h-full opacity-30 stroke-slate-300" width="100%" height="100%">
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#CBD5E1" strokeWidth="1" />
-                </pattern>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-              </svg>
-
-              {/* Map Road Accents */}
-              <svg className="absolute inset-0 w-full h-full stroke-teal-500/20 stroke-[3] fill-none">
-                <path d="M 50 100 Q 200 150 400 300 T 700 500" />
-                <path d="M 100 450 Q 300 300 600 150" />
-              </svg>
-
-              {/* User Center Pin */}
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-10 pointer-events-none">
-                <div className="w-6 h-6 rounded-full bg-brand-teal text-white flex items-center justify-center font-bold ring-4 ring-brand-teal/20 animate-pulse shadow-card">
-                  <MapPin className="w-4 h-4" />
-                </div>
-                <span className="text-[10px] font-bold bg-slate-900 text-white px-2 py-0.5 rounded-full mt-1 shadow-xs">
-                  Your Location
-                </span>
-              </div>
-
-              {/* Professional Location Pins */}
-              {filteredPros.slice(0, 5).map((pro, index) => {
-                const offsets = [
-                  { top: '30%', left: '35%' },
-                  { top: '25%', left: '68%' },
-                  { top: '65%', left: '42%' },
-                  { top: '70%', left: '75%' },
-                  { top: '45%', left: '20%' }
-                ];
-                const pos = offsets[index % offsets.length];
-
-                return (
-                  <button
-                    key={pro.id}
-                    style={{ top: pos.top, left: pos.left }}
-                    onClick={() => setSelectedProId(pro.id)}
-                    className={clsx(
-                      'absolute z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all transform hover:scale-110 cursor-pointer shadow-card border',
-                      selectedProId === pro.id
-                        ? 'bg-brand-teal text-white border-brand-teal ring-4 ring-brand-teal/30 scale-110'
-                        : 'bg-white text-text-primary border-border-default hover:border-brand-teal'
-                    )}
-                  >
-                    <ShieldCheck className="w-3.5 h-3.5 text-brand-teal" />
-                    <span>₹{pro.hourlyRate}</span>
-                  </button>
-                );
-              })}
-            </div>
+            {/* Real Interactive Leaflet Delhi NCR Map */}
+            <RealDelhiNCRMap
+              selectedCity={locationQuery}
+              latitude={selectedPro?.location.latitude || 28.5800}
+              longitude={selectedPro?.location.longitude || 77.2300}
+              locationName={selectedPro?.displayName || locationQuery}
+              height="540px"
+            />
           </Card>
         </div>
       </div>

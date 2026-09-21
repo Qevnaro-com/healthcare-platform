@@ -2,25 +2,19 @@ import React, { useState } from 'react';
 import {
   MapPin,
   Navigation,
-  CheckCircle2,
   AlertCircle,
   Loader2,
   Compass,
-  Lock,
-  WifiOff,
   ShieldCheck,
   Send
 } from 'lucide-react';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { Modal } from '../common/Modal';
-import { clsx } from 'clsx';
 import {
   DELHI_NCR_SERVICE_HUBS,
   validateNCRServiceLocation
 } from '../../data/serviceAreaMatrix';
-import type { ServiceAreaHub } from '../../data/serviceAreaMatrix';
-import { RealDelhiNCRMap } from './RealDelhiNCRMap';
 
 export interface LocationData {
   addressType: string;
@@ -160,18 +154,6 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange,
     );
   };
 
-  const handleSelectHub = (hub: ServiceAreaHub) => {
-    const updated: LocationData = {
-      ...value,
-      city: hub.city === 'Delhi' ? 'New Delhi' : hub.city,
-      state: 'Delhi NCR',
-      pincode: hub.pincodePrefixes[0],
-      isVerified: true
-    };
-    onChange(updated);
-    setSystemState('LOC-07');
-  };
-
   const handleConfirmLocation = () => {
     setSystemState('LOC-13');
     onChange({ ...value, isVerified: true });
@@ -187,21 +169,92 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange,
     }, 2000);
   };
 
+  const DELHI_NCR_PINCODES = [
+    { pincode: '110024', locality: 'Defence Colony / Lajpat Nagar', city: 'New Delhi', state: 'Delhi NCR' },
+    { pincode: '110017', locality: 'Saket / Malviya Nagar', city: 'New Delhi', state: 'Delhi NCR' },
+    { pincode: '110070', locality: 'Vasant Kunj / JNU Area', city: 'New Delhi', state: 'Delhi NCR' },
+    { pincode: '110048', locality: 'Greater Kailash (GK 1 & 2)', city: 'New Delhi', state: 'Delhi NCR' },
+    { pincode: '110016', locality: 'Hauz Khas / Green Park', city: 'New Delhi', state: 'Delhi NCR' },
+    { pincode: '110027', locality: 'Rajouri Garden / West Delhi', city: 'New Delhi', state: 'Delhi NCR' },
+    { pincode: '110085', locality: 'Rohini Sector 7 / North Delhi', city: 'New Delhi', state: 'Delhi NCR' },
+    { pincode: '122002', locality: 'DLF Phase 5 / Cyber City', city: 'Gurugram', state: 'Delhi NCR' },
+    { pincode: '122003', locality: 'Sector 56 / Golf Course Road', city: 'Gurugram', state: 'Delhi NCR' },
+    { pincode: '122001', locality: 'Old Gurugram / Civil Lines', city: 'Gurugram', state: 'Delhi NCR' },
+    { pincode: '201301', locality: 'Sector 62 / Express Zone', city: 'Noida', state: 'Delhi NCR' },
+    { pincode: '201303', locality: 'Sector 50 / City Center', city: 'Noida', state: 'Delhi NCR' },
+    { pincode: '201304', locality: 'Sector 137 / Express Highway', city: 'Noida', state: 'Delhi NCR' },
+    { pincode: '201318', locality: 'Gaur City / Greater Noida West', city: 'Noida', state: 'Delhi NCR' },
+    { pincode: '121001', locality: 'Sector 15 / Central Zone', city: 'Faridabad', state: 'Delhi NCR' },
+    { pincode: '121002', locality: 'Sector 16 / Mathura Road', city: 'Faridabad', state: 'Delhi NCR' }
+  ];
+
+  const filteredPincodes = DELHI_NCR_PINCODES.filter(
+    (p) => p.city.toLowerCase() === value.city.toLowerCase()
+  );
+
+  const handleCityChange = (newCity: string) => {
+    const firstPincode = DELHI_NCR_PINCODES.find(
+      (p) => p.city.toLowerCase() === newCity.toLowerCase()
+    );
+
+    const validation = validateNCRServiceLocation(newCity, firstPincode?.pincode || value.pincode);
+    onChange({
+      ...value,
+      city: newCity,
+      pincode: firstPincode?.pincode || value.pincode,
+      line2: firstPincode?.locality || value.line2,
+      state: firstPincode?.state || value.state || 'Delhi NCR',
+      isVerified: validation.isSupported
+    });
+    setSystemState(validation.isSupported ? 'LOC-07' : 'LOC-08');
+  };
+
+  const handlePincodeSelect = (pinStr: string) => {
+    const found = DELHI_NCR_PINCODES.find((p) => p.pincode === pinStr);
+    const resolvedCity = found ? found.city : value.city;
+    const validation = validateNCRServiceLocation(resolvedCity, pinStr);
+
+    onChange({
+      ...value,
+      pincode: pinStr,
+      city: resolvedCity,
+      line2: found ? found.locality : value.line2,
+      state: found ? found.state : value.state || 'Delhi NCR',
+      isVerified: validation.isSupported
+    });
+    setSystemState(validation.isSupported ? 'LOC-07' : 'LOC-08');
+  };
+
+  const applyAddressPreset = (preset: { line1: string; line2: string; landmark: string; city: string; pincode: string }) => {
+    onChange({
+      ...value,
+      addressType: 'Home Apartment',
+      line1: preset.line1,
+      line2: preset.line2,
+      landmark: preset.landmark,
+      city: preset.city,
+      state: 'Delhi NCR',
+      pincode: preset.pincode,
+      isVerified: true
+    });
+    setSystemState('LOC-13');
+  };
+
   return (
-    <div className="space-y-5 text-left">
-      {/* Geolocation & Detection Workspace Header */}
-      <div className="bg-canvas-secondary p-4 rounded-2xl border border-border-default space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="space-y-6 text-left">
+      {/* City & Pincode Dropdown Card Header */}
+      <div className="p-5 bg-canvas-teal rounded-2xl border border-teal-200 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-teal-200/60 pb-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-canvas-teal text-brand-teal flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-brand-teal text-white flex items-center justify-center shrink-0 shadow-xs">
               <Compass className="w-5 h-5" />
             </div>
             <div>
-              <span className="font-extrabold text-text-primary text-xs block">
-                Automatic GPS Location & NCR Service Area Check
+              <span className="font-extrabold text-teal-950 text-sm block">
+                Delhi NCR Service Area & Pincode Selector
               </span>
-              <span className="text-[11px] text-text-muted">
-                Detects your device location or pincode in Delhi NCR
+              <span className="text-xs text-teal-800 font-medium">
+                Pulse n Care operates in Delhi, Gurugram, Noida, and Faridabad.
               </span>
             </div>
           </div>
@@ -219,126 +272,107 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange,
                 <Navigation className="w-4 h-4 text-brand-teal" />
               )
             }
-            className="font-bold border-brand-teal text-brand-teal bg-white shrink-0 cursor-pointer"
+            className="font-bold border-teal-300 text-teal-900 bg-white shrink-0 cursor-pointer shadow-xs"
           >
             {systemState === 'LOC-03'
               ? 'Detecting GPS...'
               : systemState === 'LOC-06'
               ? 'Checking Coverage...'
-              : '📍 Detect My Location'}
+              : '📍 Detect GPS Location'}
           </Button>
         </div>
 
-        {/* 13 System States Visual Feedback Banners */}
-        {systemState === 'LOC-02' && (
-          <div className="p-3 bg-blue-50 rounded-xl border border-blue-200 text-xs text-blue-900 flex items-center gap-2">
-            <Navigation className="w-4 h-4 text-blue-600 animate-pulse" />
-            <span>Requesting location permissions from browser...</span>
+        {/* Clean Dropdown Selectors */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-teal-950 uppercase tracking-wider">
+              Select City / Region
+            </label>
+            <select
+              value={value.city}
+              onChange={(e) => handleCityChange(e.target.value)}
+              className="w-full h-11 px-3.5 text-sm bg-white font-extrabold text-slate-900 border border-teal-300 rounded-xl focus:border-brand-teal focus:outline-none shadow-xs"
+            >
+              <option value="New Delhi">New Delhi (South, West, Central Delhi)</option>
+              <option value="Gurugram">Gurugram (DLF Phase 1-5, Cyber City, Golf Course)</option>
+              <option value="Noida">Noida (Sector 62, 18, Express Zone)</option>
+              <option value="Faridabad">Faridabad (Sector 15, 16, Mathura Road)</option>
+            </select>
           </div>
-        )}
 
-        {systemState === 'LOC-03' && (
-          <div className="p-3 bg-teal-50 rounded-xl border border-teal-200 text-xs text-brand-teal font-semibold flex items-center gap-2">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Communicating with GPS satellite network...</span>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-teal-950 uppercase tracking-wider">
+              Select Pincode & Locality
+            </label>
+            <select
+              value={value.pincode}
+              onChange={(e) => handlePincodeSelect(e.target.value)}
+              className="w-full h-11 px-3.5 text-sm bg-white font-extrabold text-slate-900 border border-teal-300 rounded-xl focus:border-brand-teal focus:outline-none shadow-xs"
+            >
+              {filteredPincodes.map((item) => (
+                <option key={item.pincode} value={item.pincode}>
+                  {item.pincode} — {item.locality} ({item.city})
+                </option>
+              ))}
+              <option value={value.pincode}>Custom Pincode ({value.pincode})</option>
+            </select>
           </div>
-        )}
+        </div>
 
-        {systemState === 'LOC-04' && (
-          <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>GPS Coordinates Found: {value.latitude?.toFixed(4)}, {value.longitude?.toFixed(4)}</span>
-          </div>
-        )}
-
-        {systemState === 'LOC-05' && (
-          <div className="p-3 bg-teal-50 rounded-xl border border-teal-200 text-xs text-brand-teal flex items-center gap-2">
-            <MapPin className="w-4 h-4 shrink-0" />
-            <span>Resolved Address: {value.line1 || 'Locality'}, {value.city} ({value.pincode})</span>
-          </div>
-        )}
-
-        {(systemState === 'LOC-07' || (isSupported && systemState !== 'LOC-08')) && (
-          <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between">
+        {/* Operational Hub Confirmation Badge */}
+        {isSupported ? (
+          <div className="p-3.5 bg-white rounded-xl border border-teal-300 text-xs text-teal-950 flex items-center justify-between shadow-xs">
             <div className="flex items-center gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
+              <ShieldCheck className="w-5 h-5 text-brand-teal shrink-0" />
               <div>
-                <span className="font-extrabold text-emerald-950 block">Service Area Confirmed — Active NCR Hub</span>
-                <span className="text-[11px] text-emerald-800">
-                  {activeHub.name} ({activeHub.hubAddress}) • Avg Staff Arrival: {activeHub.avgDispatchTimeMinutes}
+                <span className="font-extrabold text-slate-900 block">{activeHub.name} Confirmed</span>
+                <span className="text-[11px] text-slate-600 font-medium">
+                  {activeHub.hubAddress} • {activeHub.activeStaffCount} In-House Staff • Avg Arrival: {activeHub.avgDispatchTimeMinutes}
                 </span>
               </div>
             </div>
-            <span className="text-[10px] font-extrabold bg-emerald-200 text-emerald-900 px-2.5 py-1 rounded-full uppercase shrink-0">
-              OPERATIONAL
+            <span className="text-[10px] font-black bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full uppercase border border-emerald-300 shrink-0">
+              OPERATIONAL ZONE
             </span>
           </div>
-        )}
-
-        {(!isSupported || systemState === 'LOC-08') && (
-          <div className="p-4 bg-rose-50 rounded-2xl border border-rose-300 text-xs text-rose-900 space-y-3">
-            <div className="flex items-start gap-2.5">
-              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-extrabold text-rose-950 text-sm block">Location Outside Service Boundary</span>
-                <p className="mt-0.5">
-                  Pulse n Care operates exclusively in <strong className="underline font-bold">Delhi, Noida, Gurugram, and Faridabad</strong>. We currently do not have an active staff dispatch hub in <strong className="font-extrabold">{value.city || 'your city'}</strong>.
-                </p>
-              </div>
-            </div>
-
-            {/* Recovery Actions */}
-            <div className="pt-1 flex flex-wrap items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setShowExpansionModal(true)}
-                className="text-xs font-bold border-rose-300 text-rose-800 bg-white hover:bg-rose-100 cursor-pointer"
-              >
-                Request Service in My City
-              </Button>
-
-              <span className="text-[11px] text-rose-700 font-medium">Or select active NCR hub:</span>
-
-              {DELHI_NCR_SERVICE_HUBS.slice(0, 3).map((hub) => (
-                <button
-                  key={hub.id}
-                  type="button"
-                  onClick={() => handleSelectHub(hub)}
-                  className="px-2.5 py-1 bg-white border border-rose-200 rounded-lg text-[11px] font-bold text-rose-900 hover:bg-rose-100 cursor-pointer"
-                >
-                  {hub.city}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {systemState === 'LOC-09' && (
-          <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center gap-2">
-            <Lock className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>Browser location access was denied. Please fill in your street address and pincode manually below.</span>
-          </div>
-        )}
-
-        {systemState === 'LOC-10' && (
+        ) : (
           <div className="p-3 bg-rose-50 rounded-xl border border-rose-200 text-xs text-rose-900 flex items-center gap-2">
-            <WifiOff className="w-4 h-4 text-rose-600 shrink-0" />
-            <span>GPS signal unavailable. Please select your locality or enter pincode manually.</span>
-          </div>
-        )}
-
-        {systemState === 'LOC-13' && (
-          <div className="p-3 bg-emerald-100 rounded-xl border border-emerald-300 text-xs font-bold text-emerald-950 flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-            <span>Care location verified & saved for shift dispatch.</span>
+            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <span>Outside active coverage. Please select New Delhi, Gurugram, Noida, or Faridabad.</span>
           </div>
         )}
       </div>
 
+      {/* Quick 1-Click Saved Address Presets */}
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
+          Quick 1-Click Authentic Location Presets
+        </label>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          {[
+            { label: '🏠 Defence Colony', line1: 'A-124, Defence Colony', line2: 'Ring Road, Defence Colony', landmark: 'Opposite Flyover Pillar 14', city: 'New Delhi', pincode: '110024' },
+            { label: '🏢 DLF Phase 5', line1: 'Flat 602, Crest Apartments', line2: 'Golf Course Road, DLF Phase 5', landmark: 'Near Sector 54 Metro Station', city: 'Gurugram', pincode: '122002' },
+            { label: '🌳 Sector 62 Noida', line1: 'Tower B-301, Stellar IT Park', line2: 'Block C, Sector 62', landmark: 'Near Fortis Hospital Noida', city: 'Noida', pincode: '201301' }
+          ].map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              onClick={() => applyAddressPreset(preset)}
+              className="p-3 rounded-xl border border-border-default bg-white hover:border-brand-teal hover:bg-canvas-teal text-left cursor-pointer transition-all space-y-1 shadow-xs"
+            >
+              <span className="font-extrabold text-xs text-text-primary block">{preset.label}</span>
+              <span className="text-[10px] text-text-muted block line-clamp-1">{preset.line1}, {preset.city} ({preset.pincode})</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Structured Address Form Inputs */}
-      <div className="space-y-4">
+      <div className="p-5 bg-white rounded-2xl border border-border-default space-y-4 shadow-subtle">
+        <h3 className="text-xs font-extrabold text-text-primary uppercase tracking-wider border-b border-border-light pb-2">
+          Specific Patient Room / Street Address Details
+        </h3>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">Site Type</label>
@@ -357,8 +391,8 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange,
           <Input
             label="House / Flat No. & Building Name"
             value={value.line1}
-            onChange={(e) => onChange({ ...value, line1: e.target.value })}
-            placeholder="e.g. Flat 402, Sterling Apartments"
+            onChange={(e) => onChange({ ...value, line1: e.target.value, isVerified: true })}
+            placeholder="e.g. A-124, Sterling Apartments"
             leftIcon={<MapPin className="w-4 h-4 text-text-muted" />}
           />
         </div>
@@ -383,7 +417,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange,
           <Input
             label="City"
             value={value.city}
-            onChange={(e) => onChange({ ...value, city: e.target.value })}
+            onChange={(e) => handleCityChange(e.target.value)}
             placeholder="New Delhi / Noida / Gurugram"
           />
           <Input
@@ -395,63 +429,38 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({ value, onChange,
           <Input
             label="Pincode (NCR)"
             value={value.pincode}
-            onChange={(e) => onChange({ ...value, pincode: e.target.value })}
+            onChange={(e) => handlePincodeSelect(e.target.value)}
             placeholder="110024"
           />
         </div>
 
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-            Entry / Access Instructions For Staff
+            Entry & Access Instructions For Staff
           </label>
           <textarea
             rows={2}
             value={value.accessNotes}
             onChange={(e) => onChange({ ...value, accessNotes: e.target.value })}
             className="w-full p-3 text-sm bg-white border border-border-default rounded-xl focus:border-brand-teal focus:outline-none"
-            placeholder="Elevator availability, visitor entry rules, parking details..."
+            placeholder="Elevator active 24/7, visitor entry rules, parking instructions..."
           />
         </div>
-      </div>
 
-      {/* Interactive Map Preview Card Grounded in Active Hub */}
-      <div className="bg-canvas-secondary p-4 rounded-2xl border border-border-default space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-text-secondary uppercase tracking-wider block">
-            Care Location & Hub Proximity Map
-          </span>
-          <span className="text-[11px] font-extrabold text-brand-teal">
-            Active Hub: {activeHub.name}
-          </span>
-        </div>
-
-        <RealDelhiNCRMap
-          selectedCity={value.city}
-          activeHubId={activeHub.id}
-          latitude={value.latitude}
-          longitude={value.longitude}
-          locationName={value.line1 || 'Care Destination'}
-          onSelectHub={(hub) => handleSelectHub(hub)}
-          height="340px"
-        />
-
-        <div className="flex justify-between items-center pt-1">
-          <span className="text-xs text-text-muted">
-            {systemState === 'LOC-13'
-              ? '✓ Care location confirmed for staff assignment.'
-              : 'Confirm address coordinates to proceed.'}
+        <div className="pt-2 flex justify-between items-center border-t border-border-light text-xs">
+          <span className="text-text-muted font-medium">
+            {systemState === 'LOC-13' || value.isVerified
+              ? '✓ Care delivery address confirmed for staff assignment.'
+              : 'Specify address details to proceed.'}
           </span>
           <Button
             type="button"
-            variant={systemState === 'LOC-13' ? 'secondary' : 'primary'}
+            variant="primary"
             size="sm"
             onClick={handleConfirmLocation}
-            className={clsx(
-              'font-bold text-xs cursor-pointer',
-              systemState !== 'LOC-13' && 'bg-brand-teal text-white hover:bg-brand-teal-hover'
-            )}
+            className="bg-brand-teal hover:bg-brand-teal-hover text-white font-bold text-xs cursor-pointer shadow-xs"
           >
-            {systemState === 'LOC-13' ? 'Location Confirmed ✓' : 'Confirm Location'}
+            Confirm Care Location ✓
           </Button>
         </div>
       </div>

@@ -30,11 +30,17 @@ export const ProfessionalCard: React.FC<ProfessionalCardProps> = ({
       <div className="space-y-4">
         {/* Header: Photo, Name, Badge */}
         <div className="flex items-start gap-4">
-          <div className="relative shrink-0">
+          <div
+            className="relative shrink-0 cursor-pointer group"
+            onClick={() => onViewProfile && onViewProfile(professional)}
+          >
             <img
               src={professional.profilePhoto}
               alt={professional.displayName}
-              className="w-16 h-16 rounded-2xl object-cover border border-border-default shadow-xs"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&q=80';
+              }}
+              className="w-16 h-16 rounded-2xl object-cover border border-border-default shadow-xs group-hover:ring-2 group-hover:ring-brand-teal transition-all"
             />
             {professional.isVerified && (
               <div className="absolute -bottom-1 -right-1 bg-brand-teal text-white p-1 rounded-full shadow-xs" title="KYC Verified">
@@ -45,7 +51,10 @@ export const ProfessionalCard: React.FC<ProfessionalCardProps> = ({
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
-              <h4 className="font-bold text-base text-text-primary truncate">
+              <h4
+                onClick={() => onViewProfile && onViewProfile(professional)}
+                className="font-bold text-base text-text-primary truncate cursor-pointer hover:text-brand-teal transition-colors"
+              >
                 {professional.displayName}
               </h4>
               {professional.badge && (

@@ -36,8 +36,8 @@ export const PulseNCareFAQ: React.FC = () => {
       a: 'Yes. You can select single visits, contiguous date ranges (e.g. 7 days post-surgery), or weekly recurring schedules in our booking wizard.'
     },
     {
-      q: 'What locations are covered in Delhi NCR?',
-      a: 'We actively operate dispatch hubs across Delhi, Noida, Gurugram, and Faridabad. You can check pincode coverage using our service area widget.'
+      q: 'How is service availability verified?',
+      a: 'We operate an internal managed clinical workforce. Address pincodes are validated during booking to allocate duty staff.'
     },
     {
       q: 'What information is required before booking?',

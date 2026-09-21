@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PulseNCareHeader } from '../../components/domain/pulse-n-care/PulseNCareHeader';
 import { PulseNCareHeroVisual } from '../../components/domain/pulse-n-care/PulseNCareHeroVisual';
 import { ClinicalCareGrid } from '../../components/domain/pulse-n-care/ClinicalCareGrid';
 import { PersonalCareSection } from '../../components/domain/pulse-n-care/PersonalCareSection';
 import { DailyChartPreview } from '../../components/domain/pulse-n-care/DailyChartPreview';
-import { RealDelhiNCRMap } from '../../components/domain/RealDelhiNCRMap';
 import { CareDurationSelector } from '../../components/domain/pulse-n-care/CareDurationSelector';
 import { PulseNCareFAQ } from '../../components/domain/pulse-n-care/PulseNCareFAQ';
 import { StickyBookingBar } from '../../components/domain/pulse-n-care/StickyBookingBar';
-import { LocationPicker } from '../../components/domain/LocationPicker';
-import type { LocationData } from '../../components/domain/LocationPicker';
 import { Modal } from '../../components/common/Modal';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
@@ -24,7 +20,10 @@ import {
   AlertTriangle,
   RefreshCw,
   UserCheck,
-  Clock
+  Clock,
+  MapPin,
+  CheckCircle2,
+  ArrowRight
 } from 'lucide-react';
 
 export const HomeNursingServicePage: React.FC = () => {
@@ -35,17 +34,27 @@ export const HomeNursingServicePage: React.FC = () => {
   const [callbackNotes, setCallbackNotes] = useState('');
   const [callbackSubmitted, setCallbackSubmitted] = useState(false);
 
-  const [locationData, setLocationData] = useState<LocationData>({
-    addressType: 'Home Apartment',
-    line1: 'A-124, Defence Colony',
-    line2: 'Near Lajpat Nagar Metro Station',
-    landmark: 'Opposite Flyover Pillar 14',
-    city: 'New Delhi',
-    state: 'Delhi NCR',
-    pincode: '110024',
-    accessNotes: 'Elevator active 24/7',
-    isVerified: true
+  // Service Area Availability Checker State (Clean Pincode Check, No specific hub/city references)
+  const [pincodeInput, setPincodeInput] = useState('110024');
+  const [checkStatus, setCheckStatus] = useState<{ isSupported: boolean; message?: string } | null>({
+    isSupported: true,
+    message: 'Central Operations Desk · Active Staff Allocation (~15-20 min dispatch)'
   });
+
+  const handleCheckPincode = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (pincodeInput && pincodeInput.trim().length >= 6) {
+      setCheckStatus({
+        isSupported: true,
+        message: 'Central Operations Desk · Active Staff Allocation (~15-20 min dispatch)'
+      });
+    } else {
+      setCheckStatus({
+        isSupported: false,
+        message: 'Please enter a valid 6-digit pincode.'
+      });
+    }
+  };
 
   const handleCallbackSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,10 +80,7 @@ export const HomeNursingServicePage: React.FC = () => {
     <div className="min-h-screen bg-white text-text-primary text-left relative pb-20">
       <HealthcareTexture type="clinical-wave" opacity={0.02} />
 
-      {/* 01. Pulse n Care Header */}
-      <PulseNCareHeader />
-
-      {/* 02. Hero Experience */}
+      {/* 01. Hero Experience */}
       <PulseNCareHeroVisual onOpenCallback={() => setCallbackModalOpen(true)} />
 
       {/* 03. Service Introduction & Shift Modes */}
@@ -221,38 +227,96 @@ export const HomeNursingServicePage: React.FC = () => {
       {/* 10. Duration Selector & Overnight Date Rollover */}
       <CareDurationSelector />
 
-      {/* 11 & 12. Delhi NCR Service Area Verification & Vector Map */}
+      {/* 11. Service Availability Check */}
       <section className="py-12 bg-canvas-secondary border-b border-border-default">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-left">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-left">
           <div className="text-center space-y-2">
             <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest block">
-              Service Area Verification
+              Service Availability Check
             </span>
             <h2 className="text-2xl font-black text-text-primary tracking-tight">
-              Check Home Nursing Availability in Delhi NCR
+              Check Home Nursing Availability
             </h2>
             <p className="text-xs text-text-muted">
-              Verify if Pulse n Care internal dispatch hubs active in Delhi, Noida, Gurugram, or Faridabad serve your locality.
+              Enter your 6-digit pincode to check immediate service availability.
             </p>
           </div>
 
-          {/* Real Leaflet Map of Delhi NCR with Lottie Radar Scan Overlay */}
-          <div className="space-y-4">
-            <RealDelhiNCRMap
-              selectedCity={locationData.city}
-              latitude={locationData.latitude}
-              longitude={locationData.longitude}
-              locationName={locationData.line1 || 'Care Destination'}
-              height="380px"
-            />
+          {/* Clean Pincode Availability Checker */}
+          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-border-default shadow-card space-y-4">
+            
+            {/* Pincode Input & Check Form */}
+            <form onSubmit={handleCheckPincode} className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="relative flex-1 w-full">
+                <MapPin className="w-4 h-4 text-brand-teal absolute left-3.5 top-3.5" />
+                <input
+                  type="text"
+                  value={pincodeInput}
+                  onChange={(e) => {
+                    setPincodeInput(e.target.value);
+                    setCheckStatus(null);
+                  }}
+                  placeholder="Enter 6-digit Pincode (e.g. 110024)..."
+                  className="w-full h-11 pl-10 pr-4 text-xs font-bold text-slate-900 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20"
+                />
+              </div>
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-full sm:w-auto bg-brand-teal hover:bg-brand-teal-hover text-white font-black text-xs px-6 h-11 rounded-2xl shrink-0 cursor-pointer shadow-xs"
+              >
+                Check Availability
+              </Button>
+            </form>
+
+            {/* Availability Result Status Banner */}
+            {checkStatus && (
+              <div className={`p-4 rounded-2xl border text-xs font-bold transition-all ${
+                checkStatus.isSupported
+                  ? 'bg-emerald-50 text-emerald-950 border-emerald-300'
+                  : 'bg-rose-50 text-rose-950 border-rose-300'
+              }`}>
+                {checkStatus.isSupported ? (
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                      <div>
+                        <span className="font-extrabold text-emerald-900 block text-sm">
+                          Service Available for Pincode {pincodeInput}
+                        </span>
+                        <span className="text-[11px] text-emerald-700 font-medium">
+                          {checkStatus.message}
+                        </span>
+                      </div>
+                    </div>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => navigate(`/client/booking/wizard?serviceId=srv-nursing-post-op&pincode=${pincodeInput}`)}
+                      rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-4 py-2 rounded-xl shrink-0 cursor-pointer shadow-xs whitespace-nowrap"
+                    >
+                      Book Service Now
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2.5">
+                    <AlertTriangle className="w-5 h-5 text-rose-600 shrink-0" />
+                    <div>
+                      <span className="font-extrabold text-rose-900 block text-sm">
+                        Invalid Pincode Format ({pincodeInput})
+                      </span>
+                      <span className="text-[11px] text-rose-700 font-medium">
+                        {checkStatus.message}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
           </div>
 
-          <div className="bg-white p-6 rounded-3xl border border-border-default shadow-subtle">
-            <LocationPicker
-              value={locationData}
-              onChange={(updated) => setLocationData(updated)}
-            />
-          </div>
         </div>
       </section>
 

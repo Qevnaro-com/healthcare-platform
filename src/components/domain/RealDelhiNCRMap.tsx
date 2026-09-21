@@ -13,6 +13,7 @@ export interface RealDelhiNCRMapProps {
   longitude?: number;
   locationName?: string;
   onSelectHub?: (hub: ServiceAreaHub) => void;
+  onLocationClick?: (lat: number, lng: number) => void;
   height?: string;
 }
 
@@ -24,6 +25,7 @@ export const RealDelhiNCRMap: React.FC<RealDelhiNCRMapProps> = ({
   longitude,
   locationName = 'Care Destination',
   onSelectHub,
+  onLocationClick,
   height = '360px'
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -62,12 +64,24 @@ export const RealDelhiNCRMap: React.FC<RealDelhiNCRMapProps> = ({
 
     const map = L.map(mapContainerRef.current, {
       center: [initialLat, initialLng],
-      zoom: 11,
+      zoom: 12,
       zoomControl: false,
       scrollWheelZoom: false
     });
 
     mapInstanceRef.current = map;
+
+    // Guarantee tile sizing rendering on mount
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
+
+    // Click handler to drop/move pin
+    map.on('click', (e: L.LeafletMouseEvent) => {
+      if (onLocationClick) {
+        onLocationClick(e.latlng.lat, e.latlng.lng);
+      }
+    });
 
     // Add Custom Leaflet Zoom Control at top right
     L.control.zoom({ position: 'topright' }).addTo(map);
@@ -118,7 +132,7 @@ export const RealDelhiNCRMap: React.FC<RealDelhiNCRMapProps> = ({
       const popupContent = `
         <div class="p-2 space-y-1.5 text-left font-sans text-xs">
           <div class="flex items-center gap-1.5 text-teal-700 font-extrabold uppercase tracking-wider text-[10px]">
-            <span>● Operational Hub</span>
+            <span>● Operational Service Zone</span>
           </div>
           <h4 class="font-extrabold text-slate-900 text-sm leading-tight">${hub.name}</h4>
           <p class="text-[11px] text-slate-600">${hub.hubAddress}</p>
@@ -156,10 +170,13 @@ export const RealDelhiNCRMap: React.FC<RealDelhiNCRMapProps> = ({
         html: destHtml,
         className: 'custom-dest-marker',
         iconSize: [140, 50],
-        iconAnchor: [70, 25]
+        iconAnchor: [70, 18]
       });
 
       L.marker([latitude, longitude], { icon: destIcon }).addTo(map);
+
+      // Smooth camera pan to destination coordinates
+      map.flyTo([latitude, longitude], 13, { duration: 0.8 });
     }
 
     return () => {
@@ -180,7 +197,7 @@ export const RealDelhiNCRMap: React.FC<RealDelhiNCRMapProps> = ({
         <LottieAnimation type="radar-beacon" className="w-6 h-6 shrink-0" />
         <div className="text-left">
           <span className="text-[9px] font-extrabold text-teal-300 uppercase tracking-widest block leading-none">
-            LIVE REGIONAL DISPATCH MAP
+            DELHI NCR LIVE SERVICE MAP
           </span>
           <span className="text-[11px] font-black text-white leading-tight block">
             {activeHub.name} ({activeHub.avgDispatchTimeMinutes})
@@ -188,10 +205,10 @@ export const RealDelhiNCRMap: React.FC<RealDelhiNCRMapProps> = ({
         </div>
       </div>
 
-      {/* Interactive Hub Selection Strip (Bottom Overlay Bar) */}
+      {/* Interactive Region Selection Strip (Bottom Overlay Bar) */}
       <div className="absolute bottom-3 left-3 right-3 z-20 bg-white/95 backdrop-blur-md p-2 rounded-2xl border border-slate-200 shadow-xl flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
         <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider pl-2 shrink-0 hidden sm:inline">
-          Active Hubs:
+          Service Regions:
         </span>
         <div className="flex items-center gap-1.5">
           {DELHI_NCR_SERVICE_HUBS.map((hub) => {

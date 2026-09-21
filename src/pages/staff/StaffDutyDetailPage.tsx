@@ -29,6 +29,26 @@ export const StaffDutyDetailPage: React.FC = () => {
     );
   };
 
+  const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+    ASSIGNED: ['ACKNOWLEDGED', 'TRAVELLING'],
+    ACKNOWLEDGED: ['TRAVELLING'],
+    TRAVELLING: ['ARRIVED'],
+    ARRIVED: ['IN_CARE'],
+    IN_CARE: ['COMPLETED'],
+    COMPLETED: []
+  };
+
+  const handleStateTransition = (targetStatus: DutyStatus) => {
+    if (dutyStatus === 'COMPLETED' && targetStatus !== 'COMPLETED') {
+      return; // Block invalid transition from terminal COMPLETED state
+    }
+    const allowed = ALLOWED_TRANSITIONS[dutyStatus] || [];
+    if (allowed.length > 0 && !allowed.includes(targetStatus) && targetStatus !== dutyStatus) {
+      return;
+    }
+    setDutyStatus(targetStatus);
+  };
+
   return (
     <div className="space-y-6 pb-10">
       
@@ -65,31 +85,34 @@ export const StaffDutyDetailPage: React.FC = () => {
           <p className="text-[10px] font-black uppercase tracking-widest text-teal-400">Update Duty State:</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
             <button
-              onClick={() => setDutyStatus('TRAVELLING')}
-              className={`p-2.5 rounded-xl font-extrabold border transition-all cursor-pointer ${
+              onClick={() => handleStateTransition('TRAVELLING')}
+              disabled={dutyStatus === 'COMPLETED'}
+              className={`p-2.5 rounded-xl font-extrabold border transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                 dutyStatus === 'TRAVELLING' ? 'bg-amber-500 text-slate-950 border-amber-400' : 'bg-slate-800 border-slate-700 text-slate-300'
               }`}
             >
               1. Start Travel
             </button>
             <button
-              onClick={() => setDutyStatus('ARRIVED')}
-              className={`p-2.5 rounded-xl font-extrabold border transition-all cursor-pointer ${
+              onClick={() => handleStateTransition('ARRIVED')}
+              disabled={dutyStatus === 'COMPLETED'}
+              className={`p-2.5 rounded-xl font-extrabold border transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                 dutyStatus === 'ARRIVED' ? 'bg-amber-500 text-slate-950 border-amber-400' : 'bg-slate-800 border-slate-700 text-slate-300'
               }`}
             >
               2. Arrived
             </button>
             <button
-              onClick={() => setDutyStatus('IN_CARE')}
-              className={`p-2.5 rounded-xl font-extrabold border transition-all cursor-pointer ${
+              onClick={() => handleStateTransition('IN_CARE')}
+              disabled={dutyStatus === 'COMPLETED'}
+              className={`p-2.5 rounded-xl font-extrabold border transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                 dutyStatus === 'IN_CARE' ? 'bg-emerald-500 text-slate-950 border-emerald-400' : 'bg-slate-800 border-slate-700 text-slate-300'
               }`}
             >
               3. Start Care
             </button>
             <button
-              onClick={() => setDutyStatus('COMPLETED')}
+              onClick={() => handleStateTransition('COMPLETED')}
               className={`p-2.5 rounded-xl font-extrabold border transition-all cursor-pointer ${
                 dutyStatus === 'COMPLETED' ? 'bg-teal-400 text-slate-950 border-teal-300' : 'bg-slate-800 border-slate-700 text-slate-300'
               }`}

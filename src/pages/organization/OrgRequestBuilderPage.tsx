@@ -228,14 +228,12 @@ export const OrgRequestBuilderPage: React.FC = () => {
       {/* STEP PROGRESS BAR */}
       {!submittedReqNo && (
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs relative z-10">
-          <div className="grid grid-cols-6 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
-              { step: 1, title: 'Basics' },
-              { step: 2, title: 'Workforce' },
-              { step: 3, title: 'Schedule' },
-              { step: 4, title: 'Qualifications' },
-              { step: 5, title: 'Facility' },
-              { step: 6, title: 'Review' },
+              { step: 1, title: '01 REQUEST' },
+              { step: 2, title: '02 REQUIREMENTS' },
+              { step: 3, title: '03 LOCATION & SCHEDULE' },
+              { step: 4, title: '04 REVIEW & SUBMIT' },
             ].map((s) => {
               const isCurrent = currentStep === s.step;
               const isPassed = currentStep > s.step;
@@ -248,11 +246,10 @@ export const OrgRequestBuilderPage: React.FC = () => {
                       ? 'bg-blue-600 text-white font-extrabold shadow-sm'
                       : isPassed
                       ? 'bg-blue-50 text-blue-800 font-bold cursor-pointer hover:bg-blue-100'
-                      : 'bg-slate-100 text-slate-400 font-medium'
+                      : 'bg-slate-100 text-slate-400 font-bold'
                   }`}
                 >
-                  <span className="text-[10px] uppercase tracking-wider">Step {s.step}</span>
-                  <span className="text-xs truncate max-w-full">{s.title}</span>
+                  <span className="text-xs font-mono">{s.title}</span>
                 </div>
               );
             })}
@@ -437,13 +434,10 @@ export const OrgRequestBuilderPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Agreed Daily Rate (₹) *</label>
-                    <input
-                      type="number"
-                      value={line.agreedDailyRate}
-                      onChange={(e) => handleUpdateRequirementLine(line.id, 'agreedDailyRate', parseInt(e.target.value) || 0)}
-                      className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-900 bg-white"
-                    />
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Commercial Terms Rate</label>
+                    <div className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-100 text-xs font-extrabold text-blue-900">
+                      Standard Rate: ₹{line.agreedDailyRate}/day
+                    </div>
                   </div>
                 </div>
               </div>

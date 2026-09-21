@@ -20,8 +20,8 @@ export const PulseNCareHeader: React.FC = () => {
         <div className="hidden lg:flex items-center gap-6 text-xs text-text-secondary">
           <div className="flex items-center gap-2 bg-canvas-teal px-3.5 py-1.5 rounded-full border border-teal-200">
             <MapPin className="w-4 h-4 text-brand-teal" />
-            <span className="font-extrabold text-brand-teal">Delhi NCR Hub</span>
-            <span className="text-text-muted">• Delhi, Noida, Gurugram, Faridabad</span>
+            <span className="font-extrabold text-brand-teal">Home Care Operations</span>
+            <span className="text-text-muted">• 24×7 Managed Care</span>
           </div>
 
           <div className="flex items-center gap-2 text-text-primary font-bold">

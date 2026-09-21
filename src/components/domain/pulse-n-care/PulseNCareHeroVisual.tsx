@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../common/Button';
 import { HealthcareTexture } from '../../common/HealthcareTexture';
 import { LottieAnimation } from '../../common/LottieAnimation';
-import { PhoneCall, Calendar, Activity, Clock, CheckCircle2 } from 'lucide-react';
+import { PhoneCall, Calendar, Activity, Clock, CheckCircle2, MapPin } from 'lucide-react';
 
 interface HeroVisualProps {
   onOpenCallback: () => void;
@@ -21,10 +21,14 @@ export const PulseNCareHeroVisual: React.FC<HeroVisualProps> = ({ onOpenCallback
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* LEFT 7 COLS: Typography & CTAs (Large Negative Space) */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-canvas-teal border border-teal-200">
+            <div className="inline-flex flex-wrap items-center gap-2 px-3.5 py-1.5 rounded-full bg-canvas-teal border border-teal-200">
               <span className="w-2 h-2 rounded-full bg-brand-teal animate-ping" />
               <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest">
                 Pulse n Care • 24×7 Home Nursing
+              </span>
+              <span className="text-xs text-teal-300 hidden sm:inline">•</span>
+              <span className="text-xs font-bold text-slate-700 hidden sm:flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-brand-teal" /> Delhi NCR Hub (Delhi, Noida, Gurugram, Faridabad)
               </span>
             </div>
 

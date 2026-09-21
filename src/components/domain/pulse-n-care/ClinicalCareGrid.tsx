@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card } from '../../common/Card';
 import { Activity, Pill, ShieldCheck, Stethoscope, Droplet, Wind, ChevronDown, ChevronUp, HeartPulse, CheckCircle2 } from 'lucide-react';
 import { clsx } from 'clsx';
+import { VISUAL_ASSETS } from '../../../data/visualAssets';
 
 export const ClinicalCareGrid: React.FC = () => {
   const [expandedId, setExpandedId] = useState<string | null>('vitals');
@@ -30,7 +31,7 @@ export const ClinicalCareGrid: React.FC = () => {
           </div>
         </div>
       ),
-      image: '/assets/services/home-nursing/pulse-n-care-vitals.webp'
+      image: VISUAL_ASSETS.clinicalVitals.url
     },
     {
       id: 'medication',
@@ -51,7 +52,7 @@ export const ClinicalCareGrid: React.FC = () => {
           </div>
         </div>
       ),
-      image: '/assets/services/home-nursing/pulse-n-care-medication.webp'
+      image: VISUAL_ASSETS.clinicalMedication.url
     },
     {
       id: 'wound',
@@ -72,7 +73,7 @@ export const ClinicalCareGrid: React.FC = () => {
           </div>
         </div>
       ),
-      image: '/assets/services/home-nursing/pulse-n-care-wound-care.webp'
+      image: VISUAL_ASSETS.clinicalWoundCare.url
     },
     {
       id: 'tube',
@@ -93,7 +94,7 @@ export const ClinicalCareGrid: React.FC = () => {
           </div>
         </div>
       ),
-      image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80'
+      image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=800&q=80&asset=proc_tube'
     },
     {
       id: 'catheter',
@@ -114,7 +115,7 @@ export const ClinicalCareGrid: React.FC = () => {
           </div>
         </div>
       ),
-      image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80'
+      image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&q=80&asset=proc_cath'
     },
     {
       id: 'respiratory',
@@ -135,7 +136,7 @@ export const ClinicalCareGrid: React.FC = () => {
           </div>
         </div>
       ),
-      image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&q=80'
+      image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=800&q=80&asset=proc_resp'
     }
   ];
 
@@ -189,8 +190,8 @@ export const ClinicalCareGrid: React.FC = () => {
 
                 {/* Optional Image Header */}
                 {cap.image && isExpanded && (
-                  <div className="rounded-xl overflow-hidden h-44 border border-border-default">
-                    <img src={cap.image} alt={cap.title} className="w-full h-full object-cover" />
+                  <div className="rounded-xl overflow-hidden aspect-video w-full border border-border-default">
+                    <img src={cap.image} alt={cap.title} className="w-full h-full object-cover object-top" />
                   </div>
                 )}
 

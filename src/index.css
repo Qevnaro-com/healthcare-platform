@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* Surface & Canvas Tokens */
+  /* Surface & Canvas Tokens (Surface 0 to 5) */
   --color-canvas-primary: #FFFFFF;
   --color-canvas-secondary: #F8FAFC;
   --color-canvas-tertiary: #F1F5F9;
@@ -11,6 +11,15 @@
   --color-canvas-blue: #EFF6FF;
   --color-canvas-green: #F0FDF4;
   --color-canvas-orange: #FFF7ED;
+  --color-canvas-clinical: #EEF6F7;
+  --color-canvas-dark: #050F33;
+
+  --color-surface-page: #F8FAFC;      /* Surface 0 */
+  --color-surface-card: #FFFFFF;      /* Surface 1 */
+  --color-surface-brand: #F0FDFA;     /* Surface 2 */
+  --color-surface-blue: #EFF6FF;      /* Surface 3 */
+  --color-surface-clinical: #EEF6F7;  /* Surface 4 */
+  --color-surface-dark: #050F33;      /* Surface 5 */
 
   /* Typography Tokens */
   --color-text-primary: #0F172A;
@@ -19,18 +28,50 @@
   --color-text-muted: #64748B;
   --color-text-placeholder: #94A3B8;
   --color-text-disabled: #CBD5E1;
+  --color-text-inverse: #FFFFFF;
 
   /* Border Tokens */
   --color-border-default: #E2E8F0;
   --color-border-light: #EDF2F7;
   --color-border-emphasis: #CBD5E1;
   --color-border-strong: #CBD5E1;
+  --color-border-brand-active: #99F6E4;
+  --color-border-blue-active: #BFDBFE;
+  --color-border-dark: rgba(255, 255, 255, 0.12);
 
-  /* Brand Colors */
+  /* Brand Colors — Tonal Teal Scale (TEAL = CARE) */
+  --color-brand-teal-50: #F0FDFA;
+  --color-brand-teal-100: #CCFBF1;
+  --color-brand-teal-200: #99F6E4;
+  --color-brand-teal-300: #5EEAD4;
+  --color-brand-teal-400: #2DD4BF;
+  --color-brand-teal-500: #14B8A6;
+  --color-brand-teal-600: #0EA5A4;
+  --color-brand-teal-700: #0F766E;
+  --color-brand-teal-800: #115E59;
+  --color-brand-teal-900: #134E4A;
   --color-brand-teal: #0EA5A4;
   --color-brand-teal-dark: #0F766E;
+  --color-brand-teal-hover: #0F766E;
+
+  /* Care Blue Scale (BLUE = OPERATIONS) */
+  --color-care-blue-50: #EFF6FF;
+  --color-care-blue-100: #DBEAFE;
+  --color-care-blue-200: #BFDBFE;
+  --color-care-blue-400: #60A5FA;
+  --color-care-blue-500: #3B82F6;
+  --color-care-blue-600: #2563EB;
+  --color-care-blue-700: #1D4ED8;
+  --color-care-blue-900: #1E3A8A;
   --color-brand-blue: #2563EB;
   --color-brand-blue-dark: #1D4ED8;
+
+  /* Accents */
+  --color-care-cyan: #06B6D4;
+  --color-warm-care: #F59E0B;
+  --color-warm-care-soft: #FFFBEB;
+  --color-brand-navy: #050F33;
+  --color-brand-navy-light: #0B2447;
 
   /* Status Tokens */
   --color-status-success: #16A34A;
@@ -42,7 +83,7 @@
 
   --font-sans: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Radius Tokens (Restrained Institutional Scale: 8px controls, 12px cards, 16px surface) */
+  /* Radius Tokens */
   --radius-sm: 6px;
   --radius-control: 8px;
   --radius-btn: 10px;
@@ -51,17 +92,17 @@
   --radius-dialog: 18px;
   --radius-badge: 9999px;
 
-  /* Shadow Scale (Restrained & Subtle) */
+  /* Shadows */
   --shadow-subtle: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
-  --shadow-floating: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
+  --shadow-card: 0 8px 24px -4px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
+  --shadow-floating: 0 16px 40px -6px rgba(15, 23, 42, 0.10), 0 4px 8px -2px rgba(15, 23, 42, 0.04);
 }
 
 /* Custom Root Semantic Tokens */
 :root {
   color-scheme: light;
-  --color-bg: #FFFFFF;
-  --color-surface: #F8FAFC;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
   --color-surface-muted: #F1F5F9;
   --color-border: #E2E8F0;
   --color-text: #0F172A;
@@ -73,6 +114,11 @@
   --color-warning: #D97706;
   --color-danger: #DC2626;
   --color-info: #0284C7;
+
+  /* Brand Gradients */
+  --gradient-care: linear-gradient(135deg, #0F766E 0%, #0EA5A4 55%, #06B6D4 100%);
+  --gradient-ops: linear-gradient(135deg, #1D4ED8 0%, #2563EB 60%, #0EA5A4 100%);
+  --gradient-navy: linear-gradient(135deg, #050F33 0%, #0B2447 55%, #0F766E 100%);
 }
 
 body {
@@ -88,25 +134,105 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* SUBTLE TEXTURE SYSTEM (CSS Implementation) */
+/* GRADIENTS UTILITY CLASSES */
+.bg-gradient-care {
+  background-image: var(--gradient-care);
+}
 
-/* A. Healthcare Grid (Subtle 1px Grid for Hero & Headers) */
-.bg-texture-grid {
-  background-image: linear-gradient(to right, rgba(14, 165, 164, 0.05) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(14, 165, 164, 0.05) 1px, transparent 1px);
+.bg-gradient-ops {
+  background-image: var(--gradient-ops);
+}
+
+.bg-gradient-navy {
+  background-image: var(--gradient-navy);
+}
+
+/* BUTTON CONTRAST & VISIBILITY OVERRIDES */
+.bg-brand-teal {
+  background-color: #0EA5A4;
+  color: #FFFFFF;
+}
+
+.hover\:bg-brand-teal-hover:hover,
+.hover\:bg-brand-teal-700:hover,
+.bg-brand-teal:hover {
+  background-color: #0F766E;
+  color: #FFFFFF;
+}
+
+/* PROCEDURAL TEXTURE SYSTEM V2 */
+
+/* 1. Pulse Grid (Fine engineering/medical grid 2-5% opacity) */
+.bg-pulse-grid, .bg-texture-grid {
+  background-image: linear-gradient(to right, rgba(14, 165, 164, 0.04) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(14, 165, 164, 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
-/* B. Blueprint Dot Texture (Tiny dots for section backgrounds & admin/org headers) */
-.bg-texture-dots {
-  background-image: radial-gradient(rgba(51, 65, 85, 0.07) 1px, transparent 1px);
+/* 2. Blueprint Dots (Refined dotted grid) */
+.bg-blueprint-dots, .bg-texture-dots {
+  background-image: radial-gradient(rgba(51, 65, 85, 0.08) 1.2px, transparent 1.2px);
   background-size: 16px 16px;
 }
 
-/* C. Soft Medical Wave (Curved subtle gradient fill) */
-.bg-texture-wave {
-  background-image: radial-gradient(circle at 10% 20%, rgba(240, 253, 250, 0.8) 0%, transparent 60%),
-                    radial-gradient(circle at 90% 80%, rgba(239, 246, 255, 0.8) 0%, transparent 60%);
+/* 3. Care Wave (Soft organic radial wave) */
+.bg-care-wave, .bg-texture-wave {
+  background-image: radial-gradient(circle at 10% 20%, rgba(240, 253, 250, 0.85) 0%, transparent 60%),
+                    radial-gradient(circle at 90% 80%, rgba(239, 246, 255, 0.85) 0%, transparent 60%);
+}
+
+/* 4. Clinical Cross Grid (Healthcare cross-inspired geometry) */
+.bg-clinical-cross {
+  background-image: radial-gradient(rgba(14, 165, 164, 0.12) 1px, transparent 0),
+                    linear-gradient(to right, rgba(226, 232, 240, 0.4) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* 5. Pulse Line (Abstract ECG line pattern for dark/hero surfaces) */
+.bg-pulse-line {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(14, 165, 164, 0.06) 0px,
+    rgba(14, 165, 164, 0.06) 40px,
+    transparent 40px,
+    transparent 80px
+  );
+  background-size: 160px 100%;
+}
+
+/* 6. Soft Mesh (Multi-radial mesh: Teal + Blue + Cyan) */
+.bg-soft-mesh {
+  background-image: radial-gradient(circle at 20% 20%, rgba(14, 165, 164, 0.10) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+}
+
+/* 7. Paper Grain / Surface Texture */
+.bg-paper-grain {
+  background-color: #FAFAFA;
+  background-image: radial-gradient(rgba(100, 116, 139, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Dark Surface Background with Subtle Texture */
+.bg-surface-dark-textured {
+  background-color: #050F33;
+  background-image: radial-gradient(circle at 50% 0%, rgba(14, 165, 164, 0.15) 0%, transparent 70%),
+                    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 32px 32px, 32px 32px;
+}
+
+/* Animation Keyframes */
+@keyframes pulseLineGlow {
+  0% { opacity: 0.4; stroke-dashoffset: 240; }
+  50% { opacity: 1; stroke-dashoffset: 0; }
+  100% { opacity: 0.4; stroke-dashoffset: -240; }
+}
+
+.animate-pulse-line {
+  animation: pulseLineGlow 3s ease-in-out infinite;
 }
 
 /* Scrollbar Customization */

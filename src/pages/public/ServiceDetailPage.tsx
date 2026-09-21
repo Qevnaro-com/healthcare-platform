@@ -173,7 +173,7 @@ export const ServiceDetailPage: React.FC = () => {
                   <img
                     src={service.heroMedia || service.cardMedia || 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80'}
                     alt={service.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top"
                   />
                   <span className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-xs font-extrabold text-brand-teal border border-teal-200 shadow-2xs">
                     Starting ₹{service.pricing.basePrice} / {service.pricing.priceUnit.replace('per_', '')}
@@ -192,7 +192,7 @@ export const ServiceDetailPage: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-text-muted">Service Region:</span>
                     <span className="font-extrabold text-emerald-600 flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5" /> Delhi NCR Hubs
+                      <MapPin className="w-3.5 h-3.5" /> Doorstep Service
                     </span>
                   </div>
                 </div>
@@ -321,7 +321,7 @@ export const ServiceDetailPage: React.FC = () => {
             </div>
             <div>
               <h4 className="text-sm font-extrabold text-text-primary">Service Availability Notice</h4>
-              <p className="text-xs text-text-secondary">Available across Delhi, Noida, Gurugram, and Faridabad active care hubs.</p>
+              <p className="text-xs text-text-secondary">Available with 24/7 internal staff allocation & real-time scheduling.</p>
             </div>
           </div>
           <span className="text-xs font-extrabold text-brand-teal bg-white px-3 py-1.5 rounded-full border border-teal-200 shrink-0">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card } from '../../common/Card';
 import { Heart, ShieldAlert, Activity, CheckCircle2 } from 'lucide-react';
+import { VISUAL_ASSETS } from '../../../data/visualAssets';
 
 export const PersonalCareSection: React.FC = () => {
   return (
@@ -30,8 +31,8 @@ export const PersonalCareSection: React.FC = () => {
                 Repositioning scheduled at clinically appropriate intervals (including 2-hour repositioning routines where prescribed), pressure injury prevention, and circulation support.
               </p>
             </div>
-            <div className="rounded-xl overflow-hidden h-36 border border-border-default mt-2">
-              <img src="/assets/services/home-nursing/pulse-n-care-bedside-support.webp" alt="Bedside Support" className="w-full h-full object-cover" />
+            <div className="rounded-xl overflow-hidden aspect-video w-full border border-border-default mt-2">
+              <img src={VISUAL_ASSETS.personalBedside.url} alt="Bedside Support" className="w-full h-full object-cover object-top" />
             </div>
             <div className="p-2.5 bg-white rounded-xl border border-teal-200/80 text-[11px] font-bold text-teal-900 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-brand-teal shrink-0" />
@@ -50,8 +51,8 @@ export const PersonalCareSection: React.FC = () => {
                 Sponge / bed bath support, oral hygiene, hair care, diaper changes, and fresh clothing maintenance with full respect for patient dignity.
               </p>
             </div>
-            <div className="rounded-xl overflow-hidden h-36 border border-border-default mt-2">
-              <img src="/assets/services/home-nursing/pulse-n-care-nurse-portrait.webp" alt="Grooming & Hygiene Support" className="w-full h-full object-cover" />
+            <div className="rounded-xl overflow-hidden aspect-video w-full border border-border-default mt-2">
+              <img src={VISUAL_ASSETS.personalHygiene.url} alt="Grooming & Hygiene Support" className="w-full h-full object-cover object-top" />
             </div>
             <div className="p-2.5 bg-white rounded-xl border border-teal-200/80 text-[11px] font-bold text-teal-900 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-brand-teal shrink-0" />
@@ -70,8 +71,8 @@ export const PersonalCareSection: React.FC = () => {
                 Walking support, bed-to-wheelchair transfers, and coordination with prescribed physiotherapy care plans to ensure safe movement.
               </p>
             </div>
-            <div className="rounded-xl overflow-hidden h-36 border border-border-default mt-2">
-              <img src="/assets/services/home-nursing/pulse-n-care-mobility.webp" alt="Mobility Support" className="w-full h-full object-cover" />
+            <div className="rounded-xl overflow-hidden aspect-video w-full border border-border-default mt-2">
+              <img src="/assets/services/home-nursing/pulse-n-care-mobility.webp" alt="Mobility Support" className="w-full h-full object-cover object-top" />
             </div>
             <div className="p-2.5 bg-white rounded-xl border border-teal-200/80 text-[11px] font-bold text-teal-900 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-brand-teal shrink-0" />
