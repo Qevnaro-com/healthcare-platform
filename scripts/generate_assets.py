@@ -3,7 +3,7 @@ import base64
 from PIL import Image
 import numpy as np
 
-src_path = r'C:\Users\xshan\.gemini\antigravity-cli\brain\f90f868d-0f41-461f-8b6d-ffca3a349313\.user_uploaded\uploaded_media_1789972708936.png'
+src_path = r'C:\Users\xshan\.gemini\antigravity-cli\brain\f90f868d-0f41-461f-8b6d-ffca3a349313\.user_uploaded\uploaded_media_1789976804279.png'
 pub_dir = r'C:\Users\xshan\Desktop\healthcare-platform\public\assets\brand\pulse-n-care'
 dist_dir = r'C:\Users\xshan\Desktop\healthcare-platform\dist\assets\brand\pulse-n-care'
 

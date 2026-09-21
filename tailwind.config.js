@@ -48,7 +48,9 @@ export default {
         },
         brand: {
           teal: '#0060A8',         // Logo Pulse Blue
-          green: '#169C38',        // Logo Care Green
+          green: '#C81E27',        // Logo Care Red
+          red: '#C81E27',          // Logo Care Red
+          redDark: '#A3141C',
           tealDark: '#004E8A',     // Deep Pulse Blue
           tealHover: '#004E8A',
           blue: '#0060A8',         // Pulse Blue

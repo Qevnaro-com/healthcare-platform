@@ -11,16 +11,25 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT, TA_JUSTIFY
 from reportlab.pdfgen import canvas
 import pymupdf
 
-# Step 1: Prepare Cleaned Letterhead Background Image (High Res 300 DPI)
+# Step 1: Ensure Cleaned Letterhead Background Image (High Res 300 DPI with centered email only)
 letterhead_template_path = r"C:\Users\xshan\Downloads\Yellow and Dark Green Corporate Letterhead.pdf"
 doc_template = pymupdf.open(letterhead_template_path)
 page_template = doc_template[0]
 pix = page_template.get_pixmap(dpi=300)
 img = PIL.Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
 
-# Mask out www.qevnaro.in (x: 200 to 850, y: 3150 to 3300 in 300dpi px)
+w, h = img.size
+# Crop email icon + text snippet (x: 1390 to 2020, y: 3170 to 3280)
+email_crop = img.crop((1390, 3170, 2020, 3280))
+
+# Mask out entire footer text region
 draw = PIL.ImageDraw.Draw(img)
-draw.rectangle([200, 3150, 850, 3300], fill=(255, 255, 255))
+draw.rectangle([200, 3150, 2300, 3300], fill=(255, 255, 255))
+
+# Paste centered email snippet
+email_w, email_h = email_crop.size
+start_x = (w - email_w) // 2
+img.paste(email_crop, (start_x, 3175))
 
 cleaned_bg_path = "cleaned_letterhead_bg.png"
 img.save(cleaned_bg_path)
@@ -52,7 +61,6 @@ class NumberedCanvas(canvas.Canvas):
         self.restoreState()
 
 def draw_background(canvas_obj, doc_obj):
-    # Runs BEFORE Platypus draws story text on the page!
     canvas_obj.saveState()
     canvas_obj.drawImage(cleaned_bg_path, 0, 0, width=595.27, height=841.89)
     canvas_obj.restoreState()
@@ -71,13 +79,12 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
 
     styles = getSampleStyleSheet()
     
-    # Executive Color Palette
+    # Executive Palette
     c_primary = colors.HexColor("#0F172A")       # Deep Slate 900
     c_secondary = colors.HexColor("#0284C7")     # Ocean Corporate Blue 600
     c_dark = colors.HexColor("#334155")          # Slate 700 Text
     c_light_bg = colors.HexColor("#F8FAFC")      # Light Gray Background
     c_border = colors.HexColor("#CBD5E1")        # Slate 300 Border
-    c_accent_bar = colors.HexColor("#0284C7")    # Accent Line
     c_green = colors.HexColor("#047857")         # Success Green
     c_green_bg = colors.HexColor("#ECFDF5")      # Success Soft Green Fills
     c_red = colors.HexColor("#B91C1C")           # Exclusion Red
@@ -101,21 +108,9 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         fontName='Helvetica-Bold',
         fontSize=8.5,
         leading=11.5,
-        textColor=colors.HexColor("#BAE6FD"), # Soft Sky Blue
+        textColor=colors.HexColor("#BAE6FD"),
         alignment=TA_CENTER,
         spaceAfter=0
-    )
-
-    h1_style = ParagraphStyle(
-        'Heading1_Custom',
-        parent=styles['Normal'],
-        fontName='Helvetica-Bold',
-        fontSize=9.2,
-        leading=12.5,
-        textColor=c_primary,
-        spaceBefore=7,
-        spaceAfter=3,
-        keepWithNext=True
     )
 
     body_style = ParagraphStyle(
@@ -185,7 +180,7 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
     story.append(banner_table)
     story.append(Spacer(1, 4))
 
-    # Meta Table (Agreement Details Grid Box)
+    # Meta Table (Agreement Details Grid Box - No Phone, No Physical Address)
     meta_data = [
         [
             Paragraph("<b>Service Provider:</b> Qevnaro Technology Center", table_cell_style),
@@ -225,8 +220,8 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         ))
         t = Table([[header_p]], colWidths=[511])
         t.setStyle(TableStyle([
-            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#F1F5F9")), # Slate 100 Fills
-            ('LINELEFT', (0,0), (0,0), 3, c_secondary),                 # Blue Left Accent Bar
+            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#F1F5F9")),
+            ('LINELEFT', (0,0), (0,0), 3, c_secondary),
             ('TOPPADDING', (0,0), (-1,-1), 3),
             ('BOTTOMPADDING', (0,0), (-1,-1), 3),
             ('LEFTPADDING', (0,0), (-1,-1), 7),
@@ -234,14 +229,15 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         ]))
         return t
 
-    # Preamble / Introduction Paragraph
-    p_intro = ("This Software Development & Website Services Agreement (“Agreement”) is executed between "
-               "<b>Qevnaro</b> (“Service Provider”) and <b>Pulse n Care</b> (“Client”). Both parties agree to the complete scope of work, "
-               "commercial terms, technical architecture, project deliverables, and operational responsibilities detailed herein.")
+    # Executive Preamble & Vision
+    p_intro = ("This Software Development & Website Services Agreement (“Agreement”) is entered into between "
+               "<b>Qevnaro</b> (“Service Provider”) and <b>Pulse n Care</b> (“Client”). This document serves as the formal "
+               "contractual agreement and technical master plan for building a highly scalable, multi-tenant home healthcare "
+               "and doorstep nursing operational ecosystem engineered for long-term growth and investor presentation.")
     story.append(Paragraph(p_intro, body_style))
     story.append(Spacer(1, 2))
 
-    # Section 1: PARTIES
+    # Section 1: PARTIES (NO Phone, NO Physical Address)
     story.append(create_section_header("1. PARTIES & CONTRACTUAL IDENTIFICATION"))
     story.append(Spacer(1, 3))
     parties_data = [
@@ -252,14 +248,10 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         [
             Paragraph("<b>Company Name:</b> Qevnaro Technology Center<br/>"
                       "<b>Representative:</b> Authorized Director<br/>"
-                      "<b>Email:</b> qevnaro@gmail.com<br/>"
-                      "<b>Phone:</b> +91 87965 30323<br/>"
-                      "<b>Address:</b> Qevnaro Technology HQ", table_cell_style),
+                      "<b>Corporate Email:</b> qevnaro@gmail.com", table_cell_style),
             Paragraph("<b>Brand / Company:</b> Pulse n Care<br/>"
                       "<b>Representative:</b> Authorized Signatory<br/>"
-                      "<b>Email:</b> contact@pulserncare.com<br/>"
-                      "<b>Phone:</b> Client Contact Line<br/>"
-                      "<b>Address:</b> Pulse n Care Corporate Office", table_cell_style)
+                      "<b>Corporate Email:</b> contact@pulserncare.com", table_cell_style)
         ]
     ]
     parties_table = Table(parties_data, colWidths=[250, 261])
@@ -267,63 +259,62 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         ('BACKGROUND', (0,0), (-1,0), c_primary),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 3.5),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3.5),
+        ('TOPPADDING', (0,0), (-1,-1), 4),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
         ('LEFTPADDING', (0,0), (-1,-1), 7),
         ('RIGHTPADDING', (0,0), (-1,-1), 7),
     ]))
     story.append(parties_table)
     story.append(Spacer(1, 4))
 
-    # Section 2: PROJECT OBJECTIVE
-    story.append(create_section_header("2. PROJECT OBJECTIVE & OPERATIONAL SCOPE"))
+    # Section 2: PROJECT OBJECTIVE & OPERATIONAL ARCHITECTURE
+    story.append(create_section_header("2. PROJECT OBJECTIVE & OPERATIONAL ARCHITECTURE"))
     story.append(Spacer(1, 3))
     story.append(Paragraph(
-        "Qevnaro will engineer, design, and deploy a professional website and operational software platform for <b>Pulse n Care</b>. "
-        "The platform powers Pulse n Care's doorstep health care business model, dispatching verified nurses and skilled caregivers directly to patients' homes.<br/>"
-        "The software delivers four primary operational experiences:", body_style))
-    story.append(Paragraph("• <b>Client Panel:</b> Consumer care requests, doorstep booking management, tracking, and payment receipts.", bullet_style))
-    story.append(Paragraph("• <b>Staff / Employee Duty Panel:</b> Nurse & caregiver duty schedules, shift tracking, and patient assignments.", bullet_style))
-    story.append(Paragraph("• <b>B2B / Organization Panel:</b> Dedicated portal for institutional clients (hospitals, clinics, corporate care) to request bulk staffing.", bullet_style))
-    story.append(Paragraph("• <b>Admin / Operations Command Center:</b> Dynamic service configuration, staff matching, billing, and analytics.", bullet_style))
+        "Qevnaro will design, engineer, and deploy a professional website and integrated operational platform for <b>Pulse n Care</b>. "
+        "The software digitizes doorstep health care operations, connecting patients with qualified healthcare staff through four synchronized workspaces:", body_style))
+    story.append(Paragraph("• <b>Client Panel:</b> Consumer booking interface, patient health records, doorstep care tracking, and billing.", bullet_style))
+    story.append(Paragraph("• <b>Staff / Employee Duty Panel:</b> Field nurse duty feeds, shift schedules, patient instructions, and check-in logs.", bullet_style))
+    story.append(Paragraph("• <b>B2B / Organization Panel:</b> Multi-facility staffing portal for hospitals, clinics, and corporate healthcare accounts.", bullet_style))
+    story.append(Paragraph("• <b>Admin / Operations Command Center:</b> Dynamic service builder, staff allocation, billing control, and analytics.", bullet_style))
 
-    # Section 3: PROJECT SCOPE
+    # Section 3: CORE TECHNICAL SCOPE
     story.append(Spacer(1, 2))
-    story.append(create_section_header("3. CORE DELIVERABLES & TECHNICAL SCOPE"))
+    story.append(create_section_header("3. CORE TECHNICAL SCOPE & DELIVERABLES"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("Qevnaro will execute design, engineering, database setup, testing, and deployment assistance for:", body_style))
+    story.append(Paragraph("The platform development encompasses full-stack software engineering, database architecture, and deployment setup:", body_style))
     scope_items = [
-        "Professional responsive public website with modern UI design & clear conversion funnels",
-        "Client-facing care request system with dynamic multi-step doorstep care booking",
-        "Client Workspace: Profile management, saved patient profiles & address management",
-        "Staff Duty Workspace: Assignment feeds, shift details, duty check-in/completion tracking",
-        "B2B Institutional Portal: Facility management, shift staffing requests & roster views",
-        "Admin Command Center: Service builder, staff database, client records & duty operations",
-        "Dynamic Service & Form Management (admin-configurable services, questions & fields)",
+        "High-conversion responsive public website with modern UI/UX design & brand presentation",
+        "Multi-step dynamic doorstep care booking system with interactive patient requirement selection",
+        "Client Workspace: Profile management, saved family member patient profiles & address directory",
+        "Staff Duty Workspace: Real-time duty feeds, shift guidelines, doorstep arrival check-in & completion sign-off",
+        "B2B Institutional Portal: Facility management, shift staffing requisitions & real-time roster views",
+        "Admin Command Center: Dynamic service engine, staff database, client management & duty operations",
+        "Dynamic Service & Form Builder (100% admin-configurable services, questions & custom intake fields)",
         "Automated Invoicing module and payment record status tracking system",
-        "Role-Based Access Control (RBAC) ensuring strict data security across user panels",
+        "Role-Based Access Control (RBAC) ensuring strict data segregation across user panels",
         "Full mobile, tablet, and desktop responsive layout optimization",
-        "Deployment support and server configuration for production environment"
+        "Deployment support and server configuration for production release"
     ]
     for item in scope_items:
         story.append(Paragraph(f"• {item}", bullet_style))
 
-    # Section 4: PUBLIC WEBSITE
+    # Section 4: PUBLIC WEBSITE ARCHITECTURE
     story.append(Spacer(1, 2))
-    story.append(create_section_header("4. PUBLIC WEBSITE ARCHITECTURE"))
+    story.append(create_section_header("4. PUBLIC WEBSITE ARCHITECTURE & USER FUNNELS"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("The public website incorporates the following structured sections:", body_style))
+    story.append(Paragraph("The public digital portal incorporates high-converting, investor-grade landing sections:", body_style))
     website_pages = [
-        "<b>Home Page:</b> High-impact banner, core services overview, trust metrics, quick booking entry",
-        "<b>About Us:</b> Company vision, nursing standards, clinical quality framework",
-        "<b>Service Catalog:</b> Detailed overview of doorstep nursing and caregiving services",
-        "<b>Individual Service Pages:</b> Dedicated landing pages for each core nursing category",
-        "<b>How It Works:</b> Visual guide detailing doorstep care request and nurse arrival process",
-        "<b>Client & Family Guide:</b> Patient safety protocols, caregiver vetting process, FAQs",
-        "<b>B2B & Institutional Care:</b> Custom solutions for hospitals, clinics, and eldercare facilities",
-        "<b>Careers & Nurse Joining:</b> Recruitment portal for qualified nurses and nursing assistants",
-        "<b>Contact & Support:</b> Multi-channel inquiry form, helpline info, and location details",
-        "<b>Portal Access Points:</b> Login & signup entry points for Clients, Staff, and B2B clients"
+        "<b>Home Page:</b> Executive hero banner, value proposition, service overview, trust metrics, quick booking entry",
+        "<b>About Us:</b> Vision, clinical governance standards, nursing quality benchmarks",
+        "<b>Services Overview:</b> Interactive catalog showcasing doorstep nursing and caregiving capabilities",
+        "<b>Individual Service Pages:</b> Dedicated dynamic landing templates for healthcare offerings",
+        "<b>How It Works:</b> Step-by-step visual workflow explaining doorstep care dispatch and fulfillment",
+        "<b>Client & Family Guide:</b> Patient safety protocols, caregiver background verification standards, FAQs",
+        "<b>B2B & Institutional Solutions:</b> Tailored offerings for hospitals, clinics, and eldercare facilities",
+        "<b>Careers & Staff Recruitment:</b> Onboarding gateway for qualified nurses and caregiving professionals",
+        "<b>Contact & Inquiries:</b> Multi-channel inquiry form and corporate contact information",
+        "<b>Portal Access Points:</b> Secure login & signup gateways for Clients, Staff, and B2B accounts"
     ]
     for page in website_pages:
         story.append(Paragraph(f"• {page}", bullet_style))
@@ -332,16 +323,16 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
     story.append(Spacer(1, 2))
     story.append(create_section_header("5. CLIENT PANEL SPECIFICATIONS"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("Enables customers and family members to manage doorstep care seamlessly:", body_style))
+    story.append(Paragraph("Enables patients and families to request, manage, and track doorstep care seamlessly:", body_style))
     client_features = [
         "Secure account registration, authentication, and profile management",
-        "Patient Directory: Save family member medical profiles, care notes, and mobility status",
-        "Address Book: Manage multiple care delivery locations with map/address tagging",
-        "Care Request System: Select service type, duration (12-hour / 24-hour / shifts), and specific care needs",
-        "Real-Time Duty Tracking: Follow status from <i>Request Submitted → Nurse Assigned → On Duty → Completed</i>",
-        "Caregiver Profile View: View assigned nurse credentials, qualifications, and duty schedule",
-        "Invoices & Receipts: View, download, and track payment receipts and billing summaries",
-        "Support & Communication: In-app messaging/support entry point for duty adjustments"
+        "Patient Directory: Store family member health profiles, medical history notes, and mobility requirements",
+        "Address Book: Manage multiple care delivery locations with map pin-point tagging",
+        "Care Request System: Select dynamic service type, shift duration (hourly / 12h / 24h), and specialized needs",
+        "Real-Time Duty Tracker: Monitor duty lifecycle from <i>Request Submitted → Nurse Assigned → On Duty → Completed</i>",
+        "Caregiver Profile View: Access assigned nurse qualifications, certifications, and shift schedule",
+        "Invoices & Financial Records: View, download, and track payment receipts and billing summaries",
+        "Support & Communication: In-app support entry point for duty feedback or schedule adjustments"
     ]
     for feat in client_features:
         story.append(Paragraph(f"• {feat}", bullet_style))
@@ -350,77 +341,79 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
     story.append(Spacer(1, 2))
     story.append(create_section_header("6. STAFF / EMPLOYEE DUTY PANEL"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("Empowers field nurses and caregivers to manage assigned doorstep duties:", body_style))
+    story.append(Paragraph("Empowers field nurses and caregivers to manage assigned doorstep care duties:", body_style))
     staff_features = [
         "Secure staff authentication and employee profile dashboard",
         "Duty Feed: Overview of assigned upcoming, active, and completed duty shifts",
-        "Patient Care Instructions: Access authorized patient requirements, emergency contacts, and location",
-        "Duty Lifecycle Management: Acknowledge duty, record arrival at doorstep, mark completion",
-        "Timesheet & Attendance Logs: Automatically log completed shift hours and duty records",
-        "Privacy & Segregation: Staff access is strictly restricted to their active assigned patient tasks"
+        "Patient Care Instructions: Access authorized patient care notes, emergency contacts, and location details",
+        "Duty Lifecycle Workflow: Acknowledge duty, record arrival at doorstep, mark duty completion",
+        "Timesheet & Attendance Logs: Automated log of completed shift hours and duty history",
+        "Strict Data Privacy: Staff access is strictly limited to their active assigned patient tasks"
     ]
     for feat in staff_features:
         story.append(Paragraph(f"• {feat}", bullet_style))
 
     # Section 7: B2B / ORGANIZATION PANEL
     story.append(Spacer(1, 2))
-    story.append(create_section_header("7. B2B / ORGANIZATION PANEL"))
+    story.append(create_section_header("7. B2B / ORGANIZATION PANEL (MULTI-TENANT WORKSPACE)"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("Designed for hospitals, nursing homes, eldercare institutions, and corporate clients:", body_style))
+    story.append(Paragraph("Tailored for institutional clients including hospitals, clinics, eldercare centers, and corporate entities:", body_style))
     b2b_features = [
-        "Organization profile and multi-facility management",
-        "Bulk Staffing Requests: Request multiple nurses/caregivers by role, shift, and facility location",
-        "Workforce Roster View: Live overview of assigned staff across facility locations",
-        "Timesheets & Billing Summaries: Consolidated shift records and monthly invoicing",
+        "Organization profile and multi-facility branch management",
+        "Bulk Staffing Requisitions: Request multiple nurses/caregivers by role, shift duration, and facility location",
+        "Workforce Roster View: Live overview of assigned nursing workforce across facility locations",
+        "Timesheets & Billing Summaries: Consolidated shift attendance records and monthly invoicing",
         "<i>Platform Clarification:</i> Managed B2B operational workspace — not an open gig-economy marketplace."
     ]
     for feat in b2b_features:
         story.append(Paragraph(f"• {feat}", bullet_style))
 
-    # Section 8: ADMIN COMMAND PANEL
+    # Section 8: DYNAMIC HEALTHCARE SERVICES ENGINE (100% CONFIGURABLE)
     story.append(Spacer(1, 2))
-    story.append(create_section_header("8. ADMIN & OPERATIONS COMMAND PANEL"))
+    story.append(create_section_header("8. DYNAMIC HEALTHCARE SERVICES ENGINE & CONFIGURABLE CATALOG"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("Central operational hub providing complete management control:", body_style))
+    story.append(Paragraph(
+        "<b>100% Code-Free Service Control:</b> The platform is engineered with a dynamic, schema-driven service management architecture. "
+        "Specific service names and categories are <b>not hard-coded</b>. Instead, Pulse n Care Admin possesses full, independent operational authority to:", body_style))
+    dynamic_points = [
+        "<b>Create & Launch New Services:</b> Add any home healthcare, skilled nursing, caregiver, or diagnostic service on demand.",
+        "<b>Modify & Delete Services:</b> Update service titles, descriptions, status (active/inactive), or soft-delete offerings at any time.",
+        "<b>Configurable Intake Questions & Form Fields:</b> Attach custom questions, checkboxes, and text fields per service category.",
+        "<b>Flexible Shift & Duration Models:</b> Configure hourly visits, 12-hour day/night shifts, 24-hour live-in care, or custom schedules.",
+        "<b>Dynamic Pricing & Qualification Rules:</b> Set base rates, shift premiums, and required staff qualification tags per service.",
+        "<b>Future-Proof Scalability:</b> Easily expand into new healthcare verticals (e.g., physiotherapy, doctor visits, diagnostics) without code rebuilds."
+    ]
+    for dp in dynamic_points:
+        story.append(Paragraph(f"• {dp}", bullet_style))
+
+    # Section 9: ADMIN COMMAND PANEL
+    story.append(Spacer(1, 2))
+    story.append(create_section_header("9. ADMIN & OPERATIONS COMMAND PANEL"))
+    story.append(Spacer(1, 3))
+    story.append(Paragraph("Central operational hub providing complete management control over platform activities:", body_style))
     admin_subsections = [
-        "<b>Service Management Engine:</b> Add, edit, activate/deactivate services, categories, and custom booking questions dynamically without hard-coding.",
-        "<b>Client & Patient Database:</b> Full visibility of registered clients, patient records, and booking history.",
+        "<b>Dynamic Service Engine:</b> Manage services, categories, pricing parameters, and intake questions code-freely.",
+        "<b>Client & Patient Database:</b> Comprehensive directory of registered clients, patient profiles, and booking histories.",
         "<b>B2B Contract Oversight:</b> Manage institutional accounts, staffing requisitions, and facility coverage.",
-        "<b>Staff Directory & Allocation:</b> Complete database of nurses/caregivers, certifications, shift availability, and duty logs.",
-        "<b>Operations & Duty Assignment:</b> Review incoming care requests, assign suitable nursing staff, monitor active duties in real time.",
-        "<b>Invoicing & Financial Records:</b> Generate invoices, update payment statuses, record transaction references, and monitor billing reports."
+        "<b>Staff Directory & Allocation:</b> Database of nurses/caregivers, qualification tracking, shift availability, and duty logs.",
+        "<b>Operations & Duty Assignment Engine:</b> Review incoming care requests, assign suitable staff, and monitor active duties in real time.",
+        "<b>Invoicing & Financial Control:</b> Generate invoices, update payment statuses, record references, and track billing summaries."
     ]
     for sub in admin_subsections:
         story.append(Paragraph(f"• {sub}", bullet_style))
-
-    # Section 9: SERVICE CATEGORIES
-    story.append(Spacer(1, 2))
-    story.append(create_section_header("9. PRE-CONFIGURED HEALTHCARE SERVICE CATEGORIES"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("The platform will launch supporting five primary doorstep care categories:", body_style))
-    categories = [
-        "1. <b>Post-Operative Nursing Care:</b> Post-surgical recovery, wound dressing, catheter/IV care, and vitals monitoring.",
-        "2. <b>Senior / Elderly Skilled Nursing:</b> Geriatric care, chronic disease management, medication administration.",
-        "3. <b>12-Hour Day / Night Caregiver:</b> Half-day shift assistance for hygiene, mobility, feeding, and companionship.",
-        "4. <b>24-Hour Live-In Caregiver:</b> Full-time round-the-clock home caregiving and continuous patient support.",
-        "5. <b>High-Dependency Nursing Care:</b> Advanced nursing for bedridden, ventilator-assisted, or critical step-down patients."
-    ]
-    for cat in categories:
-        story.append(Paragraph(cat, bullet_style))
-    story.append(Paragraph("<i>Dynamic Architecture:</i> All service categories are managed via the Admin Panel, allowing Pulse n Care to update titles, descriptions, pricing structures, and custom booking form fields freely.", body_style))
 
     # Section 10: CARE REQUEST WORKFLOW
     story.append(Spacer(1, 2))
     story.append(create_section_header("10. CARE REQUEST & OPERATIONAL WORKFLOW"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("The core operational lifecycle from initial client request to completion:", body_style))
+    story.append(Paragraph("The end-to-end operational lifecycle from initial request to completion:", body_style))
     workflow_steps = [
-        "<b>Step 1 — Service Selection:</b> Client selects required care service category.",
-        "<b>Step 2 — Patient & Location Info:</b> Client inputs patient condition, address, and special requirements.",
-        "<b>Step 3 — Schedule & Shift Details:</b> Client specifies start date, duration, shift type (12h/24h), and timing.",
-        "<b>Step 4 — Review & Submission:</b> Client verifies details and submits care request.",
+        "<b>Step 1 — Service Selection:</b> Client chooses required care service category from the dynamic catalog.",
+        "<b>Step 2 — Patient & Location Details:</b> Client inputs patient health condition, address, and care instructions.",
+        "<b>Step 3 — Schedule & Shift Preference:</b> Client specifies start date, duration, shift type (12h/24h/custom), and timing.",
+        "<b>Step 4 — Review & Request Submission:</b> Client verifies details and submits the care request.",
         "<b>Operational Fulfillment Chain:</b><br/>"
-        "<i>Client Request → Admin Review → Staff Assignment → Client Confirmation → Staff Duty Execution → Duty Completion → Invoicing & Payment Record</i>"
+        "<i>Client Request → Admin Review → Staff Matching & Assignment → Client Confirmation → Staff Duty Execution → Duty Completion Sign-Off → Invoicing & Payment Record</i>"
     ]
     for step in workflow_steps:
         story.append(Paragraph(f"• {step}", bullet_style))
@@ -429,7 +422,7 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
     story.append(Spacer(1, 2))
     story.append(create_section_header("11. THIRD-PARTY INTEGRATIONS & COMMERCIAL EXCLUSIONS"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("<b>WhatsApp Integration:</b> Qevnaro will implement transactional WhatsApp messaging (for booking alerts, duty updates, and confirmations) provided Client supplies active WhatsApp Business API / Meta BSP credentials. All messaging/API charges are paid directly by Client to Meta/BSP.", body_style))
+    story.append(Paragraph("<b>WhatsApp Integration:</b> Qevnaro will implement transactional WhatsApp messaging (for booking alerts, duty updates, and confirmations) provided Client supplies active WhatsApp Business API / Meta BSP credentials. All messaging/API fees are paid directly by Client to Meta/BSP.", body_style))
     story.append(Paragraph("<b>Third-Party APIs:</b> Payment gateway transaction fees, SMS gateway fees, email service APIs (SendGrid/Mailgun), and Google Maps APIs are excluded from Qevnaro's development scope and billed directly to Client by respective service providers.", body_style))
     story.append(Paragraph("<b>Infrastructure & Hosting:</b> Client maintains ownership and direct payment for domain names, cloud hosting servers (AWS/DigitalOcean/Hostinger/Vercel), database hosting, and SSL certificates. Qevnaro provides deployment assistance.", body_style))
 
