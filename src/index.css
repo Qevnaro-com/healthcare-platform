@@ -108,17 +108,17 @@
   --color-text: #0F172A;
   --color-text-secondary: #334155;
   --color-text-muted: #64748B;
-  --color-primary: #0EA5A4;
-  --color-primary-hover: #0F766E;
-  --color-success: #16A34A;
+  --color-primary: #0060A8;
+  --color-primary-hover: #004E8A;
+  --color-success: #169C38;
   --color-warning: #D97706;
   --color-danger: #DC2626;
-  --color-info: #0284C7;
+  --color-info: #0060A8;
 
-  /* Brand Gradients */
-  --gradient-care: linear-gradient(135deg, #0F766E 0%, #0EA5A4 55%, #06B6D4 100%);
-  --gradient-ops: linear-gradient(135deg, #1D4ED8 0%, #2563EB 60%, #0EA5A4 100%);
-  --gradient-navy: linear-gradient(135deg, #050F33 0%, #0B2447 55%, #0F766E 100%);
+  /* Brand Gradients — Blending Logo Pulse Blue & Care Green */
+  --gradient-care: linear-gradient(135deg, #169C38 0%, #117F2C 55%, #05963E 100%);
+  --gradient-ops: linear-gradient(135deg, #0060A8 0%, #004E8A 60%, #169C38 100%);
+  --gradient-navy: linear-gradient(135deg, #050F33 0%, #0B2447 55%, #004E8A 100%);
 }
 
 body {
@@ -149,41 +149,41 @@ body {
 
 /* BUTTON CONTRAST & VISIBILITY OVERRIDES */
 .bg-brand-teal {
-  background-color: #0EA5A4;
+  background-color: #0060A8;
   color: #FFFFFF;
 }
 
 .hover\:bg-brand-teal-hover:hover,
 .hover\:bg-brand-teal-700:hover,
 .bg-brand-teal:hover {
-  background-color: #0F766E;
+  background-color: #004E8A;
   color: #FFFFFF;
 }
 
-/* PROCEDURAL TEXTURE SYSTEM V2 */
+/* PROCEDURAL TEXTURE SYSTEM V2 (Tuned to Logo Colors: #0060A8 Pulse Blue & #169C38 Care Green) */
 
 /* 1. Pulse Grid (Fine engineering/medical grid 2-5% opacity) */
 .bg-pulse-grid, .bg-texture-grid {
-  background-image: linear-gradient(to right, rgba(14, 165, 164, 0.04) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(14, 165, 164, 0.04) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(0, 96, 168, 0.04) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(22, 156, 56, 0.04) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
 /* 2. Blueprint Dots (Refined dotted grid) */
 .bg-blueprint-dots, .bg-texture-dots {
-  background-image: radial-gradient(rgba(51, 65, 85, 0.08) 1.2px, transparent 1.2px);
+  background-image: radial-gradient(rgba(0, 96, 168, 0.08) 1.2px, transparent 1.2px);
   background-size: 16px 16px;
 }
 
 /* 3. Care Wave (Soft organic radial wave) */
 .bg-care-wave, .bg-texture-wave {
-  background-image: radial-gradient(circle at 10% 20%, rgba(240, 253, 250, 0.85) 0%, transparent 60%),
-                    radial-gradient(circle at 90% 80%, rgba(239, 246, 255, 0.85) 0%, transparent 60%);
+  background-image: radial-gradient(circle at 10% 20%, rgba(240, 253, 244, 0.85) 0%, transparent 60%),
+                    radial-gradient(circle at 90% 80%, rgba(240, 247, 255, 0.85) 0%, transparent 60%);
 }
 
 /* 4. Clinical Cross Grid (Healthcare cross-inspired geometry) */
 .bg-clinical-cross {
-  background-image: radial-gradient(rgba(14, 165, 164, 0.12) 1px, transparent 0),
+  background-image: radial-gradient(rgba(0, 96, 168, 0.12) 1px, transparent 0),
                     linear-gradient(to right, rgba(226, 232, 240, 0.4) 1px, transparent 1px),
                     linear-gradient(to bottom, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
   background-size: 28px 28px;
@@ -193,35 +193,36 @@ body {
 .bg-pulse-line {
   background-image: repeating-linear-gradient(
     90deg,
-    rgba(14, 165, 164, 0.06) 0px,
-    rgba(14, 165, 164, 0.06) 40px,
+    rgba(0, 96, 168, 0.06) 0px,
+    rgba(0, 96, 168, 0.06) 40px,
     transparent 40px,
     transparent 80px
   );
   background-size: 160px 100%;
 }
 
-/* 6. Soft Mesh (Multi-radial mesh: Teal + Blue + Cyan) */
+/* 6. Soft Mesh (Multi-radial mesh: Pulse Blue + Care Green + Sky Accent) */
 .bg-soft-mesh {
-  background-image: radial-gradient(circle at 20% 20%, rgba(14, 165, 164, 0.10) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 30%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
-                    radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+  background-image: radial-gradient(circle at 20% 20%, rgba(0, 96, 168, 0.10) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 30%, rgba(22, 156, 56, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 50%);
 }
 
 /* 7. Paper Grain / Surface Texture */
 .bg-paper-grain {
   background-color: #FAFAFA;
-  background-image: radial-gradient(rgba(100, 116, 139, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0, 96, 168, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
-/* Dark Surface Background with Subtle Texture */
+/* Dark Surface Background with Subtle Logo Texture Lighting */
 .bg-surface-dark-textured {
   background-color: #050F33;
-  background-image: radial-gradient(circle at 50% 0%, rgba(14, 165, 164, 0.15) 0%, transparent 70%),
+  background-image: radial-gradient(circle at 50% 0%, rgba(0, 96, 168, 0.20) 0%, transparent 70%),
+                    radial-gradient(circle at 90% 100%, rgba(22, 156, 56, 0.12) 0%, transparent 60%),
                     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 100% 100%, 32px 32px, 32px 32px;
+  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
 }
 
 /* Animation Keyframes */

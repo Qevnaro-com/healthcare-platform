@@ -47,38 +47,39 @@ export default {
           dark: 'rgba(255, 255, 255, 0.12)',
         },
         brand: {
-          teal: '#0EA5A4',         // Primary Teal
-          tealDark: '#0F766E',     // Deep Accent
-          tealHover: '#0F766E',
-          blue: '#2563EB',         // Operations Blue
-          blueDark: '#1D4ED8',     // Deep Operations Blue
+          teal: '#0060A8',         // Logo Pulse Blue
+          green: '#169C38',        // Logo Care Green
+          tealDark: '#004E8A',     // Deep Pulse Blue
+          tealHover: '#004E8A',
+          blue: '#0060A8',         // Pulse Blue
+          blueDark: '#004276',     // Deep Operations Blue
           navy: '#050F33',         // Dark Anchor
           navyLight: '#0B2447',
-          cyan: '#06B6D4',
+          cyan: '#38BDF8',
         },
         'brand-teal': {
-          50: '#F0FDFA',
-          100: '#CCFBF1',
-          200: '#99F6E4',
-          300: '#5EEAD4',
-          400: '#2DD4BF',
-          500: '#14B8A6',
-          600: '#0EA5A4',
-          700: '#0F766E',
-          800: '#115E59',
-          900: '#134E4A',
-          hover: '#0F766E',
+          50: '#F0F7FF',
+          100: '#E0EFFE',
+          200: '#B9DDFE',
+          300: '#7CBDFD',
+          400: '#3699F9',
+          500: '#0E7CEE',
+          600: '#0060A8',         // Logo Pulse Blue
+          700: '#004E8A',
+          800: '#004276',
+          900: '#063762',
+          hover: '#004E8A',
         },
-        'brand-teal-hover': '#0F766E',
+        'brand-teal-hover': '#004E8A',
         'care-blue': {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          400: '#60A5FA',
-          500: '#3B82F6',
-          600: '#2563EB',
-          700: '#1D4ED8',
-          900: '#1E3A8A',
+          50: '#F0F7FF',
+          100: '#E0EFFE',
+          200: '#B9DDFE',
+          400: '#3699F9',
+          500: '#0E7CEE',
+          600: '#0060A8',         // Logo Pulse Blue
+          700: '#004E8A',
+          900: '#063762',
         },
         warm: {
           care: '#F59E0B',
