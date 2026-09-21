@@ -24,28 +24,56 @@ fg_g = np.where(alpha_norm > 0, np.clip((g - 255 * (1 - alpha_norm)) / np.maximu
 fg_b = np.where(alpha_norm > 0, np.clip((b - 255 * (1 - alpha_norm)) / np.maximum(alpha_norm, 0.001), 0, 255), 0)
 
 clean_im = Image.fromarray(np.dstack([fg_r, fg_g, fg_b, alpha]).astype(np.uint8))
+clean_arr = np.array(clean_im)
+a_chan = clean_arr[:,:,3]
 
-mark_im = clean_im.crop((250, 205, 1005, 810))
-text_im = clean_im.crop((65, 805, 1195, 1025))
-stacked_im = clean_im.crop((65, 205, 1195, 1025))
+# Dynamic row mask to detect content vs gaps automatically
+row_mask = np.sum(a_chan > 10, axis=1) > 0
+rows = np.argwhere(row_mask).flatten()
+y_min, y_max = rows.min(), rows.max()
 
-# Dark mode variant
+gap_y = None
+for y in range(y_min, y_max):
+    if not row_mask[y] and row_mask[y-1]:
+        gap_y = y
+        break
+
+# Dynamic crop for Icon Mark
+mark_mask = a_chan[:gap_y, :] > 10
+m_coords = np.argwhere(mark_mask)
+my1, mx1 = m_coords[:,0].min(), m_coords[:,1].min()
+my2, mx2 = m_coords[:,0].max(), m_coords[:,1].max()
+mark_im = clean_im.crop((mx1, my1, mx2+1, my2+1))
+
+# Dynamic crop for Text Block (Title + Tagline)
+text_mask = a_chan[gap_y:, :] > 10
+t_coords = np.argwhere(text_mask)
+ty1, tx1 = t_coords[:,0].min() + gap_y, t_coords[:,1].min()
+ty2, tx2 = t_coords[:,0].max() + gap_y, t_coords[:,1].max()
+text_im = clean_im.crop((tx1, ty1, tx2+1, ty2+1))
+
+# Dynamic crop for Full Stacked Logo
+min_x = min(mx1, tx1)
+max_x = max(mx2, tx2)
+stacked_im = clean_im.crop((min_x, my1, max_x+1, ty2+1))
+
+# Dark mode variant (adjust blue to bright cyan/white for dark bg, keep red vibrant)
 dark_arr = np.array(clean_im, dtype=np.float32)
 dr, dg, db, da = dark_arr[:,:,0], dark_arr[:,:,1], dark_arr[:,:,2], dark_arr[:,:,3]
 
 # Identify blue pixels (high blue relative to red/green)
 is_blue = (db > dr + 15) & (da > 50)
-# Shift blue pixels towards bright cyan/white for dark mode
 dr[is_blue] = np.minimum(dr[is_blue] + 160, 255)
 dg[is_blue] = np.minimum(dg[is_blue] + 160, 255)
 db[is_blue] = np.minimum(db[is_blue] + 180, 255)
 
 dark_clean_im = Image.fromarray(np.dstack([dr, dg, db, da]).astype(np.uint8))
+dark_clean_arr = np.array(dark_clean_im)
 
-mark_dark = dark_clean_im.crop((250, 205, 1005, 810))
-text_dark = dark_clean_im.crop((65, 805, 1195, 1025))
+mark_dark = dark_clean_im.crop((mx1, my1, mx2+1, my2+1))
+text_dark = dark_clean_im.crop((tx1, ty1, tx2+1, ty2+1))
 
-# Build horizontal layout
+# Build horizontal layout (Mark left, Text right)
 mark_h = 300
 mark_w = int(mark_im.width * (mark_h / mark_im.height))
 mark_resized = mark_im.resize((mark_w, mark_h), Image.Resampling.LANCZOS)
@@ -74,7 +102,7 @@ light_horiz = create_horiz(mark_resized, text_resized)
 dark_horiz = create_horiz(mark_dark_resized, text_dark_resized)
 
 # Create 1200x630 Social Preview Card
-social_im = Image.new('RGBA', (1200, 630), (248, 250, 252, 255)) # Soft slate bg
+social_im = Image.new('RGBA', (1200, 630), (248, 250, 252, 255))
 scaled_logo_h = 320
 scaled_logo_w = int(light_horiz.width * (scaled_logo_h / light_horiz.height))
 social_logo = light_horiz.resize((scaled_logo_w, scaled_logo_h), Image.Resampling.LANCZOS)
@@ -114,4 +142,4 @@ for d in [pub_dir, dist_dir]:
     save_svg(mark_im, os.path.join(d, 'pulse-n-care-mark.svg'))
     save_svg(fav_im, os.path.join(d, 'pulse-n-care-favicon.svg'))
 
-print("All brand assets generated successfully!")
+print("All brand assets regenerated dynamically and cleanly!")
