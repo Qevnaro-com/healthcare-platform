@@ -7,21 +7,54 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Runtime data & dependencies
+node_modules/
+dist/
+dist-ssr/
+build/
+.output/
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
 *.local
 
-# Editor directories and files
+# Vercel & Cloud Deployments
+.vercel/
+.turbo/
+
+# Editor & IDE directories
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+Thumbs.db
+Thumbs.db:encryptable
+[Dd]esktop.ini
+
+# Caches & Diagnostics
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.cache/
+.temp/
+.tmp/
+coverage/
+.nyc_output/
 
 # Scratch & Temporary output files
 scratch/
