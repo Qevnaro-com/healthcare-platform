@@ -702,10 +702,26 @@ export const PublicLayout: React.FC = () => {
             </div>
           </div>
 
-          {/* Bottom Copyright & Disclaimer */}
-          <div className="pt-8 pb-8 sm:pb-2 border-t border-white/10 text-center sm:flex sm:justify-between items-center text-xs text-slate-300 font-medium relative z-20">
-            <p className="text-slate-400">© 2026 Pulse n Care — Home Healthcare & Doorstep Nurse Care Network. All rights reserved.</p>
-            <nav aria-label="Legal" className="mt-4 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-x-3 sm:gap-x-5 gap-y-2 text-slate-300 font-semibold">
+          {/* Bottom Copyright, Credits & Disclaimer */}
+          <div className="pt-8 pb-8 sm:pb-2 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-300 font-medium relative z-20">
+            <div className="space-y-1.5 text-center md:text-left">
+              <p className="text-slate-400">© 2026 Pulse n Care — Home Healthcare &amp; Doorstep Nurse Care Network. All rights reserved.</p>
+              <p className="text-[11.5px] text-slate-400 flex items-center justify-center md:justify-start gap-1.5">
+                <span>Designed &amp; Developed with</span>
+                <span className="text-rose-400 text-xs">❤️</span>
+                <span>by</span>
+                <a
+                  href="https://qevnaro.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-bold text-teal-300 hover:text-white transition-colors underline-offset-2 hover:underline inline-flex items-center gap-1"
+                >
+                  <span>Qevnaro</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-teal-400/10 text-teal-300 border border-teal-400/30 uppercase tracking-wider font-extrabold">Studio</span>
+                </a>
+              </p>
+            </div>
+            <nav aria-label="Legal" className="flex flex-wrap items-center justify-center md:justify-end gap-x-3 sm:gap-x-5 gap-y-2 text-slate-300 font-semibold">
               <Link to="/privacy-policy" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Privacy Policy</Link>
               <Link to="/terms" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Terms &amp; Refund Policy</Link>
               <Link to="/medical-disclaimer" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Medical Disclaimer</Link>
