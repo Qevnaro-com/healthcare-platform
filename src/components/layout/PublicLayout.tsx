@@ -176,7 +176,7 @@ export const PublicLayout: React.FC = () => {
               className="hidden lg:inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors cursor-pointer"
             >
               <MapPin className="w-3.5 h-3.5 text-rose-400" />
-              <span>{selectedHub.city === 'Delhi' ? 'Delhi NCR' : `${selectedHub.city} (NCR)`}</span>
+              <span>{selectedHub.city.includes('NCR') ? selectedHub.city : `${selectedHub.city} (NCR)`}</span>
             </button>
             <a
               href="tel:+919211765429"
@@ -469,7 +469,7 @@ export const PublicLayout: React.FC = () => {
                   className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#015498]"
                 >
                   <MapPin className="w-3.5 h-3.5 text-[#C31725]" />
-                  <span>{selectedHub.city === 'Delhi' ? 'Delhi NCR' : selectedHub.city} (Change)</span>
+                  <span>{selectedHub.city.includes('NCR') ? selectedHub.city : `${selectedHub.city} (NCR)`} (Change)</span>
                 </button>
               </div>
 
@@ -571,7 +571,7 @@ export const PublicLayout: React.FC = () => {
           className="flex-1 flex items-center justify-center gap-2 btn-sapphire-clinical text-xs font-black py-3 px-3 rounded-xl cursor-pointer"
         >
           <Phone className="w-3.5 h-3.5 text-sky-300" />
-          <span>Call 921 176 5429</span>
+          <span>Call +91 921 176 5429</span>
         </a>
 
         <button
@@ -756,7 +756,7 @@ export const PublicLayout: React.FC = () => {
                 }`}
               >
                 <p className="font-extrabold text-text-primary text-xs flex items-center justify-between">
-                  <span>{hub.city === 'Delhi' ? 'Delhi NCR' : `${hub.city} (NCR)`}</span>
+                  <span>{hub.city.includes('NCR') ? hub.city : `${hub.city} (NCR)`}</span>
                   {selectedHub.id === hub.id && (
                     <span className="text-[11px] font-black text-[#015498] bg-white px-2 py-0.5 rounded-full border border-blue-200 uppercase">
                       Selected

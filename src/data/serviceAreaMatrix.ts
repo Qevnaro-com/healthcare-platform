@@ -7,7 +7,7 @@
 export interface ServiceAreaHub {
   id: string;
   name: string;
-  city: 'Delhi' | 'Noida' | 'Gurugram' | 'Faridabad';
+  city: 'Delhi NCR' | 'Delhi' | 'Noida' | 'Gurugram' | 'Faridabad';
   hubAddress: string;
   pincodePrefixes: string[];
   activeStaffCount: number;
@@ -21,7 +21,7 @@ export const DELHI_NCR_SERVICE_HUBS: ServiceAreaHub[] = [
   {
     id: 'hub-delhi-south',
     name: 'South Delhi Care Zone',
-    city: 'Delhi',
+    city: 'Delhi NCR',
     hubAddress: 'Defence Colony, Ring Road, New Delhi',
     pincodePrefixes: ['110001', '110003', '110014', '110016', '110017', '110019', '110020', '110024', '110048', '110065', '110070'],
     activeStaffCount: 85,
@@ -33,7 +33,7 @@ export const DELHI_NCR_SERVICE_HUBS: ServiceAreaHub[] = [
   {
     id: 'hub-delhi-west',
     name: 'West & North Delhi Care Zone',
-    city: 'Delhi',
+    city: 'Delhi NCR',
     hubAddress: 'Rajouri Garden / Rohini Sector 7, New Delhi',
     pincodePrefixes: ['110015', '110027', '110058', '110063', '110085', '110088'],
     activeStaffCount: 62,

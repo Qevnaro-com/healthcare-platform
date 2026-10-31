@@ -110,7 +110,7 @@ export const ClosingCTASection: React.FC<ClosingCTASectionProps> = ({ onOpenCall
         <motion.div variants={revealUp} className="pt-4 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400 font-medium">
           <span className="flex items-center gap-1.5 text-slate-300">
             <MapPin className="w-4 h-4 text-[#015498]" />
-            Coverage: Delhi, Gurugram, Noida, Faridabad &amp; Ghaziabad
+            Coverage: Delhi NCR, Gurugram, Noida, Faridabad &amp; Ghaziabad
           </span>
           <span className="text-slate-600">•</span>
           <a href="tel:+919211765429" className="text-slate-300 hover:text-white transition-colors">
