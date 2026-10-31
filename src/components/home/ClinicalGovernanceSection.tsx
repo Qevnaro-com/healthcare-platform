@@ -207,27 +207,27 @@ export const ClinicalGovernanceSection: React.FC = () => {
 
           {/* Bottom Audit Strip */}
           <div className="p-4 sm:p-6 bg-slate-900/90 border-t border-white/10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div className="text-xs text-slate-300">
-              <strong className="text-white">Need to verify staff registration? </strong>
+            <div className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <strong className="text-white font-bold">Need to verify staff registration? </strong>
               Our Care Desk shares nurse council certificates and police clearances upon requisition.
             </div>
 
-            <div className="w-full md:w-auto flex flex-col md:flex-row items-stretch md:items-center gap-2.5 sm:gap-3 shrink-0">
+            <div className="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 shrink-0">
               <a
                 href="tel:+919211765429"
-                className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all whitespace-nowrap text-center"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/25 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all whitespace-nowrap text-center shrink-0"
               >
                 <Phone className="w-3.5 h-3.5 text-sky-300 shrink-0" />
-                <span>+91 92117 65429</span>
+                <span className="font-mono whitespace-nowrap">+91 92117 65429</span>
               </a>
 
               <button
                 type="button"
                 onClick={() => openWhatsApp('Hello Pulse n Care, I want to review credentials and verify nurse availability for home care.')}
-                className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl btn-emerald-aura btn-shimmer text-white text-xs sm:text-sm font-black cursor-pointer shadow-lg whitespace-nowrap text-center"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl btn-emerald-aura btn-shimmer text-white text-xs sm:text-sm font-black cursor-pointer shadow-lg whitespace-nowrap text-center shrink-0"
               >
                 <WhatsAppIcon className="w-4 h-4 fill-white shrink-0" />
-                <span>Verify Staff on WhatsApp</span>
+                <span className="whitespace-nowrap">Verify Staff on WhatsApp</span>
                 <ArrowRight className="w-3.5 h-3.5 text-white ml-0.5 shrink-0" />
               </button>
             </div>

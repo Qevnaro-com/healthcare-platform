@@ -587,7 +587,7 @@ export const PublicLayout: React.FC = () => {
       {/* ========================================================================= */}
       {/* EXECUTIVE HOSPITALITY & CLINICAL FOOTER                                  */}
       {/* ========================================================================= */}
-      <footer className="bg-[#050F33] text-white border-t border-white/10 relative overflow-hidden pt-16 pb-48 sm:pb-52 lg:pb-20 text-left">
+      <footer className="bg-[#050F33] text-white border-t border-white/10 relative overflow-hidden pt-16 pb-20 sm:pb-24 lg:pb-16 text-left">
         {/* Dual Brand Accent Line (Crimson Red + Royal Blue) */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#C31725] via-[#015498] to-[#25D366]" />
 
@@ -703,28 +703,27 @@ export const PublicLayout: React.FC = () => {
           </div>
 
           {/* Bottom Copyright, Credits & Disclaimer */}
-          <div className="pt-8 pb-8 sm:pb-2 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-300 font-medium relative z-20">
+          <div className="pt-8 pb-32 sm:pb-24 md:pb-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-5 text-xs text-slate-300 font-medium relative z-20">
             <div className="space-y-1.5 text-center md:text-left">
               <p className="text-slate-400">© 2026 Pulse n Care — Home Healthcare &amp; Doorstep Nurse Care Network. All rights reserved.</p>
               <p className="text-[11.5px] text-slate-400 flex items-center justify-center md:justify-start gap-1.5">
-                <span>Designed &amp; Developed with</span>
+                <span>Developed with</span>
                 <span className="text-rose-400 text-xs">❤️</span>
                 <span>by</span>
                 <a
-                  href="https://qevnaro.com"
+                  href="https://www.qevnaro.in"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold text-teal-300 hover:text-white transition-colors underline-offset-2 hover:underline inline-flex items-center gap-1"
+                  className="font-semibold text-teal-300 hover:text-white transition-colors underline-offset-2 hover:underline tracking-tight"
                 >
-                  <span>Qevnaro</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-teal-400/10 text-teal-300 border border-teal-400/30 uppercase tracking-wider font-extrabold">Studio</span>
+                  www.qevnaro.in
                 </a>
               </p>
             </div>
-            <nav aria-label="Legal" className="flex flex-wrap items-center justify-center md:justify-end gap-x-3 sm:gap-x-5 gap-y-2 text-slate-300 font-semibold">
-              <Link to="/privacy-policy" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Terms &amp; Refund Policy</Link>
-              <Link to="/medical-disclaimer" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Medical Disclaimer</Link>
+            <nav aria-label="Legal" className="flex flex-wrap items-center justify-center md:justify-end gap-2 sm:gap-x-4 text-slate-300 font-semibold text-[11px] sm:text-xs">
+              <Link to="/privacy-policy" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2.5 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2.5 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">Terms &amp; Refund Policy</Link>
+              <Link to="/medical-disclaimer" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2.5 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">Medical Disclaimer</Link>
             </nav>
           </div>
         </div>
