@@ -75,39 +75,23 @@ export const HomePage: React.FC = () => {
         {/* Centered High-Contrast Content Container (Positioned in Lower Half) */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center pt-8 sm:pt-12">
           
-          {/* Eyebrow Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-teal-400/40 text-teal-300 text-[11px] sm:text-xs font-black tracking-wide uppercase mb-3 backdrop-blur-md shadow-lg"
-          >
-            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-            <span>Delhi NCR Doorstep Clinical Nursing &amp; Attendant Network</span>
-          </motion.div>
-
-          {/* Display headline — serif, crystal-clear typography */}
+          {/* Display headline — 3-line luxury editorial typography */}
           <motion.h1
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.05 }}
-            className="font-display text-[2rem] sm:text-5xl lg:text-6xl font-semibold text-white tracking-[-0.02em] leading-[1.12] mb-3 [text-shadow:0_2px_30px_rgba(5,15,51,0.7)] max-w-4xl"
+            transition={{ duration: 0.4 }}
+            className="font-display text-[2.2rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-semibold text-white tracking-[-0.025em] leading-[1.1] sm:leading-[1.06] mb-6 sm:mb-8 [text-shadow:0_3px_30px_rgba(5,15,51,0.85)] max-w-4xl"
           >
-            Providing Non-Medical Home Nursing Care{' '}
-            <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-rose-200 block sm:inline">
-              at Your Doorstep
+            <span className="block text-slate-100 font-medium text-[0.88em] tracking-tight">
+              Providing Non-Medical
+            </span>
+            <span className="block text-white font-bold tracking-tight py-0.5">
+              Home Nursing Care
+            </span>
+            <span className="block italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-teal-200">
+              at Your Doorstep.
             </span>
           </motion.h1>
-
-          {/* Lead Subtitle with Client's Exact Wording */}
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.1 }}
-            className="text-xs sm:text-sm md:text-base text-slate-200 max-w-2xl font-medium leading-relaxed mb-4 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]"
-          >
-            Providing non-medical home nursing care and dedicated patient attendants at your doorstep for:
-          </motion.p>
 
           {/* 6 Core Disciplines Interactive Grid */}
           <motion.div
