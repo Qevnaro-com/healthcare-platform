@@ -56,10 +56,10 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       <section className="relative min-h-[620px] sm:min-h-[680px] lg:min-h-[740px] bg-[#050F33] overflow-hidden flex flex-col justify-end items-center pb-12 sm:pb-16 pt-36 border-b border-white/10 grain">
         
-        {/* Full-Width Official Team Campaign Photo — Dedicated Nurses & Caregivers (NO DOCTORS) */}
+        {/* Full-Width Official Team Campaign Photo — Dedicated Nurses & Caregivers with Official Pulse n Care Uniform Badges */}
         <img
-          src="/assets/services/home-nursing/pulse-n-care-homecare-nurses-hero.webp"
-          alt="Pulse n Care Dedicated Homecare Nurses and Attendants"
+          src="/assets/services/home-nursing/pulse-n-care-homecare-nurses-hero.webp?v=uniform-logos"
+          alt="Pulse n Care Dedicated Homecare Nurses and Attendants in Official Uniform"
           fetchPriority="high"
           decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-90 brightness-[1.03] contrast-[1.05] saturate-[1.06] md:ken-burns"
