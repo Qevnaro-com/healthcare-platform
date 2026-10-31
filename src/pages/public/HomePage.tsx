@@ -75,23 +75,32 @@ export const HomePage: React.FC = () => {
         {/* Centered High-Contrast Content Container (Positioned in Lower Half) */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center pt-8 sm:pt-12">
           
-          {/* Display headline — 3-line luxury editorial typography */}
-          <motion.h1
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="font-display text-[2.2rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-semibold text-white tracking-[-0.025em] leading-[1.1] sm:leading-[1.06] mb-6 sm:mb-8 [text-shadow:0_3px_30px_rgba(5,15,51,0.85)] max-w-4xl"
-          >
-            <span className="block text-slate-100 font-medium text-[0.88em] tracking-tight">
-              Providing Non-Medical
-            </span>
-            <span className="block text-white font-bold tracking-tight py-0.5">
-              Home Nursing Care
-            </span>
-            <span className="block italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-teal-200">
-              at Your Doorstep.
-            </span>
-          </motion.h1>
+          {/* Display headline — 3-line luxury editorial typography with ambient texture & depth */}
+          <div className="relative mb-6 sm:mb-8 w-full max-w-4xl mx-auto">
+            {/* Luminous Ambient Light Texture Glow behind headline */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[620px] lg:w-[760px] h-[180px] sm:h-[240px] bg-gradient-to-r from-[#015498]/30 via-teal-400/20 to-[#C31725]/20 rounded-full blur-[60px] sm:blur-[90px] pointer-events-none -z-1" />
+
+            <motion.h1
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="font-display text-[2.2rem] sm:text-5xl md:text-6xl lg:text-[4.3rem] font-semibold text-white tracking-[-0.025em] leading-[1.12] sm:leading-[1.05]"
+            >
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-slate-100 to-sky-100 font-medium text-[0.82em] sm:text-[0.85em] tracking-tight filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)] pb-1">
+                Providing Non-Medical
+              </span>
+              <span className="block font-bold tracking-tight text-white filter drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)] [text-shadow:0_2px_4px_rgba(0,0,0,0.9),0_8px_32px_rgba(1,84,152,0.45)] py-0.5">
+                Home Nursing Care
+              </span>
+              <span className="relative inline-block mt-0.5">
+                <span className="italic font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-200 via-white to-sky-200 filter drop-shadow-[0_4px_22px_rgba(37,211,102,0.4)]">
+                  at Your Doorstep.
+                </span>
+                {/* Micro-Accent Glowing Horizon Line */}
+                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-28 sm:w-44 h-[2px] bg-gradient-to-r from-transparent via-teal-400/80 to-transparent rounded-full shadow-[0_0_12px_rgba(45,212,191,0.8)]" />
+              </span>
+            </motion.h1>
+          </div>
 
           {/* 6 Core Disciplines Interactive Grid */}
           <motion.div
