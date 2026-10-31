@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import { Reveal } from '../../components/common/Reveal';
+import { usePageMeta } from '../../hooks/usePageMeta';
 import { useNavigate } from 'react-router-dom';
 import { useBookings } from '../../context/BookingContext';
 import { Button } from '../../components/common/Button';
-import { HealthcareTexture } from '../../components/common/HealthcareTexture';
+import { WhatsAppIcon } from '../../components/common/WhatsAppButton';
+import { openWhatsApp, WHATSAPP_DISPLAY_PHONE } from '../../utils/whatsapp';
 import {
   PulseSurface,
-  PulseEmptyState,
-  PulseStatus
+  PulseEmptyState
 } from '../../components/common/PulseUI';
-import { VISUAL_ASSETS } from '../../data/visualAssets';
 import type { ServiceCategory, Service } from '../../types';
 import {
   HeartPulse,
@@ -29,6 +30,7 @@ import { clsx } from 'clsx';
 
 export const ServicesPage: React.FC = () => {
   const navigate = useNavigate();
+  usePageMeta('Home Nursing & Care Services in Delhi NCR', 'Browse council-verified nursing, attendant, elderly, post-operative and newborn care services with transparent pricing in Delhi NCR.');
   const { services } = useBookings();
   const [activeCategory, setActiveCategory] = useState<ServiceCategory | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -73,11 +75,9 @@ export const ServicesPage: React.FC = () => {
   const activeService = services.find((s) => s.id === hoveredServiceId) || filteredServices[0] || services[0];
 
   return (
-    <div className="space-y-16 pb-20 text-left relative bg-canvas-primary overflow-hidden">
-      <HealthcareTexture type="medical-grid" opacity={0.03} />
-
+    <div className="space-y-16 pb-20 text-left relative bg-transparent overflow-hidden">
       {/* 01. Hero Section — Asymmetric Editorial Layout */}
-      <section className="bg-gradient-to-b from-slate-50 via-teal-50/20 to-white pt-12 pb-16 border-b border-border-default relative">
+      <section className="bg-gradient-to-b from-slate-50/80 via-white/50 to-transparent pt-12 pb-16 border-b border-border-default/60 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-6">
@@ -90,45 +90,42 @@ export const ServicesPage: React.FC = () => {
               </h1>
 
               <p className="text-base sm:text-lg text-text-secondary leading-relaxed max-w-2xl font-medium font-sans">
-                Browse our internal clinical nursing, bedside attendant, orthopedic rehabilitation, general physician, and critical ICU offerings managed across Delhi NCR.
+                Browse our internal clinical nursing, bedside attendant, orthopedic rehabilitation, general physician, and critical ICU offerings managed with council-registered nurses and verified attendants.
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                <Button
-                  size="lg"
-                  variant="primary"
-                  onClick={() => navigate('/client/booking/wizard')}
-                  rightIcon={<ArrowRight className="w-5 h-5" />}
-                  className="bg-brand-teal hover:bg-brand-teal-hover text-white font-bold px-8 py-4 text-base cursor-pointer shadow-subtle rounded-full"
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
+                <button
+                  type="button"
+                  onClick={() => openWhatsApp('Hello Pulse n Care, I want to inquire about scheduling a home care service.')}
+                  className="flex items-center justify-center gap-2 sm:gap-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold px-5 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base cursor-pointer shadow-md rounded-full transition-all hover:scale-105"
                 >
-                  Schedule Care Service
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => navigate('/client/support')}
-                  leftIcon={<PhoneCall className="w-4 h-4 text-brand-teal" />}
-                  className="font-bold border-border-default cursor-pointer text-text-primary rounded-full bg-white"
+                  <WhatsAppIcon className="w-5 h-5 fill-white" />
+                  <span>Chat on WhatsApp</span>
+                </button>
+                <a
+                  href="tel:+919211765429"
+                  className="inline-flex items-center justify-center gap-2 font-bold border border-border-default cursor-pointer text-text-primary rounded-full bg-white px-5 sm:px-7 py-3.5 sm:py-4 text-sm sm:text-base hover:bg-slate-50 transition-colors"
                 >
-                  Talk To Care Concierge
-                </Button>
+                  <PhoneCall className="w-4 h-4 text-brand-teal" />
+                  <span>Call {WHATSAPP_DISPLAY_PHONE}</span>
+                </a>
               </div>
             </div>
 
             <div className="lg:col-span-5 relative">
               <PulseSurface variant="feature" padding="none" pulseAccent="top" className="p-2">
                 <div className="relative rounded-xl overflow-hidden aspect-video w-full">
-                  <img
-                    src={VISUAL_ASSETS.servicePostOpHero?.url || 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80'}
-                    alt="Pulse n Care Clinical Services"
+                  <img loading="lazy" decoding="async"
+                    src="/assets/images/founder/smt-ishwari-ceo-portrait.webp"
+                    alt="Smt. Ishwari - Founder & CEO"
                     className="w-full h-full object-cover object-top"
                   />
-                  <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md p-3 rounded-xl border border-brand-teal/30 shadow-floating flex items-center justify-between">
+                  <div className="absolute bottom-4 left-4 right-4 bg-slate-950/90 backdrop-blur-md p-3 rounded-xl border border-white/20 shadow-floating flex items-center justify-between text-white">
                     <div>
-                      <p className="text-xs font-heading font-extrabold text-text-primary">Managed Clinical Roster</p>
-                      <p className="text-[11px] text-text-muted">100% Council Verified Staff</p>
+                      <p className="text-xs font-heading font-extrabold text-white">Smt. Ishwari | Founder & CEO</p>
+                      <p className="text-[11px] text-slate-300">20+ Years Compassionate Caregiving</p>
                     </div>
-                    <PulseStatus status="success" label="Delhi NCR" size="sm" />
+                    <span className="bg-[#25D366] text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">Clinical Leader</span>
                   </div>
                 </div>
               </PulseSurface>
@@ -138,14 +135,14 @@ export const ServicesPage: React.FC = () => {
       </section>
 
       {/* 02. Search & Category Filter Bar */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <Reveal as="section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <PulseSurface variant="raised" padding="lg" className="space-y-5 bg-pulse-blueprint">
           <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
             <div className="relative flex-1">
               <Search className="w-5 h-5 absolute left-4 top-3.5 text-text-muted" />
               <input
                 type="text"
-                placeholder="Search by procedure, care type, or clinical requirement (e.g. post-op, catheter, knee rehab)..."
+                aria-label="Search services" placeholder="Search by procedure, care type, or clinical requirement (e.g. post-op, catheter, knee rehab)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-12 pl-12 pr-4 text-sm font-sans font-medium text-text-primary bg-white border border-border-default rounded-xl focus:outline-none focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20"
@@ -178,16 +175,16 @@ export const ServicesPage: React.FC = () => {
             })}
           </div>
         </PulseSurface>
-      </section>
+      </Reveal>
 
       {/* 03. NUMBERED EDITORIAL SERVICE INDEX (RULE 26 COMPLIANCE - NO GENERIC 3-CARD REPETITION) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <Reveal as="section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="flex items-center justify-between border-b border-border-light pb-4">
           <div>
             <span className="text-2xs font-heading font-extrabold uppercase tracking-widest text-brand-teal block">
               SERVICE INDEX & INTERACTIVE PREVIEW / 02
             </span>
-            <h2 className="text-2xl sm:text-3xl font-heading font-extrabold text-text-primary tracking-tight">
+            <h2 className="font-display text-2xl sm:text-3xl font-semibold text-text-primary tracking-[-0.02em]">
               Interactive Care Offerings Directory
             </h2>
           </div>
@@ -243,7 +240,7 @@ export const ServicesPage: React.FC = () => {
             <div className="lg:col-span-6 sticky top-8">
               <PulseSurface variant="feature" pulseAccent="top" padding="lg" className="space-y-5">
                 <div className="relative rounded-xl overflow-hidden aspect-video w-full">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={activeService.cardMedia || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80'}
                     alt={activeService.name}
                     className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
@@ -268,7 +265,7 @@ export const ServicesPage: React.FC = () => {
                   </p>
 
                   <div className="space-y-2 pt-2">
-                    <h4 className="text-2xs font-heading font-extrabold uppercase tracking-widest text-text-muted">Key Inclusions & Clinical Scope</h4>
+                    <h3 className="text-2xs font-heading font-extrabold uppercase tracking-widest text-text-muted">Key Inclusions & Clinical Scope</h3>
                     <div className="flex flex-wrap gap-2">
                       {activeService.keyInclusions.map((inc, i) => (
                         <span key={i} className="bg-teal-50 text-brand-teal px-2.5 py-1 rounded-md text-xs font-bold border border-brand-teal/20 flex items-center gap-1">
@@ -278,15 +275,25 @@ export const ServicesPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="pt-4 flex items-center justify-between border-t border-border-light">
-                    <Button
-                      variant="primary"
-                      onClick={() => navigate(`/services/${activeService.slug || activeService.id}`)}
-                      rightIcon={<ArrowRight className="w-4 h-4" />}
-                      className="bg-brand-teal text-white rounded-full text-xs font-bold px-6 py-2.5"
-                    >
-                      Book {activeService.name}
-                    </Button>
+                  <div className="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border-light">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => openWhatsApp(`Hello Pulse n Care, I want to book ${activeService.name} (Starting ₹${activeService.pricing.basePrice}).`)}
+                        className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full text-xs font-bold px-5 py-2.5 cursor-pointer shadow-sm transition-all hover:scale-105 active:scale-95"
+                      >
+                        <WhatsAppIcon className="w-3.5 h-3.5 fill-white" />
+                        <span>Book on WhatsApp</span>
+                      </button>
+                      <Button
+                        variant="outline"
+                        onClick={() => navigate(`/services/${activeService.slug || activeService.id}`)}
+                        rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                        className="rounded-full text-xs font-bold px-4 py-2 border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
+                      >
+                        Details
+                      </Button>
+                    </div>
 
                     <span className="text-xs text-text-muted font-sans font-medium">
                       24×7 Central Operations
@@ -314,12 +321,12 @@ export const ServicesPage: React.FC = () => {
             }
           />
         )}
-      </section>
+      </Reveal>
 
       {/* 04. FAQ Section */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <Reveal as="section" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-heading font-extrabold text-text-primary">Frequently Asked Questions</h2>
+          <h2 className="font-display text-2xl font-semibold text-text-primary">Frequently Asked Questions</h2>
           <p className="text-xs text-text-muted font-sans">Everything you need to know about Pulse n Care service booking</p>
         </div>
 
@@ -335,9 +342,9 @@ export const ServicesPage: React.FC = () => {
                 className="cursor-pointer space-y-2 hover:border-brand-teal/40 transition-colors"
               >
                 <div className="flex items-center justify-between gap-4">
-                  <h4 className="font-heading font-bold text-text-primary text-sm sm:text-base flex items-center gap-2">
+                  <h3 className="font-heading font-bold text-text-primary text-sm sm:text-base flex items-center gap-2">
                     <HelpCircle className="w-4 h-4 text-brand-teal shrink-0" /> {faq.q}
-                  </h4>
+                  </h3>
                   {isOpen ? (
                     <ChevronUp className="w-5 h-5 text-brand-teal shrink-0" />
                   ) : (
@@ -353,7 +360,7 @@ export const ServicesPage: React.FC = () => {
             );
           })}
         </div>
-      </section>
+      </Reveal>
     </div>
   );
 };

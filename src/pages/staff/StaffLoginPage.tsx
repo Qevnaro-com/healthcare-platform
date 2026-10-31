@@ -32,9 +32,9 @@ export const StaffLoginPage: React.FC = () => {
       <Card className="w-full max-w-md bg-white border-slate-200 shadow-2xl rounded-3xl p-6 sm:p-8 space-y-6 relative z-10">
         <div className="text-center space-y-2">
           <img
-            src="/assets/brand/pulse-n-care/pulse-n-care-logo.svg"
+            src="/assets/brand/pulse-n-care/pulse-n-care-logo-stacked.png"
             alt="Pulse n Care"
-            className="h-10 w-auto mx-auto"
+            className="h-16 w-auto mx-auto object-contain"
           />
           <Badge variant="teal" size="md">Staff Employee Duty Portal</Badge>
           <h1 className="text-xl font-black text-slate-900 mt-2">Employee Portal Sign In</h1>

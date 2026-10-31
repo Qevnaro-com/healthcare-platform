@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/common/Button';
-import { HeartPulse, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
+import { LottieAnimation } from '../../components/common/LottieAnimation';
 
 export const NotFoundPage: React.FC = () => {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-6 text-center space-y-6">
-      <div className="w-20 h-20 rounded-3xl bg-canvas-teal text-brand-teal flex items-center justify-center border border-teal-200 shadow-card">
-        <HeartPulse className="w-10 h-10" />
-      </div>
+      <LottieAnimation type="medical-team" className="w-64 h-56 sm:w-80 sm:h-64" />
 
       <div className="space-y-2 max-w-md">
         <span className="text-xs font-bold text-brand-teal uppercase tracking-widest">Error 404</span>
@@ -24,7 +23,7 @@ export const NotFoundPage: React.FC = () => {
             Return to Homepage
           </Button>
         </Link>
-        <Link to="/client/search">
+        <Link to="/services">
           <Button variant="outline">
             Search Services
           </Button>

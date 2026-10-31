@@ -30,3 +30,6 @@ scratch/
 !src/**
 *.pdf
 !docs/**
+clean_video.py
+
+_qa_evidence/

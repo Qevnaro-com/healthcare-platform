@@ -79,7 +79,7 @@ export const DailyChartPreview: React.FC = () => {
 
           <div className="lg:col-span-4 space-y-4">
             <div className="rounded-2xl overflow-hidden h-52 border border-border-default shadow-card">
-              <img src="/assets/services/home-nursing/pulse-n-care-documentation.webp" alt="Shift Documentation" className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src="/assets/services/home-nursing/pulse-n-care-documentation.webp" alt="Shift Documentation" className="w-full h-full object-cover" />
             </div>
             <div className="p-4 bg-white rounded-2xl border border-border-default shadow-xs space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-teal-900">

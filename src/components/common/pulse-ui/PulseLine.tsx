@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 
 export interface PulseLineProps {
   variant?: 'divider' | 'timeline' | 'hero' | 'pulse' | 'glow' | 'accent' | 'mini';
-  color?: 'teal' | 'gradient' | 'muted' | 'blue';
+  color?: 'teal' | 'gradient' | 'muted' | 'blue' | 'crimson' | 'royal' | 'green';
   animated?: boolean;
   className?: string;
   height?: number;
@@ -16,9 +16,12 @@ export const PulseLine: React.FC<PulseLineProps> = ({
   className,
   height = 24
 }) => {
-  const colorMap = {
-    teal: '#0EA5A4',
-    blue: '#2563EB',
+  const colorMap: Record<string, string> = {
+    crimson: '#C31725',
+    royal: '#015498',
+    blue: '#015498',
+    teal: '#015498',
+    green: '#25D366',
     muted: '#94A3B8',
     gradient: 'url(#pulse-line-gradient)'
   };
@@ -38,9 +41,9 @@ export const PulseLine: React.FC<PulseLineProps> = ({
       >
         <defs>
           <linearGradient id="pulse-mini-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#0EA5A4" />
-            <stop offset="50%" stopColor="#2563EB" />
-            <stop offset="100%" stopColor="#0EA5A4" />
+            <stop offset="0%" stopColor="#015498" />
+            <stop offset="50%" stopColor="#C31725" />
+            <stop offset="100%" stopColor="#015498" />
           </linearGradient>
         </defs>
         <path
@@ -67,11 +70,11 @@ export const PulseLine: React.FC<PulseLineProps> = ({
         >
           <defs>
             <linearGradient id="pulse-hero-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#0EA5A4" stopOpacity="0.1" />
-              <stop offset="35%" stopColor="#0EA5A4" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#2563EB" stopOpacity="1" />
-              <stop offset="65%" stopColor="#0EA5A4" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#2563EB" stopOpacity="0.1" />
+              <stop offset="0%" stopColor="#015498" stopOpacity="0.05" />
+              <stop offset="30%" stopColor="#015498" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="#C31725" stopOpacity="1" />
+              <stop offset="70%" stopColor="#015498" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#C31725" stopOpacity="0.05" />
             </linearGradient>
             <filter id="glow-hero" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="3" result="blur" />
@@ -91,10 +94,10 @@ export const PulseLine: React.FC<PulseLineProps> = ({
 
           {/* Animated signal dot */}
           {animated && (
-            <circle r="4" fill="#2563EB">
+            <circle r="4.5" fill="#C31725">
               <animateMotion
                 path="M0 30 H480 L495 30 L505 10 L515 50 L525 18 L535 38 L545 26 L555 30 H1200"
-                dur="4s"
+                dur="3.5s"
                 repeatCount="indefinite"
               />
             </circle>
@@ -118,18 +121,18 @@ export const PulseLine: React.FC<PulseLineProps> = ({
       >
         <defs>
           <linearGradient id="pulse-line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#0EA5A4" stopOpacity="0.1" />
-            <stop offset="25%" stopColor="#0EA5A4" stopOpacity="0.5" />
-            <stop offset="50%" stopColor="#2563EB" stopOpacity="0.9" />
-            <stop offset="75%" stopColor="#0EA5A4" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#2563EB" stopOpacity="0.1" />
+            <stop offset="0%" stopColor="#015498" stopOpacity="0.1" />
+            <stop offset="30%" stopColor="#015498" stopOpacity="0.6" />
+            <stop offset="50%" stopColor="#C31725" stopOpacity="0.9" />
+            <stop offset="70%" stopColor="#015498" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#C31725" stopOpacity="0.1" />
           </linearGradient>
         </defs>
 
         <path
           d="M0 12 H240 L248 12 L254 4 L260 20 L266 7 L272 15 L278 10 L284 12 H600"
           stroke={selectedColor}
-          strokeWidth="1.5"
+          strokeWidth="1.75"
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity="0.85"
@@ -138,8 +141,8 @@ export const PulseLine: React.FC<PulseLineProps> = ({
         {animated && (
           <path
             d="M0 12 H240 L248 12 L254 4 L260 20 L266 7 L272 15 L278 10 L284 12 H600"
-            stroke="#2563EB"
-            strokeWidth="2"
+            stroke="#C31725"
+            strokeWidth="2.5"
             strokeDasharray="40 200"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -148,7 +151,7 @@ export const PulseLine: React.FC<PulseLineProps> = ({
               attributeName="stroke-dashoffset"
               from="240"
               to="-400"
-              dur="3s"
+              dur="2.5s"
               repeatCount="indefinite"
             />
           </path>

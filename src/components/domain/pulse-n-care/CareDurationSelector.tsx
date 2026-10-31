@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Card } from '../../common/Card';
-import { Button } from '../../common/Button';
-import { Moon, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Moon, CheckCircle2 } from 'lucide-react';
+import { WhatsAppIcon } from '../../common/WhatsAppButton';
+import { openWhatsApp } from '../../../utils/whatsapp';
 import { clsx } from 'clsx';
 
 export const CareDurationSelector: React.FC = () => {
-  const navigate = useNavigate();
   const [selectedShift, setSelectedShift] = useState<'short' | 'day' | 'shift12' | 'night' | 'livein'>('night');
-  const [startDate, setStartDate] = useState('2026-09-24');
+  const [startDate, setStartDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
+  });
 
   // Calculate overnight date rollover for night shift
   const calculateNightRollover = (startStr: string) => {
@@ -32,11 +35,11 @@ export const CareDurationSelector: React.FC = () => {
     <section className="py-12 bg-white border-b border-border-default">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-left">
         <div className="max-w-3xl space-y-2">
-          <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest block">
+          <span className="text-xs font-extrabold text-[#015498] uppercase tracking-widest block">
             Flexible Shift Options
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight">
-            Choose duration & shift schedules tailored to your patient.
+            Choose duration &amp; shift schedules tailored to your patient.
           </h2>
           <p className="text-sm text-text-secondary">
             Select the exact timing your family requires. Our Operations Desk confirms qualified internal staff in Delhi NCR.
@@ -54,20 +57,20 @@ export const CareDurationSelector: React.FC = () => {
                 className={clsx(
                   'p-4 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between space-y-3 text-left',
                   isSelected
-                    ? 'border-brand-teal bg-canvas-teal ring-2 ring-brand-teal/20 shadow-xs'
-                    : 'border-border-default bg-white hover:border-border-hover'
+                    ? 'border-[#015498] bg-blue-50/60 ring-2 ring-[#015498]/20 shadow-xs'
+                    : 'border-border-default bg-white hover:border-slate-300'
                 )}
               >
                 <div className="space-y-1">
                   <span className="font-extrabold text-text-primary text-sm block flex items-center gap-1">
                     {d.isNight && <Moon className="w-4 h-4 text-amber-500" />} {d.title}
                   </span>
-                  <span className="text-[11px] font-bold text-brand-teal block">{d.label}</span>
+                  <span className="text-[11px] font-bold text-[#015498] block">{d.label}</span>
                   <p className="text-[11px] text-text-muted mt-1 leading-tight">{d.desc}</p>
                 </div>
 
                 {isSelected && (
-                  <span className="text-[10px] font-extrabold text-brand-teal flex items-center gap-1 pt-2 border-t border-teal-200">
+                  <span className="text-[10px] font-extrabold text-[#015498] flex items-center gap-1 pt-2 border-t border-blue-200">
                     <CheckCircle2 className="w-3.5 h-3.5" /> Selected Shift
                   </span>
                 )}
@@ -85,7 +88,7 @@ export const CareDurationSelector: React.FC = () => {
                   <Moon className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="font-extrabold text-sm block">Overnight Shift Schedule & Date Rollover</span>
+                  <span className="font-extrabold text-sm block">Overnight Shift Schedule &amp; Date Rollover</span>
                   <span className="text-amber-800">
                     Shift Start: <strong>10:00 PM ({startDate})</strong> → Shift End: <strong>08:00 AM ({nextDayFormatted})</strong> (10 Hours)
                   </span>
@@ -95,7 +98,7 @@ export const CareDurationSelector: React.FC = () => {
               <div className="flex items-center gap-2">
                 <label className="text-xs font-bold text-amber-900">Start Date:</label>
                 <input
-                  type="date"
+                  aria-label="Care start date" type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                   className="px-3 py-1.5 text-xs bg-white border border-amber-300 rounded-xl font-extrabold text-amber-950 focus:outline-none"
@@ -105,16 +108,16 @@ export const CareDurationSelector: React.FC = () => {
           </Card>
         )}
 
-        {/* Booking Redirect CTA */}
+        {/* Direct WhatsApp Instant Booking CTA */}
         <div className="pt-2 flex justify-end">
-          <Button
-            variant="primary"
-            onClick={() => navigate(`/client/booking/wizard?serviceId=srv-nursing-post-op&shift=${selectedShift}&date=${startDate}`)}
-            rightIcon={<ArrowRight className="w-4 h-4" />}
-            className="bg-brand-teal hover:bg-brand-teal-hover text-white font-extrabold px-8 py-3.5 rounded-2xl cursor-pointer shadow-subtle text-sm"
+          <button
+            type="button"
+            onClick={() => openWhatsApp(`Hello Pulse n Care, I want to book Home Nursing for ${selectedShift.toUpperCase()} shift starting on ${startDate}.`)}
+            className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold px-8 py-3.5 rounded-2xl cursor-pointer shadow-[0_6px_20px_rgba(37,211,102,0.4)] text-sm transition-transform hover:scale-105 active:scale-95"
           >
-            Continue to Booking ({selectedShift.toUpperCase()} SHIFT)
-          </Button>
+            <WhatsAppIcon className="w-4 h-4 fill-white" />
+            <span>Confirm {selectedShift.toUpperCase()} Shift on WhatsApp</span>
+          </button>
         </div>
       </div>
     </section>

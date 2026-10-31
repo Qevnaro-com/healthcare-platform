@@ -20,3 +20,8 @@ export * from './pulse-ui/PulseStep';
 export * from './pulse-ui/PulseToast';
 export * from './pulse-ui/PulseAvatar';
 export * from './pulse-ui/PulseChart';
+export * from './pulse-ui/ClinicalECGHeartbeat';
+export * from './pulse-ui/VerifiedAccreditationShield';
+export * from './pulse-ui/DispatchRadarBeacon';
+export * from './pulse-ui/StethoscopeConsultAnimation';
+export * from './pulse-ui/RapidAmbulanceDispatchAnimation';

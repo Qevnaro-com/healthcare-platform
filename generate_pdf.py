@@ -4,36 +4,17 @@ import PIL.Image, PIL.ImageDraw
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, KeepTogether, HRFlowable
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, KeepTogether
 )
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT, TA_JUSTIFY
 from reportlab.pdfgen import canvas
-import pymupdf
 
-# Step 1: Ensure Cleaned Letterhead Background Image (High Res 300 DPI with centered email only)
-letterhead_template_path = r"C:\Users\xshan\Downloads\Yellow and Dark Green Corporate Letterhead.pdf"
-doc_template = pymupdf.open(letterhead_template_path)
-page_template = doc_template[0]
-pix = page_template.get_pixmap(dpi=300)
-img = PIL.Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-
-w, h = img.size
-# Crop email icon + text snippet (x: 1390 to 2020, y: 3170 to 3280)
-email_crop = img.crop((1390, 3170, 2020, 3280))
-
-# Mask out entire footer text region
-draw = PIL.ImageDraw.Draw(img)
-draw.rectangle([200, 3150, 2300, 3300], fill=(255, 255, 255))
-
-# Paste centered email snippet
-email_w, email_h = email_crop.size
-start_x = (w - email_w) // 2
-img.paste(email_crop, (start_x, 3175))
-
+# Ensure background image exists
 cleaned_bg_path = "cleaned_letterhead_bg.png"
-img.save(cleaned_bg_path)
-print("Cleaned background image saved successfully.")
+if not os.path.exists(cleaned_bg_path):
+    print("Error: cleaned_letterhead_bg.png not found!")
+    sys.exit(1)
 
 # Two-pass canvas for Page X of Y header string
 class NumberedCanvas(canvas.Canvas):
@@ -57,7 +38,7 @@ class NumberedCanvas(canvas.Canvas):
         self.saveState()
         self.setFont("Helvetica-Bold", 7.5)
         self.setFillColor(colors.HexColor("#334155"))
-        self.drawRightString(540, 808, f"AGREEMENT NO: PNC-QEV-2026-01   |   PAGE {self._pageNumber} OF {page_count}")
+        self.drawRightString(540, 808, f"AGREEMENT NO: PNC-QEV-2026-02   |   PAGE {self._pageNumber} OF {page_count}")
         self.restoreState()
 
 def draw_background(canvas_obj, doc_obj):
@@ -95,8 +76,8 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         'DocTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=13.5,
-        leading=17,
+        fontSize=12.5,
+        leading=16,
         textColor=colors.white,
         alignment=TA_CENTER,
         spaceAfter=2
@@ -106,8 +87,8 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         'DocSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=8.5,
-        leading=11.5,
+        fontSize=8,
+        leading=10.5,
         textColor=colors.HexColor("#BAE6FD"),
         alignment=TA_CENTER,
         spaceAfter=0
@@ -118,7 +99,7 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         parent=styles['Normal'],
         fontName='Helvetica',
         fontSize=7.8,
-        leading=10.8,
+        leading=10.6,
         textColor=c_dark,
         spaceAfter=3,
         alignment=TA_LEFT
@@ -129,7 +110,7 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         parent=body_style,
         leftIndent=10,
         bulletIndent=3,
-        spaceAfter=1.5
+        spaceAfter=1.8
     )
 
     table_cell_style = ParagraphStyle(
@@ -137,7 +118,7 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         parent=styles['Normal'],
         fontName='Helvetica',
         fontSize=7.5,
-        leading=10,
+        leading=9.8,
         textColor=c_dark
     )
 
@@ -146,7 +127,7 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
         fontSize=7.5,
-        leading=10,
+        leading=9.8,
         textColor=c_primary
     )
 
@@ -154,8 +135,8 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         'TableHeader',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=8,
-        leading=10.5,
+        fontSize=7.8,
+        leading=10.2,
         textColor=colors.white
     )
 
@@ -164,35 +145,39 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
     # Title Banner Block (Executive Dark Navy Card)
     banner_content = [
         [Paragraph("SOFTWARE DEVELOPMENT & WEBSITE SERVICES AGREEMENT", doc_title_style)],
-        [Paragraph("PROJECT: PULSE N CARE — HOME HEALTHCARE & NURSE CARE AT DOORSTEP PLATFORM", doc_subtitle_style)]
+        [Paragraph("PROJECT: PULSE N CARE — PUBLIC HEALTHCARE SHOWCASE & SERVICES WEBSITE", doc_subtitle_style)]
     ]
     banner_table = Table(banner_content, colWidths=[511])
     banner_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,-1), c_primary),
         ('BOX', (0,0), (-1,-1), 1, c_secondary),
-        ('TOPPADDING', (0,0), (-1,0), 6),
+        ('TOPPADDING', (0,0), (-1,0), 5),
         ('BOTTOMPADDING', (0,0), (-1,0), 2),
         ('TOPPADDING', (0,1), (-1,1), 2),
-        ('BOTTOMPADDING', (0,1), (-1,1), 6),
-        ('LEFTPADDING', (0,0), (-1,-1), 10),
-        ('RIGHTPADDING', (0,0), (-1,-1), 10),
+        ('BOTTOMPADDING', (0,1), (-1,1), 5),
+        ('LEFTPADDING', (0,0), (-1,-1), 8),
+        ('RIGHTPADDING', (0,0), (-1,-1), 8),
     ]))
     story.append(banner_table)
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
 
-    # Meta Table (Agreement Details Grid Box - No Phone, No Physical Address)
+    # Meta Table (Agreement Details Grid Box)
     meta_data = [
         [
             Paragraph("<b>Service Provider:</b> Qevnaro Technology Center", table_cell_style),
-            Paragraph("<b>Total Project Investment:</b> Rs. 75,000 INR", table_cell_bold)
+            Paragraph("<b>Total Project Deal:</b> Rs. 13,000 INR (Fixed)", table_cell_bold)
         ],
         [
             Paragraph("<b>Client / Brand:</b> Pulse n Care", table_cell_style),
-            Paragraph("<b>Commencement Deposit:</b> Rs. 10,000 INR (Adjusted)", table_cell_style)
+            Paragraph("<b>Advance Paid:</b> Rs. 5,000 INR (Received / Adjusted)", table_cell_bold)
         ],
         [
-            Paragraph("<b>Agreement Date:</b> September 21, 2026", table_cell_style),
-            Paragraph("<b>Agreement Ref No:</b> PNC-QEV-2026-01", table_cell_bold)
+            Paragraph("<b>Agreement Date:</b> October 25, 2026", table_cell_style),
+            Paragraph("<b>Remaining Balance:</b> Rs. 8,000 INR (Payable on Handover)", table_cell_bold)
+        ],
+        [
+            Paragraph("<b>Agreement Ref No:</b> PNC-QEV-2026-02", table_cell_style),
+            Paragraph("<b>Deliverable Type:</b> Git Repository Source Code", table_cell_style)
         ]
     ]
     meta_table = Table(meta_data, colWidths=[250, 261])
@@ -200,46 +185,47 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         ('BACKGROUND', (0,0), (-1,-1), c_light_bg),
         ('BOX', (0,0), (-1,-1), 1, c_secondary),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 3),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
-        ('LEFTPADDING', (0,0), (-1,-1), 7),
-        ('RIGHTPADDING', (0,0), (-1,-1), 7),
+        ('TOPPADDING', (0,0), (-1,-1), 2.5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
     ]))
     story.append(meta_table)
-    story.append(Spacer(1, 4))
+    story.append(Spacer(1, 3))
 
-    # Helper function to create stylish section heading bar
+    # Helper function to create section heading bar
     def create_section_header(title_text):
         header_p = Paragraph(f"<b>{title_text}</b>", ParagraphStyle(
             'SecHead',
             parent=styles['Normal'],
             fontName='Helvetica-Bold',
-            fontSize=8.5,
-            leading=11,
+            fontSize=8.2,
+            leading=10.5,
             textColor=c_primary
         ))
         t = Table([[header_p]], colWidths=[511])
         t.setStyle(TableStyle([
             ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#F1F5F9")),
             ('LINELEFT', (0,0), (0,0), 3, c_secondary),
-            ('TOPPADDING', (0,0), (-1,-1), 3),
-            ('BOTTOMPADDING', (0,0), (-1,-1), 3),
-            ('LEFTPADDING', (0,0), (-1,-1), 7),
-            ('RIGHTPADDING', (0,0), (-1,-1), 7),
+            ('TOPPADDING', (0,0), (-1,-1), 2.5),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 2.5),
+            ('LEFTPADDING', (0,0), (-1,-1), 6),
+            ('RIGHTPADDING', (0,0), (-1,-1), 6),
         ]))
         return t
 
-    # Executive Preamble & Vision
-    p_intro = ("This Software Development & Website Services Agreement (“Agreement”) is entered into between "
-               "<b>Qevnaro</b> (“Service Provider”) and <b>Pulse n Care</b> (“Client”). This document serves as the formal "
-               "contractual agreement and technical master plan for building a highly scalable, multi-tenant home healthcare "
-               "and doorstep nursing operational ecosystem engineered for long-term growth and investor presentation.")
+    # Executive Preamble
+    p_intro = ("This Software Development & Website Services Agreement (“Agreement”) is executed between "
+               "<b>Qevnaro Technology Center</b> (“Service Provider”) and <b>Pulse n Care</b> (“Client”). "
+               "This document supersedes any previous proposals and defines the mutually agreed commercial scope, "
+               "technical boundaries, and deliverable specifications for the development of a professional, modern "
+               "public marketing and healthcare service showcase website.")
     story.append(Paragraph(p_intro, body_style))
     story.append(Spacer(1, 2))
 
-    # Section 1: PARTIES (NO Phone, NO Physical Address)
+    # Section 1: PARTIES
     story.append(create_section_header("1. PARTIES & CONTRACTUAL IDENTIFICATION"))
-    story.append(Spacer(1, 3))
+    story.append(Spacer(1, 2))
     parties_data = [
         [
             Paragraph("<b>SERVICE PROVIDER</b>", table_header_style),
@@ -259,267 +245,157 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         ('BACKGROUND', (0,0), (-1,0), c_primary),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
-        ('LEFTPADDING', (0,0), (-1,-1), 7),
-        ('RIGHTPADDING', (0,0), (-1,-1), 7),
+        ('TOPPADDING', (0,0), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
     ]))
     story.append(parties_table)
-    story.append(Spacer(1, 4))
-
-    # Section 2: PROJECT OBJECTIVE & OPERATIONAL ARCHITECTURE
-    story.append(create_section_header("2. PROJECT OBJECTIVE & OPERATIONAL ARCHITECTURE"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph(
-        "Qevnaro will design, engineer, and deploy a professional website and integrated operational platform for <b>Pulse n Care</b>. "
-        "The software digitizes doorstep health care operations, connecting patients with qualified healthcare staff through four synchronized workspaces:", body_style))
-    story.append(Paragraph("• <b>Client Panel:</b> Consumer booking interface, patient health records, doorstep care tracking, and billing.", bullet_style))
-    story.append(Paragraph("• <b>Staff / Employee Duty Panel:</b> Field nurse duty feeds, shift schedules, patient instructions, and check-in logs.", bullet_style))
-    story.append(Paragraph("• <b>B2B / Organization Panel:</b> Multi-facility staffing portal for hospitals, clinics, and corporate healthcare accounts.", bullet_style))
-    story.append(Paragraph("• <b>Admin / Operations Command Center:</b> Dynamic service builder, staff allocation, billing control, and analytics.", bullet_style))
 
-    # Section 3: CORE TECHNICAL SCOPE
+    # Section 2: AGREED PROJECT SCOPE & PUBLIC DELIVERABLES
+    story.append(create_section_header("2. AGREED PROJECT SCOPE — PUBLIC WEBSITE & SERVICES SHOWCASE"))
     story.append(Spacer(1, 2))
-    story.append(create_section_header("3. CORE TECHNICAL SCOPE & DELIVERABLES"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("The platform development encompasses full-stack software engineering, database architecture, and deployment setup:", body_style))
+    story.append(Paragraph(
+        "Qevnaro will design, engineer, and package a high-conversion, responsive public website for <b>Pulse n Care</b>. "
+        "The scope is strictly centered on presenting the client's home healthcare services and directing customer inquiries efficiently:", body_style))
     scope_items = [
-        "High-conversion responsive public website with modern UI/UX design & brand presentation",
-        "Multi-step dynamic doorstep care booking system with interactive patient requirement selection",
-        "Client Workspace: Profile management, saved family member patient profiles & address directory",
-        "Staff Duty Workspace: Real-time duty feeds, shift guidelines, doorstep arrival check-in & completion sign-off",
-        "B2B Institutional Portal: Facility management, shift staffing requisitions & real-time roster views",
-        "Admin Command Center: Dynamic service engine, staff database, client management & duty operations",
-        "Dynamic Service & Form Builder (100% admin-configurable services, questions & custom intake fields)",
-        "Automated Invoicing module and payment record status tracking system",
-        "Role-Based Access Control (RBAC) ensuring strict data segregation across user panels",
-        "Full mobile, tablet, and desktop responsive layout optimization",
-        "Deployment support and server configuration for production release"
+        "<b>High-Impact Public Website:</b> Modern, clean, and patient-friendly healthcare design engineered for brand credibility.",
+        "<b>Comprehensive Healthcare Services Presentation:</b> Clear display of all Pulse n Care home care solutions (e.g., Doorstep Nursing Care, Elderly Patient Assistance, Post-Operative Care, Palliative Attendants, and Clinical Home Visits).",
+        "<b>Service Detail Sections:</b> Clear descriptions, clinical highlights, caregiver standards, and benefits for each featured care service.",
+        "<b>Direct WhatsApp Call-To-Action (Click-to-Chat):</b> Prominent, interactive WhatsApp contact button (floating CTA and dedicated page action). When a visiting patient or family member clicks this button, it automatically launches WhatsApp with a pre-configured greeting to message Pulse n Care directly.",
+        "<b>Core Brand Pages / Sections:</b> Essential public sections including About Pulse n Care, Mission & Care Protocols, Healthcare Services Directory, Patient FAQ, and Direct Contact Information.",
+        "<b>Mobile & Multi-Device Responsiveness:</b> Fluidly responsive layout tested and optimized across smartphones, tablets, laptops, and desktop browsers.",
+        "<b>Final Deliverable:</b> Clean, structured frontend source code delivered via a secure Git repository (GitHub)."
     ]
     for item in scope_items:
         story.append(Paragraph(f"• {item}", bullet_style))
 
-    # Section 4: PUBLIC WEBSITE ARCHITECTURE
+    # Section 3: EXPLICIT EXCLUSION OF PANELS & PORTALS (ZERO DASHBOARD)
     story.append(Spacer(1, 2))
-    story.append(create_section_header("4. PUBLIC WEBSITE ARCHITECTURE & USER FUNNELS"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("The public digital portal incorporates high-converting, investor-grade landing sections:", body_style))
-    website_pages = [
-        "<b>Home Page:</b> Executive hero banner, value proposition, service overview, trust metrics, quick booking entry",
-        "<b>About Us:</b> Vision, clinical governance standards, nursing quality benchmarks",
-        "<b>Services Overview:</b> Interactive catalog showcasing doorstep nursing and caregiving capabilities",
-        "<b>Individual Service Pages:</b> Dedicated dynamic landing templates for healthcare offerings",
-        "<b>How It Works:</b> Step-by-step visual workflow explaining doorstep care dispatch and fulfillment",
-        "<b>Client & Family Guide:</b> Patient safety protocols, caregiver background verification standards, FAQs",
-        "<b>B2B & Institutional Solutions:</b> Tailored offerings for hospitals, clinics, and eldercare facilities",
-        "<b>Careers & Staff Recruitment:</b> Onboarding gateway for qualified nurses and caregiving professionals",
-        "<b>Contact & Inquiries:</b> Multi-channel inquiry form and corporate contact information",
-        "<b>Portal Access Points:</b> Secure login & signup gateways for Clients, Staff, and B2B accounts"
-    ]
-    for page in website_pages:
-        story.append(Paragraph(f"• {page}", bullet_style))
-
-    # Section 5: CLIENT PANEL
+    story.append(create_section_header("3. EXPLICIT EXCLUSION OF PANELS, DASHBOARDS & USER PORTALS"))
     story.append(Spacer(1, 2))
-    story.append(create_section_header("5. CLIENT PANEL SPECIFICATIONS"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("Enables patients and families to request, manage, and track doorstep care seamlessly:", body_style))
-    client_features = [
-        "Secure account registration, authentication, and profile management",
-        "Patient Directory: Store family member health profiles, medical history notes, and mobility requirements",
-        "Address Book: Manage multiple care delivery locations with map pin-point tagging",
-        "Care Request System: Select dynamic service type, shift duration (hourly / 12h / 24h), and specialized needs",
-        "Real-Time Duty Tracker: Monitor duty lifecycle from <i>Request Submitted → Nurse Assigned → On Duty → Completed</i>",
-        "Caregiver Profile View: Access assigned nurse qualifications, certifications, and shift schedule",
-        "Invoices & Financial Records: View, download, and track payment receipts and billing summaries",
-        "Support & Communication: In-app support entry point for duty feedback or schedule adjustments"
-    ]
-    for feat in client_features:
-        story.append(Paragraph(f"• {feat}", bullet_style))
-
-    # Section 6: STAFF / EMPLOYEE PANEL
-    story.append(Spacer(1, 2))
-    story.append(create_section_header("6. STAFF / EMPLOYEE DUTY PANEL"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("Empowers field nurses and caregivers to manage assigned doorstep care duties:", body_style))
-    staff_features = [
-        "Secure staff authentication and employee profile dashboard",
-        "Duty Feed: Overview of assigned upcoming, active, and completed duty shifts",
-        "Patient Care Instructions: Access authorized patient care notes, emergency contacts, and location details",
-        "Duty Lifecycle Workflow: Acknowledge duty, record arrival at doorstep, mark duty completion",
-        "Timesheet & Attendance Logs: Automated log of completed shift hours and duty history",
-        "Strict Data Privacy: Staff access is strictly limited to their active assigned patient tasks"
-    ]
-    for feat in staff_features:
-        story.append(Paragraph(f"• {feat}", bullet_style))
-
-    # Section 7: B2B / ORGANIZATION PANEL
-    story.append(Spacer(1, 2))
-    story.append(create_section_header("7. B2B / ORGANIZATION PANEL (MULTI-TENANT WORKSPACE)"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("Tailored for institutional clients including hospitals, clinics, eldercare centers, and corporate entities:", body_style))
-    b2b_features = [
-        "Organization profile and multi-facility branch management",
-        "Bulk Staffing Requisitions: Request multiple nurses/caregivers by role, shift duration, and facility location",
-        "Workforce Roster View: Live overview of assigned nursing workforce across facility locations",
-        "Timesheets & Billing Summaries: Consolidated shift attendance records and monthly invoicing",
-        "<i>Platform Clarification:</i> Managed B2B operational workspace — not an open gig-economy marketplace."
-    ]
-    for feat in b2b_features:
-        story.append(Paragraph(f"• {feat}", bullet_style))
-
-    # Section 8: DYNAMIC HEALTHCARE SERVICES ENGINE (100% CONFIGURABLE)
-    story.append(Spacer(1, 2))
-    story.append(create_section_header("8. DYNAMIC HEALTHCARE SERVICES ENGINE & CONFIGURABLE CATALOG"))
-    story.append(Spacer(1, 3))
     story.append(Paragraph(
-        "<b>100% Code-Free Service Control:</b> The platform is engineered with a dynamic, schema-driven service management architecture. "
-        "Specific service names and categories are <b>not hard-coded</b>. Instead, Pulse n Care Admin possesses full, independent operational authority to:", body_style))
-    dynamic_points = [
-        "<b>Create & Launch New Services:</b> Add any home healthcare, skilled nursing, caregiver, or diagnostic service on demand.",
-        "<b>Modify & Delete Services:</b> Update service titles, descriptions, status (active/inactive), or soft-delete offerings at any time.",
-        "<b>Configurable Intake Questions & Form Fields:</b> Attach custom questions, checkboxes, and text fields per service category.",
-        "<b>Flexible Shift & Duration Models:</b> Configure hourly visits, 12-hour day/night shifts, 24-hour live-in care, or custom schedules.",
-        "<b>Dynamic Pricing & Qualification Rules:</b> Set base rates, shift premiums, and required staff qualification tags per service.",
-        "<b>Future-Proof Scalability:</b> Easily expand into new healthcare verticals (e.g., physiotherapy, doctor visits, diagnostics) without code rebuilds."
+        "<b>Strict Zero-Portal Architecture:</b> As specifically agreed in this revised Rs. 13,000 package, "
+        "this project does <u>NOT</u> include any authenticated panels, login modules, or internal management portals. "
+        "The following modules are expressly excluded from the scope of work:", body_style))
+    panel_exclusions = [
+        "<b>NO Admin Dashboard / Operations Command Center:</b> No internal administrative portal for employee management, order dispatch, or dynamic settings.",
+        "<b>NO Staff / Field Nurse Duty Panel:</b> No dedicated employee interface, attendance roster, check-in logger, or nurse duty assignment panel.",
+        "<b>NO B2B / Institutional Organization Panel:</b> No hospital/clinic client portal, multi-branch facility management, or bulk requisition panel.",
+        "<b>NO Client / Patient Login Dashboard:</b> No customer account creation, password login, patient history database, or self-service dashboard.",
+        "<b>Operational Flow Clarification:</b> All incoming leads and patient requests bypass login systems and connect directly to Pulse n Care via direct WhatsApp chat."
     ]
-    for dp in dynamic_points:
-        story.append(Paragraph(f"• {dp}", bullet_style))
+    for pe in panel_exclusions:
+        story.append(Paragraph(f"• {pe}", bullet_style))
 
-    # Section 9: ADMIN COMMAND PANEL
+    # Clean Page Break -> PAGE 2
+    story.append(PageBreak())
+
+    # Section 4: HOSTING, DOMAIN & DATABASE EXCLUSIONS
+    story.append(create_section_header("4. DATABASE, HOSTING & DEPLOYMENT BOUNDARIES (ZERO RESPONSIBILITY)"))
     story.append(Spacer(1, 2))
-    story.append(create_section_header("9. ADMIN & OPERATIONS COMMAND PANEL"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("Central operational hub providing complete management control over platform activities:", body_style))
-    admin_subsections = [
-        "<b>Dynamic Service Engine:</b> Manage services, categories, pricing parameters, and intake questions code-freely.",
-        "<b>Client & Patient Database:</b> Comprehensive directory of registered clients, patient profiles, and booking histories.",
-        "<b>B2B Contract Oversight:</b> Manage institutional accounts, staffing requisitions, and facility coverage.",
-        "<b>Staff Directory & Allocation:</b> Database of nurses/caregivers, qualification tracking, shift availability, and duty logs.",
-        "<b>Operations & Duty Assignment Engine:</b> Review incoming care requests, assign suitable staff, and monitor active duties in real time.",
-        "<b>Invoicing & Financial Control:</b> Generate invoices, update payment statuses, record references, and track billing summaries."
+    story.append(Paragraph(
+        "To establish absolute clarity and prevent post-delivery operational disputes, the following infrastructure boundaries are agreed:", body_style))
+    infra_points = [
+        "<b>NO Database Responsibility:</b> The platform is built as a lightweight, lightning-fast static frontend web application. Qevnaro is not responsible for creating, hosting, configuring, or maintaining any SQL/NoSQL databases or database servers.",
+        "<b>NO Domain Purchase or Management:</b> Client is solely responsible for purchasing, renewing, and owning their custom domain name (e.g., www.pulserncare.com) and configuring DNS records.",
+        "<b>NO Live Hosting or Cloud Server Setup:</b> Qevnaro bears zero responsibility for providing, purchasing, configuring, or paying for web servers, cloud hosting providers (e.g., AWS, Hostinger, Vercel, Netlify), or SSL certificates.",
+        "<b>NO Ongoing Server Deployment Management:</b> The deployment, server uptime, DNS pointing, and live hosting environment are entirely the Client's domain and responsibility.",
+        "<b>Git Repository Handover:</b> Qevnaro's technical delivery obligation is fully satisfied upon delivering the complete, production-ready frontend project code via Git Repository (GitHub repo transfer or repository access)."
     ]
-    for sub in admin_subsections:
-        story.append(Paragraph(f"• {sub}", bullet_style))
+    for ip in infra_points:
+        story.append(Paragraph(f"• {ip}", bullet_style))
 
-    # Section 10: CARE REQUEST WORKFLOW
-    story.append(Spacer(1, 2))
-    story.append(create_section_header("10. CARE REQUEST & OPERATIONAL WORKFLOW"))
+    # Section 5: COMMERCIAL VALUE & PAYMENT STRUCTURE
     story.append(Spacer(1, 3))
-    story.append(Paragraph("The end-to-end operational lifecycle from initial request to completion:", body_style))
-    workflow_steps = [
-        "<b>Step 1 — Service Selection:</b> Client chooses required care service category from the dynamic catalog.",
-        "<b>Step 2 — Patient & Location Details:</b> Client inputs patient health condition, address, and care instructions.",
-        "<b>Step 3 — Schedule & Shift Preference:</b> Client specifies start date, duration, shift type (12h/24h/custom), and timing.",
-        "<b>Step 4 — Review & Request Submission:</b> Client verifies details and submits the care request.",
-        "<b>Operational Fulfillment Chain:</b><br/>"
-        "<i>Client Request → Admin Review → Staff Matching & Assignment → Client Confirmation → Staff Duty Execution → Duty Completion Sign-Off → Invoicing & Payment Record</i>"
-    ]
-    for step in workflow_steps:
-        story.append(Paragraph(f"• {step}", bullet_style))
-
-    # Section 11: INTEGRATIONS & THIRD-PARTY SERVICES
+    story.append(create_section_header("5. COMMERCIAL DEAL VALUE & PAYMENT MILESTONES"))
     story.append(Spacer(1, 2))
-    story.append(create_section_header("11. THIRD-PARTY INTEGRATIONS & COMMERCIAL EXCLUSIONS"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("<b>WhatsApp Integration:</b> Qevnaro will implement transactional WhatsApp messaging (for booking alerts, duty updates, and confirmations) provided Client supplies active WhatsApp Business API / Meta BSP credentials. All messaging/API fees are paid directly by Client to Meta/BSP.", body_style))
-    story.append(Paragraph("<b>Third-Party APIs:</b> Payment gateway transaction fees, SMS gateway fees, email service APIs (SendGrid/Mailgun), and Google Maps APIs are excluded from Qevnaro's development scope and billed directly to Client by respective service providers.", body_style))
-    story.append(Paragraph("<b>Infrastructure & Hosting:</b> Client maintains ownership and direct payment for domain names, cloud hosting servers (AWS/DigitalOcean/Hostinger/Vercel), database hosting, and SSL certificates. Qevnaro provides deployment assistance.", body_style))
-
-    # Section 12: INVESTMENT & PAYMENT STRUCTURE
-    story.append(Spacer(1, 2))
-    story.append(create_section_header("12. PROJECT INVESTMENT & MILESTONE SCHEDULE"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("The total fixed project value for all agreed deliverables is <b>Rs. 75,000 INR</b> (Seventy-Five Thousand Indian Rupees). "
-                           "A project commencement deposit of <b>Rs. 10,000 INR</b> is collected prior to development initiation and is fully credited toward the total project value.", body_style))
+    story.append(Paragraph(
+        "The total revised commercial deal value for the complete public website deliverables described herein is "
+        "<b>Rs. 13,000 INR</b> (Thirteen Thousand Indian Rupees). The payment structure and current execution status are as follows:", body_style))
     
     pay_table_data = [
         [
-            Paragraph("<b>Project Stage / Milestone</b>", table_header_style),
-            Paragraph("<b>Payment Breakdown</b>", table_header_style),
-            Paragraph("<b>Payable Amount (Rs.)</b>", table_header_style)
+            Paragraph("<b>Payment Stage / Milestone</b>", table_header_style),
+            Paragraph("<b>Deliverable / Condition</b>", table_header_style),
+            Paragraph("<b>Amount (Rs.)</b>", table_header_style),
+            Paragraph("<b>Payment Status</b>", table_header_style)
         ],
         [
-            Paragraph("<b>1. Security Deposit / Project Commencement</b><br/>Advance deposit prior to development initiation", table_cell_style),
-            Paragraph("Fixed Advance<br/>(Adjusted against Total)", table_cell_style),
-            Paragraph("<b>Rs. 10,000 INR</b>", table_cell_style)
+            Paragraph("<b>1. Commencement Deposit</b><br/>Project initiation & scope freeze", table_cell_style),
+            Paragraph("Initial advance payment", table_cell_style),
+            Paragraph("<b>Rs. 5,000 INR</b>", table_cell_style),
+            Paragraph("<font color='#047857'><b>RECEIVED / PAID</b></font>", table_cell_style)
         ],
         [
-            Paragraph("<b>2. First Development Milestone</b><br/>Completion of UI/UX design & Public Website structure", table_cell_style),
-            Paragraph("15% of Total Value", table_cell_style),
-            Paragraph("<b>Rs. 11,250 INR</b>", table_cell_style)
+            Paragraph("<b>2. Final Project Handover</b><br/>Delivery of source code via Git Repo", table_cell_style),
+            Paragraph("Full codebase completion & Git repo access", table_cell_style),
+            Paragraph("<b>Rs. 8,000 INR</b>", table_cell_style),
+            Paragraph("<font color='#B91C1C'><b>PENDING BALANCE</b></font>", table_cell_style)
         ],
         [
-            Paragraph("<b>3. Second Development Milestone</b><br/>Client, Staff, B2B & Admin core workflows completion", table_cell_style),
-            Paragraph("25% of Total Value", table_cell_style),
-            Paragraph("<b>Rs. 18,750 INR</b>", table_cell_style)
-        ],
-        [
-            Paragraph("<b>4. Final Milestone & Project Handover</b><br/>Final testing, deployment assistance & system handover", table_cell_style),
-            Paragraph("50% Remaining Balance", table_cell_style),
-            Paragraph("<b>Rs. 35,000 INR</b>", table_cell_style)
-        ],
-        [
-            Paragraph("<b>TOTAL AGREED PROJECT VALUE</b>", table_header_style),
-            Paragraph("<b>100% Contract Value</b>", table_header_style),
-            Paragraph("<b>Rs. 75,000 INR</b>", table_header_style)
+            Paragraph("<b>TOTAL COMMERCIAL VALUE</b>", table_header_style),
+            Paragraph("<b>Complete Public Website Package</b>", table_header_style),
+            Paragraph("<b>Rs. 13,000 INR</b>", table_header_style),
+            Paragraph("<b>Rs. 8,000 Remaining</b>", table_header_style)
         ]
     ]
-    pay_table = Table(pay_table_data, colWidths=[240, 135, 136])
+    pay_table = Table(pay_table_data, colWidths=[150, 151, 105, 105])
     pay_table.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), c_primary),
         ('BACKGROUND', (0,-1), (-1,-1), c_secondary),
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
-        ('BACKGROUND', (0,1), (-1,1), colors.HexColor("#F8FAFC")),
-        ('BACKGROUND', (0,3), (-1,3), colors.HexColor("#F8FAFC")),
-        ('TOPPADDING', (0,0), (-1,-1), 3.5),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3.5),
-        ('LEFTPADDING', (0,0), (-1,-1), 7),
-        ('RIGHTPADDING', (0,0), (-1,-1), 7),
+        ('BACKGROUND', (0,1), (-1,1), c_green_bg),
+        ('BACKGROUND', (0,2), (-1,2), c_red_bg),
+        ('TOPPADDING', (0,0), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
     ]))
     story.append(pay_table)
-
-    # Section 13: RESPONSIBILITIES & CHANGE REQUESTS
     story.append(Spacer(1, 2))
-    story.append(create_section_header("13. CLIENT RESPONSIBILITIES & SCOPE GOVERNANCE"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("<b>Client Input Timelines:</b> Client will provide logo assets, service content, pricing policies, tax rules, and third-party API keys in a timely manner. Delivery schedules automatically adjust for Client-caused delays.", body_style))
-    story.append(Paragraph("<b>Medical & Legal Responsibility:</b> Pulse n Care is solely responsible for medical accuracy, clinical disclosures, staff qualifications, legal policies, privacy terms, and regulatory compliance.", body_style))
-    story.append(Paragraph("<b>Change Requests:</b> Any major feature additions outside the approved scope (e.g., new standalone modules or new third-party systems) will be estimated and billed under a separate written addendum.", body_style))
+    story.append(Paragraph(
+        "<i>* Note on Handover: Full Git repository access and codebase handover will be executed immediately upon receipt and confirmation of the remaining Rs. 8,000 balance.</i>",
+        ParagraphStyle('Note', parent=body_style, fontSize=7.2, fontName='Helvetica-Oblique', textColor=colors.HexColor("#64748B"))
+    ))
 
-    # Section 14: INCLUDED SUPPORT & STABILIZATION
-    story.append(Spacer(1, 2))
-    story.append(create_section_header("14. INCLUDED POST-DELIVERY SUPPORT & WARRANTY"))
+    # Section 6: POST-DELIVERY MAINTENANCE & SUPPORT (EXACTLY 1 FREE SERVICE)
     story.append(Spacer(1, 3))
-    story.append(Paragraph("Following final delivery, Qevnaro provides the following complimentary post-delivery benefits:", body_style))
-    story.append(Paragraph("• <b>Website Content Updates:</b> Modifications to 1–2 pre-existing static website sections.", bullet_style))
-    story.append(Paragraph("• <b>Informational Pages:</b> Addition of up to 1–2 standard informational pages within existing layout templates.", bullet_style))
-    story.append(Paragraph("• <b>Staff Operational Training:</b> One (1) guided training session for Pulse n Care operations staff.", bullet_style))
-    story.append(Paragraph("• <b>Bug Stabilization Warranty:</b> 30-day technical support period to resolve any verified implementation bugs where functionality fails to match approved scope. Excludes third-party API outages or hosting failures.", bullet_style))
+    story.append(create_section_header("6. POST-DELIVERY SUPPORT POLICY — EXACTLY ONE (1) FREE BASIC FIX"))
+    story.append(Spacer(1, 2))
+    story.append(Paragraph(
+        "Following completion of the website and handover of the Git repository, Qevnaro includes <b>exactly one (1) single complimentary basic maintenance service</b>:", body_style))
+    support_points = [
+        "<b>Scope of Single Free Service:</b> The one free service covers minor corrective adjustments such as fixing a minor text typo, updating a WhatsApp contact phone number, or adjusting minor element alignment.",
+        "<b>Single Iteration Window:</b> This free service must be consolidated into a single consolidated request by Pulse n Care.",
+        "<b>Exclusion of Major Work:</b> The complimentary service does <u>not</u> cover adding new pages, building new feature sections, redesigning the website, or resolving third-party hosting/domain errors.",
+        "<b>Additional Maintenance:</b> Any further revisions, technical troubleshooting, or modifications requested after the exhaustion of this single free service will be billed separately under a new paid quote."
+    ]
+    for sp in support_points:
+        story.append(Paragraph(f"• {sp}", bullet_style))
 
-    # Section 15: INTELLECTUAL PROPERTY & DATA
-    story.append(Spacer(1, 2))
-    story.append(create_section_header("15. INTELLECTUAL PROPERTY, CONFIDENTIALITY & DATA"))
-    story.append(Spacer(1, 3))
-    story.append(Paragraph("<b>Intellectual Property Ownership:</b> Upon full payment of the Rs. 75,000 project value, ownership of custom deliverables created specifically for Pulse n Care will be transferred to Client. Qevnaro retains ownership of its underlying frameworks, pre-existing code libraries, and generic tools.", body_style))
-    story.append(Paragraph("<b>Confidentiality:</b> Both parties agree to protect proprietary business information, client data, patient details, staff records, and API credentials.", body_style))
+    # Clean Page Break -> PAGE 3
+    story.append(PageBreak())
 
-    # Section 16: COMMERCIAL SCOPE MATRIX TABLE
+    # Section 7: COMMERCIAL SCOPE MATRIX TABLE
+    story.append(create_section_header("7. COMMERCIAL INCLUSIONS & EXCLUSIONS MATRIX"))
     story.append(Spacer(1, 2))
-    story.append(create_section_header("16. COMMERCIAL SCOPE & EXCLUSIONS MATRIX"))
-    story.append(Spacer(1, 3))
     matrix_data = [
-        [Paragraph("<b>Scope Deliverable / Item</b>", table_header_style), Paragraph("<b>Contract Inclusion Status</b>", table_header_style)],
-        [Paragraph("Public Website + 4 Operational Panels (Client, Staff, B2B, Admin)", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b> in Rs. 75,000</font>", table_cell_style)],
-        [Paragraph("Dynamic Service & Form Builder Module", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b> in Rs. 75,000</font>", table_cell_style)],
-        [Paragraph("Care Request & Duty Assignment Workflows", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b> in Rs. 75,000</font>", table_cell_style)],
-        [Paragraph("Invoice Record & Financial Tracking Module", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b> in Rs. 75,000</font>", table_cell_style)],
-        [Paragraph("WhatsApp Integration Code Implementation", table_cell_style), Paragraph("<b>INCLUDED</b> (Client supplies API key)", table_cell_style)],
-        [Paragraph("1 Staff Training Visit & 30-Day Bug Stabilization Warranty", table_cell_style), Paragraph("<b>INCLUDED</b>", table_cell_style)],
-        [Paragraph("Domain Name Purchase & Cloud Server Hosting Fees", table_cell_style), Paragraph("<font color='#B91C1C'><b>EXCLUDED</b> (Client Direct Pay)</font>", table_cell_style)],
-        [Paragraph("WhatsApp Meta API / Per-Message Usage Charges", table_cell_style), Paragraph("<font color='#B91C1C'><b>EXCLUDED</b> (Client Direct Pay)</font>", table_cell_style)],
-        [Paragraph("Payment Gateway & Transaction Processing Fees", table_cell_style), Paragraph("<font color='#B91C1C'><b>EXCLUDED</b> (Client Direct Pay)</font>", table_cell_style)]
+        [Paragraph("<b>Scope Deliverable / Item</b>", table_header_style), Paragraph("<b>Contract Status (Rs. 13,000 Deal)</b>", table_header_style)],
+        [Paragraph("Modern Responsive Public Healthcare Website", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b></font>", table_cell_style)],
+        [Paragraph("Detailed Healthcare Services & Caregiver Showcase", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b></font>", table_cell_style)],
+        [Paragraph("Direct WhatsApp Click-to-Chat Contact CTA Integration", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b></font>", table_cell_style)],
+        [Paragraph("Source Code Delivery via Git Repository (GitHub)", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b> (After final payment)</font>", table_cell_style)],
+        [Paragraph("Post-Delivery Support: Exactly One (1) Basic Fix Service", table_cell_style), Paragraph("<font color='#047857'><b>INCLUDED</b> (One-time basic adjustment)</font>", table_cell_style)],
+        [Paragraph("Admin / Operations Management Dashboard", table_cell_style), Paragraph("<font color='#B91C1C'><b>STRICTLY EXCLUDED</b> (No Panel)</font>", table_cell_style)],
+        [Paragraph("Staff / Nurse Duty Attendance & Shift Panel", table_cell_style), Paragraph("<font color='#B91C1C'><b>STRICTLY EXCLUDED</b> (No Panel)</font>", table_cell_style)],
+        [Paragraph("B2B / Hospital Institutional Management Panel", table_cell_style), Paragraph("<font color='#B91C1C'><b>STRICTLY EXCLUDED</b> (No Panel)</font>", table_cell_style)],
+        [Paragraph("Client / Patient Authentication & Login Portal", table_cell_style), Paragraph("<font color='#B91C1C'><b>STRICTLY EXCLUDED</b> (No Panel)</font>", table_cell_style)],
+        [Paragraph("Backend Database Creation, Management & Hosting", table_cell_style), Paragraph("<font color='#B91C1C'><b>STRICTLY EXCLUDED</b> (No Database)</font>", table_cell_style)],
+        [Paragraph("Domain Name Purchase, DNS Setup & Live Hosting Server", table_cell_style), Paragraph("<font color='#B91C1C'><b>STRICTLY EXCLUDED</b> (Client's Responsibility)</font>", table_cell_style)],
+        [Paragraph("Third-Party API / Meta WhatsApp Messaging Fees", table_cell_style), Paragraph("<font color='#B91C1C'><b>STRICTLY EXCLUDED</b> (Client's Responsibility)</font>", table_cell_style)]
     ]
     matrix_table = Table(matrix_data, colWidths=[310, 201])
     matrix_table.setStyle(TableStyle([
@@ -530,22 +406,47 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         ('BACKGROUND', (0,2), (-1,2), c_green_bg),
         ('BACKGROUND', (0,3), (-1,3), c_green_bg),
         ('BACKGROUND', (0,4), (-1,4), c_green_bg),
+        ('BACKGROUND', (0,5), (-1,5), c_green_bg),
+        ('BACKGROUND', (0,6), (-1,6), c_red_bg),
         ('BACKGROUND', (0,7), (-1,7), c_red_bg),
         ('BACKGROUND', (0,8), (-1,8), c_red_bg),
         ('BACKGROUND', (0,9), (-1,9), c_red_bg),
-        ('TOPPADDING', (0,0), (-1,-1), 3),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 3),
-        ('LEFTPADDING', (0,0), (-1,-1), 7),
-        ('RIGHTPADDING', (0,0), (-1,-1), 7),
+        ('BACKGROUND', (0,10), (-1,10), c_red_bg),
+        ('BACKGROUND', (0,11), (-1,11), c_red_bg),
+        ('BACKGROUND', (0,12), (-1,12), c_red_bg),
+        ('TOPPADDING', (0,0), (-1,-1), 2.2),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 2.2),
+        ('LEFTPADDING', (0,0), (-1,-1), 6),
+        ('RIGHTPADDING', (0,0), (-1,-1), 6),
     ]))
     story.append(matrix_table)
+    story.append(Spacer(1, 3))
 
-    # Section 17: SIGNATURE BLOCK
+    # Section 8: INTELLECTUAL PROPERTY & LEGAL PROVISIONS
+    story.append(create_section_header("8. INTELLECTUAL PROPERTY, DATA & LEGAL PROVISIONS"))
     story.append(Spacer(1, 2))
-    story.append(create_section_header("17. ACCEPTANCE & EXECUTION SIGNATURES"))
+    story.append(Paragraph(
+        "<b>Code Ownership & Transfer:</b> Full ownership and rights to the bespoke frontend code created for Pulse n Care "
+        "will be formally transferred to the Client immediately upon full clearance of the remaining Rs. 8,000 balance payment. "
+        "Qevnaro retains ownership of underlying general-purpose utility libraries, standard boilerplates, and developer tooling.", body_style))
+    story.append(Paragraph(
+        "<b>Client Content & Medical Liability:</b> Pulse n Care is solely and fully responsible for all clinical information, "
+        "medical claims, service descriptions, imagery, logos, nurse vetting standards, legal compliance, and patient disclaimers. "
+        "Qevnaro acts strictly as a web technology contractor and bears zero liability for patient care or medical interactions.", body_style))
+    story.append(Paragraph(
+        "<b>Scope Governance:</b> Any feature addition, backend integration, or structural redesign outside this document "
+        "will require a separate written agreement and additional milestone budget.", body_style))
+    story.append(Spacer(1, 4))
+
+    # Section 9: SIGNATURE BLOCK
+    story.append(create_section_header("9. ACCEPTANCE & FORMAL EXECUTION SIGNATURES"))
     story.append(Spacer(1, 3))
-    story.append(Paragraph("By signing below, both Qevnaro and Pulse n Care formally accept and execute this Agreement in accordance with all scope details, payment structures, and legal terms contained herein.", body_style))
-    story.append(Spacer(1, 3))
+    story.append(Paragraph(
+        "By signing below, both Qevnaro Technology Center and Pulse n Care formally agree to and execute this Agreement. "
+        "Both parties confirm that the project scope is limited to a public showcase website with direct WhatsApp contact, "
+        "total commercial deal of Rs. 13,000 (Rs. 5,000 paid advance, Rs. 8,000 remaining balance), zero panel/dashboard inclusion, "
+        "zero database/hosting responsibility, deliverable handover via Git repository, and exactly one (1) free basic fix post-delivery.", body_style))
+    story.append(Spacer(1, 4))
 
     sig_data = [
         [
@@ -573,12 +474,11 @@ def build_pdf(filename="Pulse_n_Care_Agreement.pdf"):
         ('BOX', (0,0), (-1,-1), 1, c_border),
         ('INNERGRID', (0,0), (-1,-1), 0.5, c_border),
         ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 5),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
         ('LEFTPADDING', (0,0), (-1,-1), 8),
         ('RIGHTPADDING', (0,0), (-1,-1), 8),
     ]))
     
-    # Keep signature block together on one page
     story.append(KeepTogether(sig_table))
 
     # Build Document

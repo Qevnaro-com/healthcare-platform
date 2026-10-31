@@ -273,7 +273,7 @@ export const ClientDashboardPage: React.FC = () => {
               Need immediate assistance or emergency shift changes? Contact our 24/7 Operations Command Center in Delhi.
             </p>
             <div className="p-3 bg-canvas-secondary rounded-xl border border-border-default text-brand-teal font-extrabold text-sm flex items-center justify-between">
-              <span>+91-80-4920-8800</span>
+              <span>+91 92117 65429</span>
               <span className="text-[10px] bg-emerald-100 text-emerald-900 font-bold px-2 py-0.5 rounded">24/7 ACTIVE</span>
             </div>
           </Card>

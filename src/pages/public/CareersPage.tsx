@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Card } from '../../components/common/Card';
-import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
-import { Input } from '../../components/common/Input';
-import { HealthcareTexture } from '../../components/common/HealthcareTexture';
-import { MOCK_JOB_POSTINGS, MOCK_JOB_APPLICATIONS } from '../../data/mockCareersData';
-import type { JobPosting, JobApplication } from '../../types';
+import { MOCK_JOB_POSTINGS } from '../../data/mockCareersData';
+import { WhatsAppIcon } from '../../components/common/WhatsAppButton';
+import { openWhatsApp, WHATSAPP_DISPLAY_PHONE } from '../../utils/whatsapp';
 import {
   Briefcase,
   MapPin,
@@ -13,151 +11,164 @@ import {
   Award,
   CheckCircle2,
   ShieldCheck,
-  Send,
-  X,
-  FileText,
   DollarSign,
   Heart,
   Users,
+  Sparkles,
+  MessageCircle,
+  FileCheck2,
+  PhoneCall,
+  ArrowRight,
 } from 'lucide-react';
 
 export const CareersPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
-
-  // Application form state
-  const [applicantName, setApplicantName] = useState('');
-  const [applicantEmail, setApplicantEmail] = useState('');
-  const [applicantPhone, setApplicantPhone] = useState('');
-  const [applicantQualification, setApplicantQualification] = useState('');
-  const [applicantExperience, setApplicantExperience] = useState<number>(3);
-  const [applicantOrg, setApplicantOrg] = useState('');
-  const [applicantNotice, setApplicantNotice] = useState<number>(15);
-  const [resumeFileName, setResumeFileName] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedApplicationNo, setSubmittedApplicationNo] = useState<string | null>(null);
 
   const filteredJobs = selectedCategory === 'all'
     ? MOCK_JOB_POSTINGS
     : MOCK_JOB_POSTINGS.filter((j) => j.roleCategory === selectedCategory);
 
-  const handleOpenApplyModal = (job: JobPosting) => {
-    setSelectedJob(job);
-    setApplicantQualification(job.qualifications[0] || '');
-    setSubmittedApplicationNo(null);
-    setIsApplyModalOpen(true);
-  };
-
-  const handleSubmitApplication = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedJob) return;
-
-    setIsSubmitting(true);
-    setTimeout(() => {
-      const newAppNo = `APP-2026-09${MOCK_JOB_APPLICATIONS.length + 1}`;
-      const newApp: JobApplication = {
-        id: `app-${Date.now()}`,
-        applicationNumber: newAppNo,
-        jobId: selectedJob.id,
-        jobTitle: selectedJob.title,
-        jobCode: selectedJob.jobCode,
-        fullName: applicantName,
-        email: applicantEmail,
-        phone: applicantPhone,
-        gender: 'female',
-        qualification: applicantQualification,
-        experienceYears: Number(applicantExperience),
-        currentOrganization: applicantOrg || undefined,
-        noticePeriodDays: Number(applicantNotice),
-        resumeFileName: resumeFileName || 'Uploaded_Resume.pdf',
-        status: 'applied',
-        appliedAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      MOCK_JOB_APPLICATIONS.unshift(newApp);
-      setIsSubmitting(false);
-      setSubmittedApplicationNo(newAppNo);
-    }, 800);
+  const handleApplyViaWhatsApp = (jobTitle: string, jobCode: string, salary: string, exp: string) => {
+    const text = `Hello Pulse n Care HR Team,\n\nI am applying for the position of: *${jobTitle}* (Job Code: ${jobCode}).\n- Expected Salary: ${salary}\n- Required Experience: ${exp}\n- Sign-In Bonus: ₹10,000\n\nPlease find my qualifications and experience attached. Kindly let me know the interview schedule for Delhi NCR.`;
+    openWhatsApp(text);
   };
 
   return (
-    <div className="space-y-12 pb-16 text-left relative max-w-7xl mx-auto px-4 sm:px-6">
-      <HealthcareTexture type="soft-cell" opacity={0.03} />
-
+    <div className="space-y-12 pb-20 text-left relative max-w-7xl mx-auto px-4 sm:px-6 bg-transparent">
       {/* Hero Banner */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl">
-        <HealthcareTexture type="medical-grid" opacity={0.08} />
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-teal-950 to-slate-900 text-white rounded-3xl p-6 sm:p-12 shadow-2xl border border-teal-900/40">
+        <div className="hidden sm:block absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/20 border border-teal-400/30 text-teal-300 text-xs font-bold uppercase tracking-wider">
             <ShieldCheck className="w-4 h-4 text-teal-400" />
-            Verified In-House Clinical Care Team
+            NRI FDI Backed Healthcare Startup · Direct WhatsApp Hiring
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
-            Build Your Clinical Career with <span className="text-teal-400">Pulse n Care</span>
+          <h1 className="text-2xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+            Build Your Clinical Nursing Career with <span className="text-teal-400">Pulse n Care</span>
           </h1>
-          <p className="text-slate-300 text-base sm:text-lg font-medium leading-relaxed">
-            Join Delhi NCR's premier healthcare team. We offer competitive salaries, flexible shift rosters, health insurance coverage, and continuous clinical certification programs.
+          <p className="text-slate-300 text-sm sm:text-lg font-medium leading-relaxed">
+            Join North India's fastest-growing home healthcare ecosystem. We offer guaranteed on-time salaries, ₹10,000 sign-in bonus, shift flexibility, comprehensive health coverage, and zero agency middlemen.
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-800 text-xs">
-            <div>
-              <p className="text-slate-400 font-semibold">Verification</p>
-              <p className="text-white font-extrabold text-sm">100% In-House</p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-6 border-t border-slate-800/80 text-xs">
+            <div className="bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+              <p className="text-slate-400 font-semibold text-[11px]">Sign-In Bonus</p>
+              <p className="text-amber-400 font-extrabold text-sm sm:text-base">₹10,000 Flat</p>
             </div>
-            <div>
-              <p className="text-slate-400 font-semibold">Service Zone</p>
-              <p className="text-white font-extrabold text-sm">Delhi NCR</p>
+            <div className="bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+              <p className="text-slate-400 font-semibold text-[11px]">Monthly Payroll</p>
+              <p className="text-white font-extrabold text-sm sm:text-base">1st of Month</p>
             </div>
-            <div>
-              <p className="text-slate-400 font-semibold">Shift Roster</p>
-              <p className="text-white font-extrabold text-sm">Home & Hospital</p>
+            <div className="bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+              <p className="text-slate-400 font-semibold text-[11px]">Shifts Available</p>
+              <p className="text-white font-extrabold text-sm sm:text-base">12h & 24h Live-In</p>
             </div>
-            <div>
-              <p className="text-slate-400 font-semibold">Benefits</p>
-              <p className="text-white font-extrabold text-sm">Insurance & Bonus</p>
+            <div className="bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+              <p className="text-slate-400 font-semibold text-[11px]">Hiring Process</p>
+              <p className="text-teal-400 font-extrabold text-sm sm:text-base">Direct WhatsApp</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Join Pulse n Care */}
+      {/* 3-Step WhatsApp Hiring Guide */}
+      <section className="bg-emerald-50/80 border border-emerald-200/90 rounded-3xl p-6 sm:p-8">
+        <div className="max-w-4xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
+                100% Hassle-Free Recruitment
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-2">
+                No Lengthy Forms — Apply Directly on WhatsApp in 3 Easy Steps
+              </h2>
+            </div>
+            <button
+              onClick={() => openWhatsApp('Hello Pulse n Care HR, I am looking for a nursing job in Delhi NCR. Please guide me on open positions.')}
+              className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm shadow-md transition-all hover:scale-[1.02] cursor-pointer w-full sm:w-auto"
+            >
+              <WhatsAppIcon className="w-4 h-4 fill-white shrink-0" />
+              <span>Message HR Desk ({WHATSAPP_DISPLAY_PHONE})</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div className="bg-white p-5 rounded-2xl border border-emerald-100 shadow-xs flex items-start gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black shrink-0 text-sm">
+                1
+              </div>
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm">Select Your Role</h4>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Browse open positions below (GNM/B.Sc Nurse, ICU Nurse, Bedside Attendant) and tap <strong>"Apply on WhatsApp"</strong>.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-emerald-100 shadow-xs flex items-start gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black shrink-0 text-sm">
+                2
+              </div>
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm">Share Resume & Nursing Reg.</h4>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  WhatsApp will open with a pre-filled draft. Attach your CV or Nursing Council Registration photo.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-emerald-100 shadow-xs flex items-start gap-3.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-black shrink-0 text-sm">
+                3
+              </div>
+              <div>
+                <h4 className="font-extrabold text-slate-900 text-sm">Interview within 24 Hours</h4>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Our HR & Clinical Lead will verify your credentials and arrange an in-person or video interview right away.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Healthcare Professionals Choose Us */}
       <section className="space-y-6">
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <h2 className="text-2xl font-extrabold text-slate-900">Why Healthcare Professionals Choose Us</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Why Nurses & Caregivers Love Pulse n Care</h2>
           <p className="text-slate-600 text-sm">
             We prioritize clinical safety, dignity, transparent earnings, and professional growth for every care team member.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="p-6 space-y-3 border-slate-200 hover:shadow-md transition-shadow">
+          <Card className="p-6 space-y-3 border-slate-200 hover:shadow-lg transition-all rounded-3xl bg-white">
             <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold">
               <DollarSign className="w-6 h-6" />
             </div>
-            <h3 className="font-extrabold text-slate-900 text-base">Top Salary & On-Time Payroll</h3>
+            <h3 className="font-extrabold text-slate-900 text-base">Top Industry Pay & On-Time Payroll</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Guaranteed 1st of the month salary transfer, overtime incentives, travel allowance, and performance bonuses.
+              Guaranteed 1st-of-month direct bank transfer. Extra night-shift allowances, emergency overtime incentives, and ₹10,000 joining bonus.
             </p>
           </Card>
 
-          <Card className="p-6 space-y-3 border-slate-200 hover:shadow-md transition-shadow">
+          <Card className="p-6 space-y-3 border-slate-200 hover:shadow-lg transition-all rounded-3xl bg-white">
             <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
               <Heart className="w-6 h-6" />
             </div>
-            <h3 className="font-extrabold text-slate-900 text-base">Health Insurance & Clinical Safety</h3>
+            <h3 className="font-extrabold text-slate-900 text-base">Health Insurance & Clinical Dignity</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Comprehensive medical insurance, sterile PPE supply kits, and 24x7 doctor backup for emergency clinical support.
+              Medical insurance coverage for you and family, sterile medical PPE supply kits, and 24x7 Doctor On-Call escalation support.
             </p>
           </Card>
 
-          <Card className="p-6 space-y-3 border-slate-200 hover:shadow-md transition-shadow">
+          <Card className="p-6 space-y-3 border-slate-200 hover:shadow-lg transition-all rounded-3xl bg-white">
             <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold">
               <Users className="w-6 h-6" />
             </div>
-            <h3 className="font-extrabold text-slate-900 text-base">Flexible Shift Roster</h3>
+            <h3 className="font-extrabold text-slate-900 text-base">Flexible Shift Rosters</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Choose between home care patient visits or partner hospital facility rosters (12h day/night & 24h options).
+              Choose between 12-hour day shifts, 12-hour night shifts, or high-earning 24/7 live-in deployments across Delhi, Gurgaon, Noida, and Faridabad.
             </p>
           </Card>
         </div>
@@ -167,24 +178,24 @@ export const CareersPage: React.FC = () => {
       <section className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
           <div>
-            <h2 className="text-xl font-extrabold text-slate-900">Open Clinical & Nursing Positions</h2>
-            <p className="text-xs text-slate-500">Explore active openings across Delhi NCR</p>
+            <h2 className="text-2xl font-black text-slate-900">Current Job Openings (Delhi NCR)</h2>
+            <p className="text-xs text-slate-500">Tap below to apply directly via WhatsApp</p>
           </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
             {[
-              { id: 'all', label: 'All Jobs' },
-              { id: 'icu_nurse', label: 'ICU Nurse' },
-              { id: 'registered_nurse', label: 'Ward Nurse' },
-              { id: 'physiotherapist', label: 'Physiotherapist' },
+              { id: 'all', label: 'All Openings' },
+              { id: 'registered_nurse', label: 'Home Healthcare Nurse' },
+              { id: 'icu_nurse', label: 'ICU / Critical Care' },
               { id: 'caregiver_attendant', label: 'Bedside Caregiver' },
+              { id: 'physiotherapist', label: 'Physiotherapist' },
             ].map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold cursor-pointer whitespace-nowrap transition-all border ${
+                className={`px-4 py-2 rounded-2xl text-xs font-bold cursor-pointer whitespace-nowrap transition-all border ${
                   selectedCategory === cat.id
-                    ? 'bg-teal-600 text-white border-teal-600 shadow-xs'
+                    ? 'bg-teal-700 text-white border-teal-700 shadow-sm'
                     : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
                 }`}
               >
@@ -195,248 +206,132 @@ export const CareersPage: React.FC = () => {
         </div>
 
         {/* Job Listings Grid */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           {filteredJobs.map((job) => (
-            <Card key={job.id} className="p-6 border-slate-200 hover:border-teal-300 transition-all space-y-4 shadow-xs">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div className="space-y-2">
+            <Card
+              key={job.id}
+              className="p-6 sm:p-7 border-slate-200 hover:border-teal-400 hover:shadow-xl transition-all space-y-5 rounded-3xl bg-white"
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                <div className="space-y-2.5">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="info" className="uppercase font-bold text-[10px]">
+                    <Badge variant="info" className="uppercase font-bold text-[10px] tracking-wider">
                       {job.jobCode}
                     </Badge>
                     <Badge variant="success" className="capitalize font-semibold text-[11px]">
                       {job.employmentType.replace('_', ' ')}
                     </Badge>
-                    <span className="text-xs font-bold text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">
-                      {job.salaryRange}
+                    <span className="text-xs font-black text-teal-800 bg-teal-50 px-3 py-1 rounded-full border border-teal-200">
+                      💰 {job.salaryRange}
+                    </span>
+                    <span className="text-xs font-black text-amber-900 bg-amber-50 px-3 py-1 rounded-full border border-amber-300 flex items-center gap-1 shadow-2xs">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
+                      ₹10,000 Sign-In Bonus
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-extrabold text-slate-900">{job.title}</h3>
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-900">{job.title}</h3>
 
                   <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 font-medium">
-                    <span className="flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                      <MapPin className="w-3.5 h-3.5 text-teal-600" />
                       {job.location}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                      <Briefcase className="w-3.5 h-3.5 text-teal-600" />
                       Experience: {job.experienceRequired}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
-                      Posted: {new Date(job.postedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                    <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                      <Clock className="w-3.5 h-3.5 text-teal-600" />
+                      Immediate Joining in Delhi NCR
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 self-start lg:self-center">
-                  <Button
-                    variant="primary"
-                    onClick={() => handleOpenApplyModal(job)}
-                    rightIcon={<Send className="w-4 h-4" />}
-                    className="bg-teal-600 hover:bg-teal-700 text-white font-bold cursor-pointer"
+                {/* Direct WhatsApp Action Button */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleApplyViaWhatsApp(
+                        job.title,
+                        job.jobCode,
+                        job.salaryRange,
+                        job.experienceRequired
+                      )
+                    }
+                    className="px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm font-black flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:scale-[1.02] cursor-pointer transition-all"
                   >
-                    Apply Now
-                  </Button>
+                    <WhatsAppIcon className="w-4 h-4 fill-white" />
+                    <span>Apply on WhatsApp</span>
+                    <ArrowRight className="w-4 h-4 text-emerald-200" />
+                  </button>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4">
                 {job.description}
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
-                <div className="space-y-1">
-                  <p className="font-bold text-slate-900 flex items-center gap-1">
-                    <Award className="w-3.5 h-3.5 text-teal-600" /> Key Qualifications:
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-1">
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-1.5">
+                  <p className="font-extrabold text-slate-900 flex items-center gap-1.5">
+                    <Award className="w-4 h-4 text-teal-600" /> Required Skills & Qualifications:
                   </p>
-                  <ul className="list-disc list-inside text-slate-600 space-y-0.5">
+                  <ul className="list-disc list-inside text-slate-600 space-y-1 pl-1">
                     {job.qualifications.map((q, idx) => (
-                      <li key={idx}>{q}</li>
+                      <li key={idx} className="leading-snug">{q}</li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="space-y-1">
-                  <p className="font-bold text-slate-900 flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-teal-600" /> Package Benefits:
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-1.5">
+                  <p className="font-extrabold text-slate-900 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Key Benefits & Perks:
                   </p>
-                  <ul className="list-disc list-inside text-slate-600 space-y-0.5">
-                    {job.benefits.slice(0, 2).map((b, idx) => (
-                      <li key={idx}>{b}</li>
+                  <ul className="list-disc list-inside text-slate-600 space-y-1 pl-1">
+                    {job.benefits.map((b, idx) => (
+                      <li key={idx} className="leading-snug">{b}</li>
                     ))}
                   </ul>
                 </div>
+              </div>
+
+              {/* Instant WhatsApp note */}
+              <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+                <span className="flex items-center gap-1 text-emerald-700 font-semibold">
+                  <FileCheck2 className="w-3.5 h-3.5" /> No registration charges · 100% Free Candidate Application
+                </span>
+                <span className="text-slate-400 hidden sm:inline">
+                  Direct Response within 24 Hours
+                </span>
               </div>
             </Card>
           ))}
         </div>
       </section>
 
-      {/* Application Modal */}
-      {isApplyModalOpen && selectedJob && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative my-8 text-left">
-            <button
-              onClick={() => setIsApplyModalOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {!submittedApplicationNo ? (
-              <>
-                <div className="space-y-1 border-b border-slate-100 pb-4">
-                  <Badge variant="info" className="uppercase font-bold text-[10px]">
-                    {selectedJob.jobCode}
-                  </Badge>
-                  <h2 className="text-xl font-extrabold text-slate-900">Apply for {selectedJob.title}</h2>
-                  <p className="text-xs text-slate-500">
-                    Location: {selectedJob.location} • Salary: {selectedJob.salaryRange}
-                  </p>
-                </div>
-
-                <form onSubmit={handleSubmitApplication} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Input
-                      label="Full Name *"
-                      placeholder="e.g. Anjali Deshmukh"
-                      value={applicantName}
-                      onChange={(e) => setApplicantName(e.target.value)}
-                      required
-                    />
-                    <Input
-                      label="Phone Number (+91) *"
-                      placeholder="+91-98765-43210"
-                      value={applicantPhone}
-                      onChange={(e) => setApplicantPhone(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Input
-                      label="Email Address *"
-                      type="email"
-                      placeholder="anjali@example.com"
-                      value={applicantEmail}
-                      onChange={(e) => setApplicantEmail(e.target.value)}
-                      required
-                    />
-                    <Input
-                      label="Primary Qualification *"
-                      placeholder="e.g. B.Sc Nursing, BPT, GDM"
-                      value={applicantQualification}
-                      onChange={(e) => setApplicantQualification(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Experience (Years) *</label>
-                      <input
-                        type="number"
-                        min={0}
-                        max={40}
-                        value={applicantExperience}
-                        onChange={(e) => setApplicantExperience(Number(e.target.value))}
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Notice Period (Days)</label>
-                      <input
-                        type="number"
-                        min={0}
-                        max={90}
-                        value={applicantNotice}
-                        onChange={(e) => setApplicantNotice(Number(e.target.value))}
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">Current Employer</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Fortis / Apollo"
-                        value={applicantOrg}
-                        onChange={(e) => setApplicantOrg(e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Resume / CV File</label>
-                    <div className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center hover:bg-slate-50 transition-colors cursor-pointer">
-                      <FileText className="w-8 h-8 text-teal-600 mx-auto mb-1" />
-                      <p className="text-xs font-bold text-slate-700">Click to upload or drag & drop CV</p>
-                      <p className="text-[10px] text-slate-500">PDF, DOCX up to 5MB</p>
-                      <input
-                        type="file"
-                        accept=".pdf,.docx,.doc"
-                        onChange={(e) => setResumeFileName(e.target.files?.[0]?.name || '')}
-                        className="hidden"
-                        id="resume-upload"
-                      />
-                      <label htmlFor="resume-upload" className="block w-full h-full cursor-pointer mt-2 text-xs text-teal-700 font-bold underline">
-                        {resumeFileName ? `Selected: ${resumeFileName}` : 'Choose File'}
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setIsApplyModalOpen(false)}
-                      className="cursor-pointer"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      isLoading={isSubmitting}
-                      className="bg-teal-600 hover:bg-teal-700 text-white font-bold cursor-pointer"
-                    >
-                      Submit Application
-                    </Button>
-                  </div>
-                </form>
-              </>
-            ) : (
-              <div className="text-center space-y-4 py-6">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-10 h-10" />
-                </div>
-                <h3 className="text-2xl font-extrabold text-slate-900">Application Submitted!</h3>
-                <p className="text-xs text-slate-600 max-w-md mx-auto">
-                  Thank you for applying to Pulse n Care. Your application reference number is:
-                </p>
-                <div className="bg-slate-100 p-3 rounded-xl inline-block font-mono text-base font-extrabold text-teal-800">
-                  {submittedApplicationNo}
-                </div>
-                <p className="text-[11px] text-slate-500">
-                  Our HR & Clinical Operations Desk will review your application and contact you within 24-48 business hours.
-                </p>
-                <Button
-                  variant="primary"
-                  onClick={() => setIsApplyModalOpen(false)}
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold cursor-pointer mt-4"
-                >
-                  Done
-                </Button>
-              </div>
-            )}
+      {/* Direct HR Support Card */}
+      <section className="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 rounded-3xl p-8 text-white text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+        <div className="space-y-2 max-w-xl">
+          <div className="inline-flex items-center gap-2 text-teal-300 text-xs font-bold uppercase tracking-wider">
+            <MessageCircle className="w-4 h-4 text-teal-400" /> HR Helpdesk & Candidate Helpline
           </div>
+          <h3 className="text-xl sm:text-2xl font-black">
+            Have Questions About Shifts, Salaries, or Relocation?
+          </h3>
+          <p className="text-slate-300 text-xs sm:text-sm">
+            Speak directly with our Nursing Recruitment Lead on WhatsApp. We provide accommodation guidance for outstation nurses coming to Delhi NCR.
+          </p>
         </div>
-      )}
+        <button
+          onClick={() => openWhatsApp('Hello Pulse n Care HR Team, I have a query regarding nursing recruitment in Delhi NCR.')}
+          className="px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm flex items-center gap-2.5 shadow-lg shadow-emerald-500/20 hover:scale-105 cursor-pointer transition-all shrink-0"
+        >
+          <PhoneCall className="w-4 h-4" />
+          <span>Chat with HR Lead</span>
+        </button>
+      </section>
     </div>
   );
 };

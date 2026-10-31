@@ -121,7 +121,7 @@ export const OrgLayout: React.FC = () => {
           <div className="flex items-center gap-3">
             <Link to="/organization/dashboard" className="flex items-center gap-2.5 group">
               <img
-                src="/assets/brand/pulse-n-care/pulse-n-care-logo.svg"
+                src="/assets/brand/pulse-n-care/pulse-n-care-logo-horizontal.webp"
                 alt="Pulse n Care"
                 className="h-8 w-auto"
               />

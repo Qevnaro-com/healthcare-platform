@@ -283,7 +283,7 @@ export const StaffDashboardPage: React.FC = () => {
         </button>
 
         <a
-          href="tel:+911149208800"
+          href="tel:+919211765429"
           className="col-span-2 sm:col-span-1 p-4 rounded-xl bg-slate-900 text-white shadow-card text-left space-y-2 cursor-pointer transition-all block"
         >
           <Phone className="w-5 h-5 text-teal-400" />

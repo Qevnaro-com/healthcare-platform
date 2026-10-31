@@ -64,7 +64,7 @@ export const AdminOrganizationRequestsPage: React.FC = () => {
       endTime: selectedLine.shiftType === '12h_night' ? '08:00' : '20:00',
       assignedStaffId: staffId,
       assignedStaffName: staffName,
-      assignedStaffPhone: '+91-98765-43210',
+      assignedStaffPhone: '+91 98765 43210',
       assignedStaffEmployeeId: 'PNC-EMP-0042',
       assignedStaffRole: selectedLine.roleCategoryTitle,
       status: 'assigned',

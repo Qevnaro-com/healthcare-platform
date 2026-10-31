@@ -27,9 +27,9 @@ export const StaffLayout: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/staff" className="flex items-center gap-2">
             <img
-              src="/assets/brand/pulse-n-care/pulse-n-care-logo-dark.svg"
+              src="/assets/brand/pulse-n-care/pulse-n-care-logo-horizontal-dark.webp"
               alt="Pulse n Care Staff"
-              className="h-7 w-auto"
+              className="h-8 w-auto"
             />
             <span className="text-[10px] font-black uppercase tracking-widest text-teal-400 bg-white/10 px-2 py-0.5 rounded-full border border-white/20">
               Staff Portal
@@ -38,7 +38,7 @@ export const StaffLayout: React.FC = () => {
 
           <div className="flex items-center gap-3">
             <a
-              href="tel:+911149208800"
+              href="tel:+919211765429"
               className="px-2.5 py-1 rounded-full bg-teal-500/20 text-teal-300 text-[11px] font-extrabold border border-teal-500/30 flex items-center gap-1"
             >
               <PhoneCall className="w-3 h-3 animate-pulse" /> Operations Desk

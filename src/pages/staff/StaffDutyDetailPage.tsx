@@ -188,7 +188,7 @@ export const StaffDutyDetailPage: React.FC = () => {
             </div>
           </div>
           <a
-            href="tel:+911149208800"
+            href="tel:+919211765429"
             className="px-3 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-[11px] whitespace-nowrap shadow-xs"
           >
             Call Operations

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
-import { HealthcareTexture } from '../../components/common/HealthcareTexture';
 import {
   Building2,
   Users,
@@ -19,7 +18,6 @@ export const OrgLandingPage: React.FC = () => {
 
   return (
     <div className="space-y-16 text-left py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
-      <HealthcareTexture type="clinical-wave" opacity={0.03} />
 
       {/* Hero Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">

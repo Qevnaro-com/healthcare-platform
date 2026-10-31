@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
+import { usePageMeta } from '../../hooks/usePageMeta';
+import { submitCallbackLead } from '../../utils/leads';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useBookings } from '../../context/BookingContext';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
 import { Modal } from '../../components/common/Modal';
 import { Input } from '../../components/common/Input';
-import { HealthcareTexture } from '../../components/common/HealthcareTexture';
 import { EmptyState } from '../../components/common/EmptyState';
+import { WhatsAppIcon } from '../../components/common/WhatsAppButton';
+import { openWhatsApp } from '../../utils/whatsapp';
 import {
   ShieldCheck,
   CheckCircle2,
   XCircle,
-  ArrowRight,
   ChevronDown,
   ChevronUp,
   PhoneCall,
@@ -33,11 +35,7 @@ export const ServiceDetailPage: React.FC = () => {
 
   // Find service by ID or slug
   const service: Service | undefined = services.find((s) => s.id === id || s.slug === id);
-
-  // If this is the home nursing overview route, render the specialized Pulse n Care page
-  if (id === 'home-nursing' || id === 'home_nursing') {
-    return <HomeNursingServicePage />;
-  }
+  usePageMeta(service?.name ?? 'Service', service?.shortDescription);
 
   const [selectedShift, setSelectedShift] = useState<ServiceShiftOption | null>(
     service?.shiftOptions?.[0] || null
@@ -48,6 +46,11 @@ export const ServiceDetailPage: React.FC = () => {
   const [callbackPhone, setCallbackPhone] = useState('');
   const [callbackNotes, setCallbackNotes] = useState('');
   const [callbackSubmitted, setCallbackSubmitted] = useState(false);
+
+  // Hooks above must run on every render; only now is it safe to branch to the specialised page
+  if (id === 'home-nursing' || id === 'home_nursing') {
+    return <HomeNursingServicePage />;
+  }
 
   // 404 Fallback if service not found
   if (!service) {
@@ -77,6 +80,7 @@ export const ServiceDetailPage: React.FC = () => {
 
   const handleCallbackSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    submitCallbackLead({ name: callbackName, phone: callbackPhone, notes: callbackNotes, source: window.location.pathname });
     setCallbackSubmitted(true);
     setTimeout(() => {
       setIsCallbackModalOpen(false);
@@ -104,7 +108,6 @@ export const ServiceDetailPage: React.FC = () => {
 
   return (
     <div className="space-y-16 pb-28 text-left relative bg-white overflow-hidden">
-      <HealthcareTexture type="care-pathway" opacity={0.03} />
 
       {/* 01. Breadcrumb & Top Hero Header */}
       <section className="bg-gradient-to-b from-slate-50 via-teal-50/20 to-white border-b border-border-default pt-8 pb-16">
@@ -144,22 +147,21 @@ export const ServiceDetailPage: React.FC = () => {
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center gap-4 pt-4">
-                <Button
-                  size="lg"
-                  variant="primary"
-                  onClick={() => navigate(`/client/booking/wizard?serviceId=${service.id}&shiftId=${activeShift.id}`)}
-                  rightIcon={<ArrowRight className="w-5 h-5" />}
-                  className="bg-brand-teal hover:bg-brand-teal-hover font-bold text-white px-8 py-4 text-base cursor-pointer shadow-subtle"
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => openWhatsApp(`Hello Pulse n Care, I want to book ${service.name} (${activeShift.label}) at Rs. ${calculatedPrice}.`)}
+                  className="flex items-center justify-center gap-2 sm:gap-2.5 bg-[#25D366] hover:bg-[#20bd5a] font-extrabold text-white px-5 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base cursor-pointer shadow-md rounded-full transition-all hover:scale-105"
                 >
-                  Book {service.name}
-                </Button>
+                  <WhatsAppIcon className="w-5 h-5 fill-white" />
+                  <span>Book via WhatsApp</span>
+                </button>
                 <Button
                   size="lg"
                   variant="outline"
                   onClick={() => setIsCallbackModalOpen(true)}
                   leftIcon={<PhoneCall className="w-4 h-4 text-brand-teal" />}
-                  className="font-bold border-border-default cursor-pointer text-text-primary bg-white"
+                  className="font-bold border-border-default cursor-pointer text-text-primary bg-white text-sm sm:text-base"
                 >
                   Talk To Our Care Team
                 </Button>
@@ -170,7 +172,7 @@ export const ServiceDetailPage: React.FC = () => {
             <div className="lg:col-span-5">
               <div className="bg-white p-6 rounded-3xl border border-border-default shadow-card space-y-4">
                 <div className="aspect-video rounded-2xl bg-canvas-teal flex items-center justify-center border border-teal-200 overflow-hidden relative">
-                  <img
+                  <img loading="lazy" decoding="async"
                     src={service.heroMedia || service.cardMedia || 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80'}
                     alt={service.name}
                     className="w-full h-full object-cover object-top"
@@ -207,7 +209,7 @@ export const ServiceDetailPage: React.FC = () => {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <div className="space-y-2">
             <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest">Clinical Scenarios</span>
-            <h2 className="text-2xl font-extrabold text-text-primary">Who This Care Service Is For</h2>
+            <h2 className="font-display text-2xl font-semibold text-text-primary">Who This Care Service Is For</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -231,7 +233,7 @@ export const ServiceDetailPage: React.FC = () => {
           <div className="lg:col-span-7 space-y-6">
             <div className="space-y-2">
               <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest">Clinical Scope</span>
-              <h2 className="text-2xl font-extrabold text-text-primary">What We Provide</h2>
+              <h2 className="font-display text-2xl font-semibold text-text-primary">What We Provide</h2>
             </div>
 
             <Card className="p-6 border-border-default shadow-subtle space-y-4 bg-white">
@@ -248,7 +250,7 @@ export const ServiceDetailPage: React.FC = () => {
           <div className="lg:col-span-5 space-y-6">
             <div className="space-y-2">
               <span className="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Exclusions & Boundaries</span>
-              <h2 className="text-2xl font-extrabold text-text-primary">What We Do Not Provide</h2>
+              <h2 className="font-display text-2xl font-semibold text-text-primary">What We Do Not Provide</h2>
             </div>
 
             <Card className="p-6 border-border-default shadow-subtle space-y-4 bg-slate-50/70">
@@ -272,7 +274,7 @@ export const ServiceDetailPage: React.FC = () => {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <div className="space-y-2">
             <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest">Schedule Options</span>
-            <h2 className="text-2xl font-extrabold text-text-primary">Select Available Shift Timing</h2>
+            <h2 className="font-display text-2xl font-semibold text-text-primary">Select Available Shift Timing</h2>
             <p className="text-xs text-text-muted">Choose your preferred shift duration to calculate updated price estimates.</p>
           </div>
 
@@ -320,7 +322,7 @@ export const ServiceDetailPage: React.FC = () => {
               <MapPin className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-extrabold text-text-primary">Service Availability Notice</h4>
+              <h3 className="text-sm font-extrabold text-text-primary">Service Availability Notice</h3>
               <p className="text-xs text-text-secondary">Available with 24/7 internal staff allocation & real-time scheduling.</p>
             </div>
           </div>
@@ -333,7 +335,7 @@ export const ServiceDetailPage: React.FC = () => {
       {/* 06. Service-Specific FAQ Accordion */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-extrabold text-text-primary">Service FAQs</h2>
+          <h2 className="font-display text-2xl font-semibold text-text-primary">Service FAQs</h2>
           <p className="text-xs text-text-muted">Questions regarding {service.name}</p>
         </div>
 
@@ -347,9 +349,9 @@ export const ServiceDetailPage: React.FC = () => {
                 className="p-5 border-border-default shadow-2xs cursor-pointer space-y-2 hover:border-teal-300 transition-colors bg-white"
               >
                 <div className="flex items-center justify-between gap-4">
-                  <h4 className="font-extrabold text-text-primary text-sm sm:text-base flex items-center gap-2">
+                  <h3 className="font-extrabold text-text-primary text-sm sm:text-base flex items-center gap-2">
                     <HelpCircle className="w-4 h-4 text-brand-teal shrink-0" /> {faq.q}
-                  </h4>
+                  </h3>
                   {isOpen ? (
                     <ChevronUp className="w-5 h-5 text-brand-teal shrink-0" />
                   ) : (
@@ -368,29 +370,28 @@ export const ServiceDetailPage: React.FC = () => {
       </section>
 
       {/* 07. Sticky Action Bar (Fixed Bottom Bar on Mobile/Desktop) */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-border-default p-4 shadow-floating">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between gap-4">
-          <div className="text-left">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-border-default p-3 sm:p-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-floating">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 flex items-center justify-between gap-2 sm:gap-4">
+          <div className="text-left min-w-0">
             <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider block">Selected Service & Shift</span>
-            <p className="text-sm sm:text-base font-extrabold text-text-primary truncate max-w-xs sm:max-w-md">
+            <p className="text-xs sm:text-base font-extrabold text-text-primary truncate max-w-[140px] sm:max-w-md">
               {service.name} • <span className="text-brand-teal">{activeShift.label}</span>
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <div className="text-right hidden sm:block">
               <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider block">Est. Cost</span>
               <p className="text-lg font-extrabold text-brand-teal">₹{calculatedPrice}</p>
             </div>
-            <Button
-              size="lg"
-              variant="primary"
-              onClick={() => navigate(`/client/booking/wizard?serviceId=${service.id}&shiftId=${activeShift.id}`)}
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-              className="bg-brand-teal hover:bg-brand-teal-hover font-bold text-white px-6 sm:px-8 cursor-pointer"
+            <button
+              type="button"
+              onClick={() => openWhatsApp(`Hello Pulse n Care, I want to book ${service.name} (${activeShift.label}) at Rs. ${calculatedPrice}.`)}
+              className="flex items-center gap-1.5 sm:gap-2 bg-[#25D366] hover:bg-[#20bd5a] font-black text-white px-3.5 sm:px-8 py-2.5 sm:py-3 rounded-full cursor-pointer shadow-md transition-all hover:scale-105 text-xs sm:text-base shrink-0"
             >
-              Book This Service
-            </Button>
+              <WhatsAppIcon className="w-4 h-4 fill-white shrink-0" />
+              <span>Book via WhatsApp</span>
+            </button>
           </div>
         </div>
       </div>
@@ -407,8 +408,8 @@ export const ServiceDetailPage: React.FC = () => {
             <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h4 className="text-lg font-extrabold text-text-primary">Callback Request Received!</h4>
-            <p className="text-xs text-text-muted">Our Care Concierge team will call you at {callbackPhone} within 15 minutes.</p>
+            <h3 className="text-lg font-extrabold text-text-primary">Callback Request Received!</h3>
+            <p className="text-xs text-text-muted">Our Care Concierge team will call you at {callbackPhone} promptly.</p>
           </div>
         ) : (
           <form onSubmit={handleCallbackSubmit} className="space-y-4">
@@ -437,6 +438,10 @@ export const ServiceDetailPage: React.FC = () => {
                 className="w-full p-3 text-xs font-medium text-slate-900 border border-border-default rounded-xl focus:outline-none focus:border-brand-teal"
               />
             </div>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              By submitting, you agree to be contacted about your enquiry. See our{' '}
+              <a href="/privacy-policy" className="text-[#015498] font-semibold underline underline-offset-2">Privacy Policy</a>.
+            </p>
             <Button type="submit" variant="primary" className="w-full font-bold cursor-pointer">
               Submit Callback Request
             </Button>

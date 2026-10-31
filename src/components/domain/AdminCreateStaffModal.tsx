@@ -205,7 +205,7 @@ export const AdminCreateStaffModal: React.FC<AdminCreateStaffModalProps> = ({
                   leftIcon={<Phone className="w-4 h-4 text-text-muted" />}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91-98765-43210"
+                  placeholder="+91 98765 43210"
                 />
               </div>
             </div>

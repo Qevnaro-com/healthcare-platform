@@ -20,6 +20,90 @@ export interface VisualAsset {
 
 export const VISUAL_ASSETS: Record<string, VisualAsset> = {
   // ==========================================
+  // FOUNDER & CEO LEADERSHIP (SMT. ISHWARI - 20+ YEARS EXPERIENCE)
+  // ==========================================
+  founderIshwariCeo: {
+    assetId: 'founderIshwariCeo',
+    page: 'Home / Leadership',
+    section: 'Founder & CEO Spotlight',
+    purpose: 'Executive leadership portrait of Smt. Ishwari, Founder & CEO',
+    visualType: 'editorial_photography',
+    subject: 'Smt. Ishwari, Founder & CEO in Pulse n Care executive uniform with brand emblem',
+    source: 'Pulse n Care Healthcare Leadership',
+    url: '/assets/images/founder/smt-ishwari-ceo-portrait.webp',
+    reuseAllowed: true
+  },
+  founderIshwariCaregiver: {
+    assetId: 'founderIshwariCaregiver',
+    page: 'Home / Leadership',
+    section: 'Lead Care Specialist Profile',
+    purpose: 'Clinical caregiver uniform portrait of Smt. Ishwari with 20+ years expertise',
+    visualType: 'editorial_photography',
+    subject: 'Smt. Ishwari in Pulse n Care caregiver uniform tunic',
+    source: 'Pulse n Care Healthcare Leadership',
+    url: '/assets/images/founder/smt-ishwari-caregiver-uniform.webp',
+    reuseAllowed: true
+  },
+
+  // ==========================================
+  // CORE 5 HEALTHCARE SERVICES
+  // ==========================================
+  serviceChronicPalliative: {
+    assetId: 'serviceChronicPalliative',
+    page: 'Services',
+    section: 'Chronic Disease & Palliative Care',
+    purpose: 'Clinical care visual for oncology, stroke rehab and chronic illness',
+    visualType: 'editorial_photography',
+    subject: 'Nurse caring for chronic disease and palliative patient at home',
+    source: 'Pulse n Care Healthcare Media',
+    url: '/assets/services/core/service-chronic-palliative.webp',
+    reuseAllowed: false
+  },
+  servicePostOpRecovery: {
+    assetId: 'servicePostOpRecovery',
+    page: 'Services',
+    section: 'Post-Operative Recovery',
+    purpose: 'Clinical support for orthopedic knee/hip replacement and cardiac post-surgery',
+    visualType: 'editorial_photography',
+    subject: 'Rehabilitation nurse guiding post-operative surgery patient with walker',
+    source: 'Pulse n Care Healthcare Media',
+    url: '/assets/services/core/service-post-op-recovery.webp',
+    reuseAllowed: false
+  },
+  servicePatientAttendant: {
+    assetId: 'servicePatientAttendant',
+    page: 'Services',
+    section: 'General Patient Attendants',
+    purpose: 'Non-medical hygiene, bed-bath, sponge bath and diaper changing assistance',
+    visualType: 'editorial_photography',
+    subject: 'Trained patient attendant assisting senior patient with dignity',
+    source: 'Pulse n Care Healthcare Media',
+    url: '/assets/services/core/service-patient-attendant.webp',
+    reuseAllowed: false
+  },
+  serviceElderlyCare: {
+    assetId: 'serviceElderlyCare',
+    page: 'Services',
+    section: 'Elderly Care Assistance',
+    purpose: 'Senior companionship, medication scheduling and fall prevention',
+    visualType: 'editorial_photography',
+    subject: 'Compassionate caregiver supporting elderly grandmother with walking and medicines',
+    source: 'Pulse n Care Healthcare Media',
+    url: '/assets/services/core/service-elderly-care.webp',
+    reuseAllowed: false
+  },
+  serviceNewbornMotherCare: {
+    assetId: 'serviceNewbornMotherCare',
+    page: 'Services',
+    section: 'Newborn & Mother Care',
+    purpose: 'Post-partum mother care, infant massage, bathing and feeding assistance',
+    visualType: 'editorial_photography',
+    subject: 'Postpartum caregiver cradling infant with mother resting happily',
+    source: 'Pulse n Care Healthcare Media',
+    url: '/assets/services/core/service-newborn-mother-care.webp',
+    reuseAllowed: false
+  },
+  // ==========================================
   // 1. PUBLIC PAGE HERO & FEATURE VISUALS (INDIAN HEALTHCARE ENVIRONMENT)
   // ==========================================
   homeHeroCare: {
@@ -30,7 +114,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Senior Indian nurse checking vitals of patient in home setting',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-team-hero.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-team-hero.webp',
     reuseAllowed: false
   },
   homeFlagshipNursing: {
@@ -41,7 +125,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Registered Indian nurse monitoring patient recovery equipment at home',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.webp',
     reuseAllowed: false
   },
   homePrinciplesOps: {
@@ -52,7 +136,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Indian healthcare professional organizing clinical documentation and equipment',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-equipment.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-equipment.webp',
     reuseAllowed: false
   },
   aboutCarePrep: {
@@ -63,7 +147,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'documentary_close_up',
     subject: 'Hands preparing sterile medical kit and stethoscope in Indian home',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nursing-kit.png',
+    url: '/assets/services/home-nursing/pulse-n-care-nursing-kit.webp',
     reuseAllowed: false
   },
   careersTeam: {
@@ -74,7 +158,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'workplace_photography',
     subject: 'Indian nursing staff and care coordinators in clinical briefing',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-team-campaign-7-9.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-team-campaign-7-9.webp',
     reuseAllowed: false
   },
   supportConnection: {
@@ -85,7 +169,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Care coordinator answering client inquiry',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-handover.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-handover.webp',
     reuseAllowed: false
   },
   homeNursingHero: {
@@ -96,7 +180,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Nurse administering post-operative care at bedside',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.webp',
     reuseAllowed: false
   },
 
@@ -111,7 +195,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Digital blood pressure and pulse oximeter monitoring',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-vitals.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-vitals.webp',
     reuseAllowed: false
   },
   clinicalMedication: {
@@ -133,7 +217,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Sterile surgical dressing kit preparation',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-wound-care.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-wound-care.webp',
     reuseAllowed: false
   },
   clinicalHandover: {
@@ -144,7 +228,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Daily chart review and digital shift report notes',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-handover.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-handover.webp',
     reuseAllowed: false
   },
 
@@ -185,7 +269,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Wound care dressing and post-op vitals monitoring',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-wound-care.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-wound-care.webp',
     reuseAllowed: false
   },
   servicePostOpHero: {
@@ -196,7 +280,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Nurse recording post-surgical vitals',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-home-nursing-hero.webp',
     reuseAllowed: false
   },
   serviceElderlyNursingCard: {
@@ -207,7 +291,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'lifestyle_photography',
     subject: 'Senior patient receiving routine blood pressure check at home',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-vitals.jpg',
+    url: '/assets/images/client/pulse-n-care-palliative-cancer-care.jpg',
     reuseAllowed: false
   },
   serviceElderlyNursingHero: {
@@ -240,7 +324,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'lifestyle_photography',
     subject: 'Physical therapist assisting patient with leg elevation exercise',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-equipment.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-equipment.webp',
     reuseAllowed: false
   },
   servicePhysioNeuroCard: {
@@ -251,7 +335,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'lifestyle_photography',
     subject: 'Specialized neuro therapist assisting stroke patient balance',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-handover.jpg',
+    url: '/assets/services/home-nursing/pulse-n-care-handover.webp',
     reuseAllowed: false
   },
   servicePhysioNeuroHero: {
@@ -273,7 +357,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'lifestyle_photography',
     subject: 'Attendant helping senior sitting comfortably at home',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-bedside-support.webp',
+    url: '/assets/images/client/pulse-n-care-bedridden-patient-support.jpg',
     reuseAllowed: false
   },
   serviceAttendant24x7Hero: {
@@ -284,7 +368,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'lifestyle_photography',
     subject: 'Attendant preparing nutritious meal for bedridden senior',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/images/illustrations/nursing-caregiver-heart.jpg',
+    url: '/assets/images/illustrations/nursing-caregiver-heart.webp',
     reuseAllowed: false
   },
   serviceAttendant12hCard: {
@@ -295,7 +379,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'lifestyle_photography',
     subject: 'Day attendant assisting senior reading in living room',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nurse-portrait.webp',
+    url: '/assets/images/client/pulse-n-care-elderly-companion.jpg',
     reuseAllowed: false
   },
   serviceAttendant12hHero: {
@@ -306,7 +390,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'lifestyle_photography',
     subject: 'Day caregiver recording daily activity log',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/images/illustrations/doctor-home-visit.jpg',
+    url: '/assets/images/illustrations/doctor-home-visit.webp',
     reuseAllowed: false
   },
 
@@ -332,7 +416,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Professional headshot of male physiotherapist Rajesh Kumar',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.png',
+    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.webp',
     reuseAllowed: false
   },
   staffSunita: {
@@ -354,7 +438,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Professional headshot of male caregiver Vikram Singh',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.png',
+    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.webp',
     reuseAllowed: false
   },
   staffPooja: {
@@ -376,7 +460,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Professional headshot of male ICU nurse Amit Patel',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.png',
+    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.webp',
     reuseAllowed: false
   },
   staffKarthik: {
@@ -387,7 +471,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Professional headshot of male nurse Karthik Verma',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.png',
+    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.webp',
     reuseAllowed: false
   },
   staffMeena: {
@@ -409,7 +493,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Professional headshot of male therapist Suresh Nair',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.png',
+    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.webp',
     reuseAllowed: false
   },
   staffKavita: {
@@ -431,7 +515,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Professional headshot of male nurse Deepak Sharma',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.png',
+    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.webp',
     reuseAllowed: false
   },
   staffAnanya: {
@@ -453,7 +537,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Professional headshot of male therapist Rohan Mehta',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.png',
+    url: '/assets/services/home-nursing/pulse-n-care-nurse-hero.webp',
     reuseAllowed: false
   }
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { submitCallbackLead } from '../../utils/leads';
 import { PulseNCareHeroVisual } from '../../components/domain/pulse-n-care/PulseNCareHeroVisual';
 import { ClinicalCareGrid } from '../../components/domain/pulse-n-care/ClinicalCareGrid';
 import { PersonalCareSection } from '../../components/domain/pulse-n-care/PersonalCareSection';
@@ -7,14 +7,14 @@ import { DailyChartPreview } from '../../components/domain/pulse-n-care/DailyCha
 import { CareDurationSelector } from '../../components/domain/pulse-n-care/CareDurationSelector';
 import { PulseNCareFAQ } from '../../components/domain/pulse-n-care/PulseNCareFAQ';
 import { StickyBookingBar } from '../../components/domain/pulse-n-care/StickyBookingBar';
+import { WhatsAppIcon } from '../../components/common/WhatsAppButton';
+import { openWhatsApp } from '../../utils/whatsapp';
 import { Modal } from '../../components/common/Modal';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
-import { HealthcareTexture } from '../../components/common/HealthcareTexture';
 import {
   ShieldCheck,
   PhoneCall,
-  Calendar,
   Heart,
   Send,
   AlertTriangle,
@@ -23,11 +23,9 @@ import {
   Clock,
   MapPin,
   CheckCircle2,
-  ArrowRight
 } from 'lucide-react';
 
 export const HomeNursingServicePage: React.FC = () => {
-  const navigate = useNavigate();
   const [callbackModalOpen, setCallbackModalOpen] = useState(false);
   const [callbackName, setCallbackName] = useState('');
   const [callbackPhone, setCallbackPhone] = useState('');
@@ -58,6 +56,7 @@ export const HomeNursingServicePage: React.FC = () => {
 
   const handleCallbackSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    submitCallbackLead({ name: callbackName, phone: callbackPhone, notes: callbackNotes, source: window.location.pathname });
     setCallbackSubmitted(true);
     setTimeout(() => {
       setCallbackModalOpen(false);
@@ -69,7 +68,7 @@ export const HomeNursingServicePage: React.FC = () => {
     { num: '01', title: 'Tell us what care is needed', desc: 'Select home nursing requirements & specific clinical duties.' },
     { num: '02', title: 'Share patient details', desc: 'Provide patient relationship, age, allergies & medical history.' },
     { num: '03', title: 'Choose timing', desc: 'Select 12h, 24h, or night shift with overnight date rollover.' },
-    { num: '04', title: 'Operations team arranges staff', desc: 'Pulse n Care Operations assigns qualified internal staff in Delhi NCR.' },
+    { num: '04', title: 'Operations team arranges staff', desc: 'Pulse n Care Operations assigns qualified internal staff for doorstep dispatch.' },
     { num: '05', title: 'Care is confirmed', desc: 'Receive instant confirmation & assigned nurse credentials.' },
     { num: '06', title: 'Nurse arrives', desc: 'Council-verified nurse arrives at doorstep with clinical kit.' },
     { num: '07', title: 'Care begins', desc: 'Vitals logged, medication administered, prescribed routines fulfilled.' },
@@ -77,8 +76,8 @@ export const HomeNursingServicePage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white text-text-primary text-left relative pb-20">
-      <HealthcareTexture type="clinical-wave" opacity={0.02} />
+    <div className="min-h-screen bg-transparent text-text-primary text-left relative pb-20">
+
 
       {/* 01. Hero Experience */}
       <PulseNCareHeroVisual onOpenCallback={() => setCallbackModalOpen(true)} />
@@ -89,7 +88,7 @@ export const HomeNursingServicePage: React.FC = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-canvas-teal text-brand-teal text-xs font-extrabold border border-teal-200 uppercase tracking-widest">
             <ShieldCheck className="w-3.5 h-3.5" /> 24×7 Home Nursing Support
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight max-w-3xl">
+          <h2 className="font-display text-2xl sm:text-3xl font-semibold text-text-primary tracking-[-0.02em] max-w-3xl">
             Professional nursing support delivered at the patient's home.
           </h2>
           <p className="text-sm text-text-secondary max-w-3xl leading-relaxed font-medium">
@@ -204,7 +203,7 @@ export const HomeNursingServicePage: React.FC = () => {
             <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest block">
               Care Journey
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight">
+            <h2 className="font-display text-2xl sm:text-3xl font-semibold text-text-primary tracking-[-0.02em]">
               From booking to bedside care.
             </h2>
             <p className="text-sm text-text-secondary">
@@ -216,7 +215,7 @@ export const HomeNursingServicePage: React.FC = () => {
             {journeySteps.map((step) => (
               <div key={step.num} className="p-4 bg-white rounded-2xl border border-border-default shadow-2xs space-y-2 relative">
                 <span className="text-xs font-mono font-black text-brand-teal block">{step.num}</span>
-                <h4 className="font-extrabold text-text-primary text-xs">{step.title}</h4>
+                <h3 className="font-extrabold text-text-primary text-xs">{step.title}</h3>
                 <p className="text-[11px] text-text-muted leading-tight">{step.desc}</p>
               </div>
             ))}
@@ -234,7 +233,7 @@ export const HomeNursingServicePage: React.FC = () => {
             <span className="text-xs font-extrabold text-brand-teal uppercase tracking-widest block">
               Service Availability Check
             </span>
-            <h2 className="text-2xl font-black text-text-primary tracking-tight">
+            <h2 className="font-display text-2xl font-semibold text-text-primary tracking-[-0.02em]">
               Check Home Nursing Availability
             </h2>
             <p className="text-xs text-text-muted">
@@ -256,7 +255,7 @@ export const HomeNursingServicePage: React.FC = () => {
                     setPincodeInput(e.target.value);
                     setCheckStatus(null);
                   }}
-                  placeholder="Enter 6-digit Pincode (e.g. 110024)..."
+                  aria-label="Pincode" placeholder="Enter 6-digit Pincode (e.g. 110024)..."
                   className="w-full h-11 pl-10 pr-4 text-xs font-bold text-slate-900 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20"
                 />
               </div>
@@ -289,15 +288,14 @@ export const HomeNursingServicePage: React.FC = () => {
                         </span>
                       </div>
                     </div>
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => navigate(`/client/booking/wizard?serviceId=srv-nursing-post-op&pincode=${pincodeInput}`)}
-                      rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs px-4 py-2 rounded-xl shrink-0 cursor-pointer shadow-xs whitespace-nowrap"
+                    <button
+                      type="button"
+                      onClick={() => openWhatsApp(`Hello Pulse n Care, I want to book Home Nursing for pincode ${pincodeInput}.`)}
+                      className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shrink-0 cursor-pointer shadow-xs whitespace-nowrap transition-all hover:scale-105"
                     >
-                      Book Service Now
-                    </Button>
+                      <WhatsAppIcon className="w-3.5 h-3.5 fill-white" />
+                      <span>Book on WhatsApp</span>
+                    </button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2.5">
@@ -325,13 +323,12 @@ export const HomeNursingServicePage: React.FC = () => {
 
       {/* 14. Final Call to Action */}
       <section className="py-16 bg-gradient-to-r from-teal-900 via-brand-teal to-teal-800 text-white border-b border-border-default relative overflow-hidden text-center">
-        <HealthcareTexture type="care-pathway" opacity={0.1} />
         <div className="max-w-3xl mx-auto px-4 space-y-6 relative z-10">
           <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto border border-white/20">
             <Heart className="w-7 h-7 text-teal-200" />
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+          <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white tracking-[-0.02em]">
             Need nursing care at home?
           </h2>
 
@@ -340,14 +337,14 @@ export const HomeNursingServicePage: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-            <Button
-              variant="primary"
-              onClick={() => navigate('/client/booking/wizard?serviceId=srv-nursing-post-op')}
-              leftIcon={<Calendar className="w-4 h-4" />}
-              className="bg-white text-brand-teal hover:bg-teal-50 font-extrabold px-8 py-3.5 rounded-2xl cursor-pointer text-sm shadow-md"
+            <button
+              type="button"
+              onClick={() => openWhatsApp('Hello Pulse n Care, I want to book Home Nursing care at doorstep.')}
+              className="flex items-center gap-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold px-8 py-3.5 rounded-2xl cursor-pointer text-sm shadow-md transition-all hover:scale-105"
             >
-              Book Home Nursing
-            </Button>
+              <WhatsAppIcon className="w-5 h-5 fill-white" />
+              <span>Book via WhatsApp</span>
+            </button>
 
             <Button
               variant="outline"
@@ -373,7 +370,7 @@ export const HomeNursingServicePage: React.FC = () => {
       >
         <div className="space-y-4 text-left">
           <p className="text-xs text-text-secondary">
-            Leave your contact details. Our Delhi NCR Operations Desk will call you back within 15 minutes to answer clinical or scheduling queries.
+            Leave your contact details. Our Central Operations Desk will call you back promptly to answer clinical or scheduling queries.
           </p>
 
           {!callbackSubmitted ? (
@@ -404,6 +401,11 @@ export const HomeNursingServicePage: React.FC = () => {
                 />
               </div>
 
+              <p className="text-[11px] text-slate-500 leading-relaxed">
+                By submitting, you agree to be contacted about your enquiry. See our{' '}
+                <a href="/privacy-policy" className="text-[#015498] font-semibold underline underline-offset-2">Privacy Policy</a>.
+              </p>
+
               <Button
                 type="submit"
                 variant="primary"
@@ -423,3 +425,4 @@ export const HomeNursingServicePage: React.FC = () => {
     </div>
   );
 };
+

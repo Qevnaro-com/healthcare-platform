@@ -518,7 +518,7 @@ export const BookingWizardPage: React.FC = () => {
                     {selectedService.name} Clinical Context Questions
                   </h3>
                   <DynamicFormRenderer
-                    questions={selectedService.serviceQuestions}
+                    questions={selectedService.serviceQuestions ?? []}
                     answers={dynamicAnswers}
                     onAnswerChange={(fieldId, val) =>
                       setDynamicAnswers((prev) => ({ ...prev, [fieldId]: val }))

@@ -191,7 +191,7 @@ export const ClinicalCareGrid: React.FC = () => {
                 {/* Optional Image Header */}
                 {cap.image && isExpanded && (
                   <div className="rounded-xl overflow-hidden aspect-video w-full border border-border-default">
-                    <img src={cap.image} alt={cap.title} className="w-full h-full object-cover object-top" />
+                    <img loading="lazy" decoding="async" src={cap.image} alt={cap.title} className="w-full h-full object-cover object-top" />
                   </div>
                 )}
 

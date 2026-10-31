@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from 'react';
+import { ScrollProgress } from '../common/ScrollProgress';
+import { track } from '../../utils/track';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { useNotifications } from '../../context/NotificationContext';
-import { DemoRoleSwitcher } from '../common/DemoRoleSwitcher';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../common/Button';
 import { Modal } from '../common/Modal';
-import { HealthcareTexture } from '../common/HealthcareTexture';
+import { WhatsAppIcon, WhatsAppFloatingButton } from '../common/WhatsAppButton';
+import { openWhatsApp, WHATSAPP_DISPLAY_PHONE } from '../../utils/whatsapp';
+import { ClinicalECGHeartbeat } from '../common/PulseUI';
 import {
-  Bell,
   ShieldCheck,
   Phone,
+  Mail,
   Menu,
   X,
   MapPin,
   ChevronDown,
-  Building2,
   Activity,
   UserCheck,
   ShieldPlus,
-  ArrowRight,
-  HeartPulse
+  HeartPulse,
+  Sparkles,
+  CheckCircle2
 } from 'lucide-react';
 import { DELHI_NCR_SERVICE_HUBS } from '../../data/serviceAreaMatrix';
 
 export const PublicLayout: React.FC = () => {
-  const { currentRole } = useAuth();
-  const { unreadCount } = useNotifications();
   const location = useLocation();
   const navigate = useNavigate();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
-  const [orgDropdownOpen, setOrgDropdownOpen] = useState(false);
+  const [hoveredNavItem, setHoveredNavItem] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [selectedHub, setSelectedHub] = useState(DELHI_NCR_SERVICE_HUBS[0]);
 
@@ -47,488 +47,662 @@ export const PublicLayout: React.FC = () => {
   // Close dropdowns on route change
   useEffect(() => {
     setServicesDropdownOpen(false);
-    setOrgDropdownOpen(false);
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  // Count phone-call taps (any tel: link on the site)
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement | null)?.closest('a[href^="tel:"]');
+      if (a) track('call_click', { page: window.location.pathname });
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
+
+  // Scroll to hash targets once the routed page has rendered
+  useEffect(() => {
+    if (!location.hash) return;
+    const id = decodeURIComponent(location.hash.slice(1));
+    // Sections above the target mount lazily and shift the layout, so re-align a few times
+    const timers = [100, 600, 1400].map((delay, i) =>
+      window.setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: i === 0 ? 'smooth' : 'auto', block: 'start' });
+      }, delay)
+    );
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, [location.pathname, location.hash]);
+
+  const navItems = [
+    { id: 'home', label: 'Home', href: '/', isRoute: true },
+    { id: 'services', label: 'Services', href: '/services', isRoute: true, hasDropdown: true },
+    { id: 'about-us', label: 'About & Mission', href: '/#about-us', isRoute: false },
+    { id: 'pricing', label: 'Pricing & Rates', href: '/#cost-calculator', isRoute: false },
+    { id: 'careers', label: 'Careers', href: '/careers', isRoute: true, badge: '₹10k Bonus' },
+    { id: 'faqs', label: 'FAQs', href: '/#faqs', isRoute: false }
+  ];
+
   const serviceCategories = [
     {
-      title: 'Clinical Home Nursing',
-      desc: 'Wound care, IV fluids, catheter & vital monitoring',
-      icon: <Activity className="w-5 h-5 text-brand-teal" />,
-      path: '/services/home-nursing',
-      badge: 'Flagship'
+      title: 'Chronic Disease & Palliative Care',
+      desc: 'Oncology, stroke rehabilitation, advanced diabetes & neuro care',
+      icon: <HeartPulse className="w-5 h-5 text-[#C31725]" />,
+      path: '/services/chronic-disease-palliative-care',
+      badge: 'Palliative'
     },
     {
-      title: 'Caregiver / Attendant',
-      desc: 'Bedside living support, bathing, mobility & feeding',
-      icon: <UserCheck className="w-5 h-5 text-brand-teal" />,
-      path: '/services/12-hour-caregiver-attendant'
+      title: 'Post-Operative Recovery',
+      desc: 'Orthopaedic knee/hip replacement, cardiac rehab & surgical support',
+      icon: <Activity className="w-5 h-5 text-[#015498]" />,
+      path: '/services/post-operative-recovery',
+      badge: 'Post-Op'
     },
     {
-      title: 'Physical Therapy',
-      desc: 'Post-op orthopedic rehab, joint & stroke recovery',
-      icon: <HeartPulse className="w-5 h-5 text-brand-teal" />,
-      path: '/services/orthopedic-joint-rehab-physio'
+      title: 'General Patient Attendants',
+      desc: 'Non-medical hygiene, bed-baths, sponge baths & diaper changing',
+      icon: <UserCheck className="w-5 h-5 text-[#015498]" />,
+      path: '/services/general-patient-attendants',
+      badge: 'Attendants'
     },
     {
-      title: 'Senior Skilled Nursing Visit',
-      desc: 'Insulin, vital monitoring & chronic care checks',
-      icon: <HeartPulse className="w-5 h-5 text-brand-teal" />,
-      path: '/services/senior-skilled-nursing-visit'
+      title: 'Elderly Care Assistance',
+      desc: 'Medication management, walking assistance, fall prevention & toilet routine',
+      icon: <ShieldPlus className="w-5 h-5 text-[#015498]" />,
+      path: '/services/elderly-care-assistance',
+      badge: 'Elderly'
     },
     {
-      title: '24-Hour Live-In Caregiver',
-      desc: 'Round-the-clock continuous bedside care',
-      icon: <ShieldPlus className="w-5 h-5 text-brand-teal" />,
-      path: '/services/24-hour-live-in-caregiver'
+      title: 'Newborn & Mother Care',
+      desc: 'Post-partum mother care, infant massage, bathing & feeding assistance',
+      icon: <HeartPulse className="w-5 h-5 text-[#C31725]" />,
+      path: '/services/newborn-mother-care',
+      badge: 'Mother & Baby'
     }
   ];
 
-  const orgServices = [
-    { name: 'Hospitals & Health Systems', desc: 'ICU & ward nurse shift requisitions' },
-    { name: 'Specialty Clinics', desc: 'Procedure & clinical attendant support' },
-    { name: 'Senior Living Communities', desc: 'Rotational nursing & caregiver rosters' },
-    { name: 'Rehabilitation Centers', desc: 'Dedicated physical therapy staff' }
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col bg-canvas-primary text-text-primary antialiased font-sans">
-      {/* Top Demo Role Bar */}
-      <DemoRoleSwitcher />
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased font-sans selection:bg-[#015498] selection:text-white relative overflow-x-hidden w-full max-w-full">
+      <a href="#main" className="skip-link">Skip to main content</a>
+      <ScrollProgress />
+      {/* ========================================================================= */}
+      {/* ========================================================================= */}
+      {/* LUXURY TOP ANNOUNCEMENT & VERIFIED CLINICAL HOTLINE STRIP                 */}
+      {/* ========================================================================= */}
+      <div className="bg-[#050F33] text-white border-b border-white/10 text-[11px] sm:text-xs py-2 px-4 sm:px-6 lg:px-8 relative z-50">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 font-medium">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <span className="inline-flex items-center gap-2 font-bold text-emerald-400">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              24/7 Clinical Helpline Active
+            </span>
+            <span className="hidden sm:inline text-white/30">•</span>
+            <span className="hidden md:inline text-slate-300">
+              Council-Registered Nurses (DNC/INC) · Rates from ₹35/hr (Advance Payment) · 100% 24h Money-Back
+            </span>
+          </div>
 
-      {/* Primary Public Navigation Header — Rafly / Framer Style Floating Glass Pill Navbar */}
-      <header
-        className="sticky top-2 sm:top-4 z-50 px-2 sm:px-4 lg:px-6 max-w-7xl mx-auto w-full transition-all duration-300 relative"
-      >
-        {/* Floating Pill Header Capsule - Strict Fixed Height (h-14) */}
-        <div
-          className={`w-full h-14 rounded-full transition-all duration-300 flex items-center justify-between px-3 sm:px-4 lg:px-6 relative z-30 ${
-            isScrolled
-              ? 'bg-white/95 backdrop-blur-2xl shadow-[0_12px_36px_rgba(15,23,42,0.12)] border border-slate-200/90'
-              : 'bg-white/90 backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] border border-white/80'
-          }`}
-          style={{ backdropFilter: 'blur(20px) saturate(180%)' }}
-        >
-          <HealthcareTexture type="micro-dot-mesh" opacity={0.02} />
-
-          <div className="w-full flex items-center justify-between gap-1.5 sm:gap-3 lg:gap-4 relative z-10">
-            
-            {/* Left: Master Brand Logo */}
-            <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 shrink-0">
-              <Link to="/" className="flex items-center gap-2 group shrink-0">
-                <img
-                  src="/assets/brand/pulse-n-care/pulse-n-care-logo.svg"
-                  alt="Pulse n Care"
-                  className="h-8 sm:h-9 lg:h-10 w-auto group-hover:scale-[1.02] transition-transform duration-200"
-                />
-              </Link>
-            </div>
-
-            {/* Center Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-1 relative shrink-0">
-              
-              <Link
-                to="/"
-                className={`px-3.5 py-1.5 text-[13px] tracking-tight font-medium rounded-full transition-all duration-200 relative whitespace-nowrap ${
-                  location.pathname === '/' 
-                    ? 'text-white bg-slate-900 font-semibold shadow-xs' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-                }`}
-              >
-                Home
-              </Link>
-
-              {/* Services Mega-Menu Dropdown */}
-              <div
-                className="relative"
-                onMouseEnter={() => setServicesDropdownOpen(true)}
-                onMouseLeave={() => setServicesDropdownOpen(false)}
-              >
-                <button
-                  onClick={() => navigate('/services')}
-                  className={`flex items-center gap-1 px-3.5 py-1.5 text-[13px] tracking-tight font-medium rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap ${
-                    location.pathname.startsWith('/services') 
-                      ? 'text-white bg-slate-900 font-semibold shadow-xs' 
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-                  }`}
-                >
-                  <span className="whitespace-nowrap">Services</span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${servicesDropdownOpen ? 'rotate-180 text-brand-teal' : 'text-slate-400'}`} />
-                </button>
-
-                {/* Mega-Menu Panel with Hover Bridge */}
-                {servicesDropdownOpen && (
-                  <div className="absolute top-full pt-2 left-1/2 -translate-x-1/2 w-[calc(100vw-2rem)] max-w-[660px] z-50 animate-fadeIn">
-                    <div className="bg-white rounded-3xl shadow-[0_24px_60px_rgba(15,23,42,0.18)] border border-slate-200/90 p-5 grid grid-cols-12 gap-5 relative overflow-hidden">
-                      <HealthcareTexture type="micro-dot-mesh" opacity={0.03} />
-
-                      {/* Left Column: Care Services List */}
-                      <div className="col-span-7 space-y-2 relative z-10">
-                        <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-                          <span className="text-[10px] font-extrabold text-brand-teal uppercase tracking-widest whitespace-nowrap">
-                            Care Services Ecosystem
-                          </span>
-                          <Link to="/services" className="text-[11px] font-bold text-slate-500 hover:text-brand-teal whitespace-nowrap">
-                            View All (11) →
-                          </Link>
-                        </div>
-
-                        <div className="space-y-1 pt-1">
-                          {serviceCategories.map((item) => (
-                            <Link
-                              key={item.title}
-                              to={item.path}
-                              className="flex items-start gap-3 p-2 rounded-2xl hover:bg-teal-50/70 transition-colors group"
-                            >
-                              <div className="p-2 rounded-xl bg-teal-50 border border-teal-200/70 group-hover:scale-105 transition-transform shrink-0">
-                                {item.icon}
-                              </div>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <p className="text-xs font-bold text-slate-900 group-hover:text-brand-teal whitespace-nowrap">
-                                    {item.title}
-                                  </p>
-                                  {item.badge && (
-                                    <span className="text-[9px] font-black text-brand-teal bg-canvas-teal px-2 py-0.5 rounded-full border border-teal-200 uppercase whitespace-nowrap">
-                                      {item.badge}
-                                    </span>
-                                  )}
-                                </div>
-                                <p className="text-[11px] text-slate-500 leading-tight mt-0.5">
-                                  {item.desc}
-                                </p>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Right Column: Featured Flagship Showcase */}
-                      <div className="col-span-5 bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 rounded-2xl p-4 text-white flex flex-col justify-between relative overflow-hidden shadow-inner">
-                        <img
-                          src="/assets/services/home-nursing/pulse-n-care-team-campaign-7-9.jpg"
-                          alt="Pulse n Care Team"
-                          className="absolute inset-0 w-full h-full object-cover opacity-30"
-                        />
-                        <div className="relative z-10 space-y-2">
-                          <span className="text-[10px] font-black text-teal-300 uppercase tracking-widest bg-white/10 px-2.5 py-1 rounded-full border border-white/20 whitespace-nowrap">
-                            24×7 Home Nursing
-                          </span>
-                          <h4 className="text-sm font-black text-white leading-tight">
-                            Qualified Nurse Care at Doorstep
-                          </h4>
-                          <p className="text-[11px] text-teal-100/90 leading-relaxed">
-                            Verified, trained nursing professionals managed by Central Ops.
-                          </p>
-                        </div>
-
-                        <Link to="/services/home-nursing" className="relative z-10 pt-3">
-                          <Button size="sm" className="w-full bg-brand-teal hover:bg-brand-teal-hover text-white font-extrabold text-xs rounded-full h-9 whitespace-nowrap shadow-sm">
-                            Explore Home Nursing <ArrowRight className="w-3.5 h-3.5 ml-1" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <a
-                href="/#how-it-works"
-                className="px-3.5 py-1.5 text-[13px] tracking-tight font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/80 rounded-full transition-all duration-200 whitespace-nowrap"
-              >
-                How It Works
-              </a>
-
-              <Link
-                to="/careers"
-                className={`px-3.5 py-1.5 text-[13px] tracking-tight font-medium rounded-full transition-all duration-200 whitespace-nowrap ${
-                  location.pathname === '/careers'
-                    ? 'text-white bg-slate-900 font-semibold shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-                }`}
-              >
-                Careers
-              </Link>
-
-              {/* For Organizations Dropdown */}
-              <div
-                className="relative"
-                onMouseEnter={() => setOrgDropdownOpen(true)}
-                onMouseLeave={() => setOrgDropdownOpen(false)}
-              >
-                <button
-                  onClick={() => navigate('/organizations')}
-                  className={`flex items-center gap-1 px-3.5 py-1.5 text-[13px] tracking-tight font-medium rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap ${
-                    location.pathname === '/organizations' 
-                      ? 'text-white bg-slate-900 font-semibold shadow-xs' 
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-                  }`}
-                >
-                  <span className="whitespace-nowrap"><span className="hidden xl:inline">For </span>Organizations</span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${orgDropdownOpen ? 'rotate-180 text-brand-teal' : 'text-slate-400'}`} />
-                </button>
-
-                {orgDropdownOpen && (
-                  <div className="absolute top-full pt-2 left-1/2 -translate-x-1/2 w-80 z-50 animate-fadeIn">
-                    <div className="bg-white rounded-3xl shadow-[0_24px_60px_rgba(15,23,42,0.18)] border border-slate-200/90 p-4 space-y-3">
-                      <div className="flex items-center gap-2 px-2 pb-2 border-b border-slate-100">
-                        <Building2 className="w-4 h-4 text-brand-teal" />
-                        <span className="text-xs font-extrabold text-slate-900 whitespace-nowrap">B2B Facility Staffing</span>
-                      </div>
-
-                      <div className="space-y-1">
-                        {orgServices.map((org) => (
-                          <Link
-                            key={org.name}
-                            to="/organizations"
-                            className="block p-2.5 rounded-xl hover:bg-teal-50/70 transition-colors"
-                          >
-                            <p className="text-xs font-bold text-slate-900 whitespace-nowrap">{org.name}</p>
-                            <p className="text-[11px] text-slate-500">{org.desc}</p>
-                          </Link>
-                        ))}
-                      </div>
-
-                      <div className="pt-2 border-t border-slate-100">
-                        <Link to="/organization/dashboard">
-                          <Button size="sm" className="w-full bg-brand-teal text-white font-bold text-xs h-9 rounded-full whitespace-nowrap shadow-sm">
-                            Access B2B Staffing Portal →
-                          </Button>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <Link
-                to="/client/support"
-                className={`px-3.5 py-1.5 text-[13px] tracking-tight font-medium rounded-full transition-all duration-200 whitespace-nowrap ${
-                  location.pathname === '/client/support' 
-                    ? 'text-white bg-slate-900 font-semibold shadow-xs' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
-                }`}
-              >
-                Support
-              </Link>
-            </nav>
-
-            {/* Right Action Section */}
-            <div className="hidden lg:flex items-center gap-2.5 shrink-0">
-              
-              {/* 24×7 Hotline Pill */}
-              <a
-                href="tel:+919876543210"
-                className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100/90 hover:bg-slate-200/90 text-slate-700 text-xs font-semibold transition-all cursor-pointer whitespace-nowrap border border-slate-200/70"
-              >
-                <Phone className="w-3.5 h-3.5 text-brand-teal animate-pulse" />
-                <span>+91 98765 43210</span>
-              </a>
-
-              {currentRole === 'client' && (
-                <Link to="/client/notifications" className="relative p-2 text-slate-500 hover:text-slate-900 rounded-full hover:bg-slate-100 transition-colors">
-                  <Bell className="w-4 h-4" />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-white" />
-                  )}
-                </Link>
-              )}
-
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => navigate('/client/booking/wizard')}
-                rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-                className="bg-brand-teal hover:bg-brand-teal-hover text-white font-extrabold text-[12px] px-4.5 py-2 rounded-full shadow-xs hover:shadow-md hover:scale-[1.02] transition-all duration-200 whitespace-nowrap cursor-pointer h-9 shrink-0"
-              >
-                Book Care Now
-              </Button>
-            </div>
-
-            {/* Mobile Menu Toggle Button */}
+          <div className="hidden sm:flex items-center gap-5 sm:gap-7 font-bold shrink-0">
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-700 hover:text-slate-900 cursor-pointer rounded-full hover:bg-slate-100"
-              aria-label="Toggle Navigation Menu"
+              type="button"
+              onClick={() => setLocationModalOpen(true)}
+              className="hidden lg:inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors cursor-pointer"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <MapPin className="w-3.5 h-3.5 text-rose-400" />
+              <span>{selectedHub.city}</span>
             </button>
+            <a
+              href="tel:+919211765429"
+              className="inline-flex items-center gap-1.5 text-sky-300 hover:text-white transition-colors"
+            >
+              <Phone className="w-3.5 h-3.5 text-[#25D366]" />
+              <span>+91 92117 65429</span>
+            </a>
+            <a
+              href="mailto:pulsencare@gmail.com"
+              className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors"
+            >
+              <Mail className="w-3.5 h-3.5 text-rose-400" />
+              <span>pulsencare@gmail.com</span>
+            </a>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Slide-down Drawer */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden border border-slate-200/90 bg-white/98 backdrop-blur-2xl p-4 mt-2 rounded-3xl space-y-4 shadow-2xl relative z-40 max-h-[calc(100vh-100px)] overflow-y-auto">
-            {/* Mobile Operations Hotline */}
-            <div className="pb-3 border-b border-slate-100">
-              <a
-                href="tel:+919876543210"
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold border border-slate-200"
-              >
-                <Phone className="w-3.5 h-3.5 text-brand-teal animate-pulse" />
-                <span>24×7 Operations Hotline: +91 98765 43210</span>
-              </a>
-            </div>
-
-            <div className="space-y-1">
-              <Link
-                to="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block text-sm font-bold py-2 border-b border-slate-100 ${
-                  location.pathname === '/' ? 'text-brand-teal' : 'text-slate-900 hover:text-brand-teal'
-                }`}
-              >
-                Home
-              </Link>
-              <Link
-                to="/services"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block text-sm font-bold py-2 border-b border-slate-100 ${
-                  location.pathname.startsWith('/services') ? 'text-brand-teal' : 'text-slate-900 hover:text-brand-teal'
-                }`}
-              >
-                Services Catalog (11 Services)
-              </Link>
-              <div className="pl-3 space-y-1 pt-1 pb-2 border-b border-slate-100 bg-slate-50/50 rounded-xl p-2 my-1">
-                {serviceCategories.slice(0, 4).map((sc) => (
-                  <Link
-                    key={sc.path}
-                    to={sc.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-brand-teal py-1"
-                  >
-                    <span>↳</span>
-                    <span>{sc.title}</span>
-                  </Link>
-                ))}
-              </div>
-              <a
-                href="/#how-it-works"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block text-sm font-bold text-slate-900 hover:text-brand-teal py-2 border-b border-slate-100"
-              >
-                How It Works
-              </a>
-              <Link
-                to="/organizations"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block text-sm font-bold py-2 border-b border-slate-100 ${
-                  location.pathname === '/organizations' ? 'text-brand-teal' : 'text-slate-900 hover:text-brand-teal'
-                }`}
-              >
-                For Organizations (B2B Staffing)
-              </Link>
-              <Link
-                to="/client/support"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block text-sm font-bold py-2 border-b border-slate-100 ${
-                  location.pathname === '/client/support' ? 'text-brand-teal' : 'text-slate-900 hover:text-brand-teal'
-                }`}
-              >
-                Support Hub
-              </Link>
-            </div>
-
-            <div className="pt-2 space-y-2">
-              <Link to="/client/booking/wizard" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="primary" className="w-full bg-brand-teal text-white font-extrabold h-10 rounded-full shadow-xs">
-                  Book a Service Now
-                </Button>
-              </Link>
-              <Link to="/client/bookings" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full font-bold h-10 rounded-full">
-                  My Bookings
-                </Button>
-              </Link>
-            </div>
+      {/* MASTER HEALTHCARE EXECUTIVE NAVBAR (SINGLE HORIZONTAL TIER, ZERO OVERFLOW) */}
+      {/* ========================================================================= */}
+      <header
+        className={`sticky top-0 z-50 w-full transition-all duration-200 bg-white/92 backdrop-blur-xl border-b border-slate-200/80 ${
+          isScrolled
+            ? 'h-16 shadow-[0_4px_24px_rgba(5,15,51,0.06)]'
+            : 'h-18 sm:h-20 shadow-[0_1px_4px_rgba(0,0,0,0.03),0_6px_20px_rgba(1,84,152,0.03)]'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+          {/* Brand Logo with Calibrated Proportions & Trust Badge */}
+          <div className="flex items-center shrink-0">
+            <Link to="/" className="flex items-center group">
+              <img
+                src="/assets/brand/pulse-n-care/pulse-n-care-logo-horizontal.webp"
+                alt="Pulse n Care — Nurse Care at Doorstep"
+                className="h-10 sm:h-11 w-auto transition-transform duration-200 group-hover:scale-[1.03] filter drop-shadow-[0_2px_8px_rgba(1,84,152,0.12)]"
+              />
+            </Link>
           </div>
-        )}
+
+          {/* Center Desktop Navigation Menu - Exact Single Horizontal Line, Crystal Clear */}
+          <nav
+            className="hidden xl:flex items-center gap-1 xl:gap-2 relative h-full"
+            onMouseLeave={() => setHoveredNavItem(null)}
+          >
+            {navItems.map((item) => {
+              const isItemActive = item.isRoute
+                ? (item.href === '/' ? location.pathname === '/' : location.pathname.startsWith(item.href))
+                : false;
+              const isHovered = hoveredNavItem === item.id;
+
+              if (item.hasDropdown) {
+                return (
+                  <div
+                    key={item.id}
+                    className="relative flex items-center h-full"
+                    onMouseEnter={() => {
+                      setHoveredNavItem(item.id);
+                      setServicesDropdownOpen(true);
+                    }}
+                    onMouseLeave={() => {
+                      setServicesDropdownOpen(false);
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => navigate(item.href)}
+                      className={`relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13.5px] font-semibold transition-all duration-150 cursor-pointer whitespace-nowrap z-10 ${
+                        isItemActive ? 'text-[#015498] font-bold' : 'text-slate-600 hover:text-slate-950'
+                      }`}
+                    >
+                      {/* Active / Hover Background Pill */}
+                      {isHovered ? (
+                        <motion.div
+                          layoutId="nav-hover-pill"
+                          className="absolute inset-0 rounded-full bg-slate-100 -z-1"
+                          transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                        />
+                      ) : isItemActive ? (
+                        <div className="absolute inset-0 rounded-full bg-blue-50/80 border border-blue-200/60 -z-1 shadow-2xs" />
+                      ) : null}
+
+                      <span>{item.label}</span>
+                    {(item as any).badge && (
+                      <span className="ml-1.5 text-[10px] font-black text-amber-800 bg-amber-100/90 px-1.5 py-0.5 rounded-full border border-amber-300 tracking-tight shadow-2xs">
+                        {(item as any).badge}
+                      </span>
+                    )}
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          servicesDropdownOpen ? 'rotate-180 text-[#015498]' : 'text-slate-400'
+                        }`}
+                      />
+                    </button>
+
+                    {/* Mega Dropdown Animated with AnimatePresence & Framer Motion */}
+                    <AnimatePresence>
+                      {servicesDropdownOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10, scale: 0.99 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 6, scale: 0.99 }}
+                          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                          className="absolute top-full pt-2 left-1/2 -translate-x-1/2 w-[680px] z-50 pointer-events-auto"
+                        >
+                          <div className="bg-white/98 backdrop-blur-2xl rounded-3xl shadow-[0_24px_60px_rgba(5,15,51,0.14)] border border-slate-200 p-6 space-y-4 text-left overflow-hidden relative">
+                            {/* Top Mega Menu Header */}
+                            <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
+                              <div>
+                                <span className="text-[11px] font-black uppercase tracking-widest text-[#C31725] block">
+                                  HOSPITAL-GRADE HOMECARE DISCIPLINES
+                                </span>
+                                <h3 className="text-sm font-extrabold text-slate-900">100% In-House Managed Clinical Staff</h3>
+                              </div>
+                              <Link
+                                to="/services"
+                                className="text-xs font-black text-[#015498] hover:text-[#C31725] transition-colors flex items-center gap-1"
+                              >
+                                <span>Browse Full Directory (11+)</span>
+                                <span>→</span>
+                              </Link>
+                            </div>
+
+                            {/* 2-Column Mega Content Grid */}
+                            <div className="grid grid-cols-12 gap-5 pt-1">
+                              {/* Left Column: 5 Services (7 Cols) */}
+                              <div className="col-span-7 space-y-2">
+                                {serviceCategories.map((cat) => (
+                                  <Link
+                                    key={cat.title}
+                                    to={cat.path}
+                                    className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-all group border border-transparent hover:border-slate-200/80"
+                                  >
+                                    <div className="p-2 rounded-xl bg-blue-50/80 border border-blue-100 text-[#015498] group-hover:scale-105 group-hover:bg-[#015498] group-hover:text-white transition-all shrink-0">
+                                      {cat.icon}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center justify-between">
+                                        <p className="text-xs font-bold text-slate-900 group-hover:text-[#015498] truncate">
+                                          {cat.title}
+                                        </p>
+                                        {cat.badge && (
+                                          <span className="text-[11px] font-black text-[#C31725] bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200 uppercase">
+                                            {cat.badge}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                                        {cat.desc}
+                                      </p>
+                                    </div>
+                                  </Link>
+                                ))}
+                              </div>
+
+                              {/* Right Column: Direct WhatsApp Triage Spotlight Card (5 Cols) */}
+                              <div className="col-span-5 bg-[#050F33] rounded-2xl p-5 text-white flex flex-col justify-between border border-slate-800 shadow-inner relative overflow-hidden">
+                                <div className="space-y-3 relative z-10">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[11px] font-black uppercase tracking-wider text-rose-300">
+                                      Emergency Triage
+                                    </span>
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                  </div>
+
+                                  <div className="w-full h-10 overflow-hidden rounded-xl bg-slate-900/90 border border-white/10 p-1">
+                                    <ClinicalECGHeartbeat variant="dark" height={32} showGrid={false} showTelemetry={false} className="w-full h-full" />
+                                  </div>
+
+                                  <div>
+                                    <h5 className="text-xs font-black text-white">Unsure what care is needed?</h5>
+                                    <p className="text-[11px] text-slate-300 leading-snug mt-1">
+                                      Share doctor prescription on WhatsApp. We promptly match qualified nursing staff for your patient.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => openWhatsApp('Hello Pulse n Care, please guide me on which healthcare service is best for my patient.')}
+                                  className="w-full mt-4 flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20BD5A] text-white font-extrabold text-xs py-2.5 rounded-xl cursor-pointer shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                >
+                                  <WhatsAppIcon className="w-3.5 h-3.5 text-white" />
+                                  <span>Talk to Desk (Instant)</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              }
+
+              // Standard Navigation Link - Fixed single line, exact height
+              const Component = item.isRoute ? Link : 'a';
+              const linkProps = item.isRoute ? { to: item.href } : { href: item.href };
+
+              return (
+                <div
+                  key={item.id}
+                  className="relative flex items-center h-full"
+                  onMouseEnter={() => setHoveredNavItem(item.id)}
+                >
+                  <Component
+                    {...(linkProps as any)}
+                    className={`relative inline-flex items-center px-3 py-1.5 rounded-full text-[13.5px] font-semibold transition-all duration-150 whitespace-nowrap z-10 ${
+                      isItemActive ? 'text-[#015498] font-bold' : 'text-slate-600 hover:text-slate-950'
+                    }`}
+                  >
+                    {/* Active / Hover Background Pill */}
+                    {isHovered ? (
+                      <motion.div
+                        layoutId="nav-hover-pill"
+                        className="absolute inset-0 rounded-full bg-slate-100 -z-1"
+                        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                      />
+                    ) : isItemActive ? (
+                      <div className="absolute inset-0 rounded-full bg-blue-50/80 border border-blue-200/60 -z-1 shadow-2xs" />
+                    ) : null}
+
+                    <span>{item.label}</span>
+                    {(item as any).badge && (
+                      <span className="ml-1.5 text-[10px] font-black text-amber-800 bg-amber-100/90 px-1.5 py-0.5 rounded-full border border-amber-300 tracking-tight shadow-2xs">
+                        {(item as any).badge}
+                      </span>
+                    )}
+                  </Component>
+                </div>
+              );
+            })}
+          </nav>
+
+          {/* Right Action Group - Crisp, Clean, Zero Overflow, Subtle Luxury */}
+          <div className="hidden xl:flex items-center gap-2.5 xl:gap-3 shrink-0">
+            {/* Direct Calling Button */}
+            <a
+              href="tel:+919211765429"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full btn-glass-frost text-slate-800 text-xs font-bold transition-all group whitespace-nowrap"
+            >
+              <Phone className="w-3.5 h-3.5 text-[#015498] group-hover:rotate-12 transition-transform" />
+              <span>+91 92117 65429</span>
+            </a>
+
+            {/* Standout Premium WhatsApp CTA Button with Tactile Aura */}
+            <button
+              type="button"
+              onClick={() => openWhatsApp('Hello Pulse n Care, I want to book home healthcare / nurse services.')}
+              className="inline-flex items-center gap-2 btn-emerald-aura btn-shimmer text-white font-black text-xs sm:text-[13px] px-4.5 py-2 rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap"
+            >
+              <WhatsAppIcon className="w-3.5 h-3.5 text-white shrink-0" />
+              <span className="tracking-tight">Book on WhatsApp</span>
+            </button>
+          </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="xl:hidden p-2 text-slate-800 hover:text-[#015498] rounded-xl hover:bg-slate-100 cursor-pointer"
+            aria-label="Toggle Mobile Navigation"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        {/* Mobile Slide-down Drawer Animated with AnimatePresence */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="xl:hidden bg-white border-y border-slate-200 p-5 space-y-4 shadow-2xl text-left overflow-hidden z-50 relative max-h-[85vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <span className="text-xs font-bold text-slate-500">Service Area:</span>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setLocationModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#015498]"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-[#C31725]" />
+                  <span>{selectedHub.city} (Change)</span>
+                </button>
+              </div>
+
+              <div className="space-y-1">
+                <Link
+                  to="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block py-2.5 px-3 rounded-xl text-sm font-bold ${
+                    location.pathname === '/' ? 'bg-slate-100 text-[#015498]' : 'text-slate-800'
+                  }`}
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/services"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block py-2.5 px-3 rounded-xl text-sm font-bold ${
+                    location.pathname.startsWith('/services') ? 'bg-slate-100 text-[#015498]' : 'text-slate-800'
+                  }`}
+                >
+                  Services (All 11+ Disciplines)
+                </Link>
+                <a
+                  href="/#about-us"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2.5 px-3 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-50"
+                >
+                  About & Mission
+                </a>
+                <a
+                  href="/#cost-calculator"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2.5 px-3 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-50"
+                >
+                  Pricing & Rates
+                </a>
+                <Link
+                  to="/careers"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center justify-between py-2.5 px-3 rounded-xl text-sm font-bold ${
+                    location.pathname === '/careers' ? 'bg-slate-100 text-[#015498]' : 'text-slate-800 hover:bg-slate-50'
+                  }`}
+                >
+                  <span>Careers</span>
+                  <span className="text-[10px] font-black text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-300">
+                    ✨ ₹10k Bonus
+                  </span>
+                </Link>
+                <a
+                  href="/#faqs"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2.5 px-3 rounded-xl text-sm font-bold text-slate-800 hover:bg-slate-50"
+                >
+                  FAQs
+                </a>
+              </div>
+
+              <div className="pt-2 space-y-2.5 border-t border-slate-100">
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    openWhatsApp('Hello Pulse n Care, I want to book a doorstep nurse.');
+                  }}
+                  className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-extrabold h-12 rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer transition-all"
+                >
+                  <WhatsAppIcon className="w-5 h-5 fill-white" />
+                  <span>Chat on WhatsApp Now</span>
+                </button>
+
+                <a
+                  href="tel:+919211765429"
+                  className="w-full bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold h-11 rounded-xl flex items-center justify-center gap-2 text-xs border border-slate-200 transition-colors"
+                >
+                  <Phone className="w-4 h-4 text-[#015498]" />
+                  <span>Call Desk: {WHATSAPP_DISPLAY_PHONE}</span>
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
-      {/* Main Page Body */}
-      <main className="flex-1">
+      {/* Main Content Body */}
+      <main id="main" tabIndex={-1} className="flex-1 pb-16 md:pb-0 outline-none">
         <Outlet />
       </main>
 
-      {/* Global Footer — Premium Navy Closing Surface (#050F33 + Textured Depth + Care Accent Line) */}
-      <footer className="bg-surface-dark-textured text-white border-t border-white/10 relative overflow-hidden pt-16 pb-12">
-        {/* Top Care Gradient Accent Line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-care" />
+      {/* Global Floating Sticky WhatsApp CTA (Desktop only: md+) */}
+      <WhatsAppFloatingButton />
+
+      {/* Global Mobile Floating Action Dock (Mobile only: < md, hidden on service detail / custom bar pages) */}
+      <div
+        className={`md:hidden fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-8px_30px_rgba(5,15,51,0.14)] px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] flex items-center justify-between gap-2.5 ${
+          location.pathname.startsWith('/services/') || location.pathname === '/services/home-nursing' ? 'hidden' : ''
+        }`}
+      >
+        <a
+          href="tel:+919211765429"
+          className="flex-1 flex items-center justify-center gap-2 btn-sapphire-clinical text-xs font-black py-3 px-3 rounded-xl cursor-pointer"
+        >
+          <Phone className="w-3.5 h-3.5 text-sky-300" />
+          <span>Call 92117 65429</span>
+        </a>
+
+        <button
+          type="button"
+          onClick={() => openWhatsApp('Hello Pulse n Care, I want to book verified nurse and caregiver care at home.')}
+          className="flex-1 flex items-center justify-center gap-2 btn-emerald-aura btn-shimmer text-xs font-black py-3 px-3 rounded-xl cursor-pointer"
+        >
+          <WhatsAppIcon className="w-4 h-4 fill-white shrink-0" />
+          <span>WhatsApp Care</span>
+        </button>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* EXECUTIVE HOSPITALITY & CLINICAL FOOTER                                  */}
+      {/* ========================================================================= */}
+      <footer className="bg-[#050F33] text-white border-t border-white/10 relative overflow-hidden pt-16 pb-12 text-left">
+        {/* Dual Brand Accent Line (Crimson Red + Royal Blue) */}
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#C31725] via-[#015498] to-[#25D366]" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+          
+          {/* Top WhatsApp High-Conversion Callout Banner (Shown on inner pages; homepage has dedicated ClosingCTASection) */}
+          {location.pathname !== '/' && (
+            <div className="bg-gradient-to-r from-[#0B2447] via-[#050F33] to-[#0A192F] rounded-3xl p-6 sm:p-9 border border-blue-400/20 flex flex-col lg:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
+              <div className="space-y-2 text-center lg:text-left relative z-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 text-rose-300 text-xs font-bold border border-rose-500/30">
+                  <Sparkles className="w-3.5 h-3.5 text-[#C31725]" />
+                  <span>Immediate Healthcare Assistance Available</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                  Looking for Verified Care at Home?
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-300 max-w-xl font-normal">
+                  Chat directly with our Central Care Desk on WhatsApp. We confirm verified nurse availability, share transparent shift pricing, and arrange care promptly at your doorstep.
+                </p>
+              </div>
+              
+              <button
+                onClick={() => openWhatsApp('Hello Pulse n Care, I want to arrange doorstep healthcare.')}
+                className="w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 rounded-full bg-[#25D366] hover:bg-[#20BD5A] text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 sm:gap-2.5 shadow-sm hover:shadow transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer relative z-10 border border-emerald-400/40"
+              >
+                <WhatsAppIcon className="w-4 h-4 text-white shrink-0" />
+                <span>Connect on WhatsApp ({WHATSAPP_DISPLAY_PHONE})</span>
+              </button>
+            </div>
+          )}
+
+          {/* Main Footer Links Columns */}
           <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
-            
-            {/* Col 1: Brand & Operational Governance */}
+            {/* Col 1 & 2: Brand Identity & Rigor */}
             <div className="md:col-span-2 space-y-4">
               <img
-                src="/assets/brand/pulse-n-care/pulse-n-care-logo-dark.svg"
+                src="/assets/brand/pulse-n-care/pulse-n-care-logo-horizontal-dark.webp"
                 alt="Pulse n Care"
-                className="h-10 w-auto"
+                className="h-10 sm:h-11 w-auto"
               />
               <p className="text-xs text-slate-300 leading-relaxed max-w-sm font-medium">
-                Nurse care at doorstep. Managed home nursing, attendant care, physical therapy, and physician visits across Delhi NCR.
+                Pulse n Care is a trusted home non-medical healthcare and doorstep nursing care provider founded in Delhi NCR. NRI-funded startup through FDI, delivering verified clinical care directly to family residences.
               </p>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-teal-300 text-xs font-bold border border-white/15">
-                <ShieldCheck className="w-3.5 h-3.5 text-brand-teal-400" />
-                <span>100% In-House Managed Workforce</span>
+              <div className="space-y-2 pt-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 text-slate-300 text-xs font-medium border border-white/10">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>98% On-Time Deployment Rate Across NCR</span>
+                </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 text-slate-300 text-xs font-medium border border-white/10">
+                  <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0" />
+                  <span>NRI-Funded FDI Enterprise • 24×7 Central Care Desk</span>
+                </div>
               </div>
             </div>
 
-            {/* Col 2: Services */}
+            {/* Col 3: Core Healthcare Services */}
             <div className="space-y-3">
-              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-300">Home Care Services</h4>
+              <h2 className="text-xs font-black uppercase tracking-wider text-rose-400">Home Care Services</h2>
               <ul className="space-y-2 text-xs text-slate-300">
-                <li><Link to="/services/post-operative-nursing-care" className="hover:text-teal-300 transition-colors">Post-Operative Nursing Care</Link></li>
-                <li><Link to="/services/senior-skilled-nursing-visit" className="hover:text-teal-300 transition-colors">Senior Skilled Nursing Visit</Link></li>
-                <li><Link to="/services/12-hour-caregiver-attendant" className="hover:text-teal-300 transition-colors">12-Hour Day / Night Caregiver</Link></li>
-                <li><Link to="/services/24-hour-live-in-caregiver" className="hover:text-teal-300 transition-colors">24-Hour Live-In Caregiver</Link></li>
-                <li><Link to="/services/high-dependency-nursing-care" className="hover:text-teal-300 transition-colors">High-Dependency Nursing Care</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">1. Chronic Disease & Palliative Care</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">2. Post-Operative Recovery</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">3. General Patient Attendants</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">4. Elderly Care Assistance</Link></li>
+                <li><Link to="/services" className="hover:text-white transition-colors">5. Newborn & Mother Care</Link></li>
+                <li><Link to="/careers" className="hover:text-amber-300 font-bold text-amber-400 transition-colors">✨ We're Hiring Nurses (₹10,000 Bonus) →</Link></li>
+                <li><a href="/#about-us" className="hover:text-emerald-400 font-bold text-emerald-400 transition-colors">Our Mission, Vision & FDI Backing →</a></li>
               </ul>
             </div>
 
-            {/* Col 3: Delhi NCR Hub Coverage */}
+            {/* Col 4: Clinical Governance & Safety Protocols */}
             <div className="space-y-3">
-              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-300">Service Coverage</h4>
+              <h2 className="text-xs font-black uppercase tracking-wider text-blue-400">Clinical Standards</h2>
               <ul className="space-y-2 text-xs text-slate-300">
-                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal-400" /> Delhi & NCR Regions</li>
-                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal-400" /> Gurugram Care Zones</li>
-                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal-400" /> Noida & Greater Noida</li>
-                <li className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-brand-teal-400" /> Faridabad & Neighboring Areas</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> DNC & INC Verified Licenses</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Biometric Background Verification</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Medical Officer Protocol Compliance</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Sterile ICU & Wound Care Standards</li>
               </ul>
             </div>
 
-            {/* Col 4: Operations Contact & Support */}
+            {/* Col 5: Operations Contact */}
             <div className="space-y-3">
-              <h4 className="text-xs font-extrabold uppercase tracking-widest text-teal-300">Central Operations</h4>
+              <h2 className="text-xs font-black uppercase tracking-wider text-emerald-400">Central Care Desk</h2>
               <p className="text-xs text-slate-300 leading-relaxed">
-                24/7 Operations Desk for emergency nursing requisitions & scheduling queries.
+                Connect with our duty officer for emergency nursing requisitions, shift matching, and patient status updates.
               </p>
-              <div className="space-y-1.5 text-xs text-white font-bold">
-                <p className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-brand-teal-400" /> +91-11-4920-8800</p>
-                <p className="text-teal-200">support@pulsen-care.com</p>
+              <div className="space-y-2 text-xs text-white font-bold">
+                <button
+                  onClick={() => openWhatsApp('Hello Pulse n Care, I need support from Central Care Desk.')}
+                  className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 cursor-pointer"
+                >
+                  <WhatsAppIcon className="w-4 h-4 fill-emerald-400" />
+                  <span>WhatsApp: {WHATSAPP_DISPLAY_PHONE}</span>
+                </button>
+                <a
+                  href="tel:+919211765429"
+                  className="flex items-center gap-2 text-slate-200 hover:text-white transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5 text-sky-400" />
+                  <span>Call: +91 92117 65429</span>
+                </a>
+                <a
+                  href="mailto:pulsencare@gmail.com"
+                  className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-xs"
+                >
+                  <Mail className="w-3.5 h-3.5 text-rose-400" />
+                  <span>pulsencare@gmail.com</span>
+                </a>
               </div>
             </div>
           </div>
 
+          {/* Bottom Copyright & Disclaimer */}
           <div className="pt-8 border-t border-white/10 text-center sm:flex sm:justify-between text-xs text-slate-400 font-medium">
-            <p>© 2026 Pulse n Care — Nurse Care at Doorstep. All rights reserved.</p>
-            <p className="mt-2 sm:mt-0">Managed Clinical Operations • Doorstep Healthcare Network</p>
+            <p>© 2026 Pulse n Care — Home Healthcare & Doorstep Nurse Care Network. All rights reserved.</p>
+            <nav aria-label="Legal" className="mt-2 sm:mt-0 flex flex-wrap items-center gap-x-5 gap-y-1 text-slate-400">
+              <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-white transition-colors">Terms & Refund Policy</Link>
+              <Link to="/medical-disclaimer" className="hover:text-white transition-colors">Medical Disclaimer</Link>
+            </nav>
           </div>
         </div>
       </footer>
 
-      {/* Location Selector Modal */}
+      {/* Region Selector Modal */}
       <Modal
         isOpen={locationModalOpen}
         onClose={() => setLocationModalOpen(false)}
-        title="Service Availability & Coverage"
+        title="Delhi NCR Service Availability"
         maxWidth="md"
       >
         <div className="space-y-4 text-left">
           <p className="text-xs text-text-secondary">
-            Pulse n Care operates an internal, managed healthcare workforce. Select your primary service region below:
+            Pulse n Care operates an active clinical nursing roster across all major zones in Delhi NCR. Select your city to check immediate shift dispatch:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -541,23 +715,31 @@ export const PublicLayout: React.FC = () => {
                 }}
                 className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer ${
                   selectedHub.id === hub.id
-                    ? 'border-brand-teal bg-canvas-teal/50 shadow-2xs'
-                    : 'border-border-default bg-white hover:border-teal-200'
+                    ? 'border-[#015498] bg-blue-50/60 shadow-xs ring-1 ring-[#015498]/30'
+                    : 'border-border-default bg-white hover:border-blue-200'
                 }`}
               >
                 <p className="font-extrabold text-text-primary text-xs flex items-center justify-between">
                   <span>{hub.city}</span>
-                  {selectedHub.id === hub.id && <span className="text-[10px] font-black text-brand-teal bg-white px-2 py-0.5 rounded-full border border-teal-200 uppercase">Selected</span>}
+                  {selectedHub.id === hub.id && (
+                    <span className="text-[11px] font-black text-[#015498] bg-white px-2 py-0.5 rounded-full border border-blue-200 uppercase">
+                      Selected
+                    </span>
+                  )}
                 </p>
                 <p className="text-[11px] text-text-muted mt-1">{hub.name}</p>
-                <p className="text-[10px] font-medium text-brand-teal mt-1.5">✓ {hub.pincodePrefixes.length} Pincode Zones Covered</p>
+                <p className="text-[11px] font-bold text-emerald-700 mt-1.5">✓ {hub.pincodePrefixes.length} Pincode Sectors Active</p>
               </button>
             ))}
           </div>
 
           <div className="pt-3 border-t border-slate-100 flex justify-end">
-            <Button size="sm" onClick={() => setLocationModalOpen(false)} className="bg-brand-teal text-white font-bold px-6">
-              Confirm Location
+            <Button
+              size="sm"
+              onClick={() => setLocationModalOpen(false)}
+              className="bg-[#015498] hover:bg-[#004276] text-white font-bold px-6 rounded-full"
+            >
+              Confirm Service Region
             </Button>
           </div>
         </div>

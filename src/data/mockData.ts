@@ -25,21 +25,92 @@ import type {
 import { VISUAL_ASSETS } from './visualAssets';
 
 // ==========================================
+// OFFICIAL COMPANY PROFILE & AUTHENTIC SERVICE RATES
+// ==========================================
+
+export const COMPANY_PROFILE = {
+  name: 'Pulse n Care',
+  entityType: 'Home Non-Medical Healthcare Provider',
+  foundedLocation: 'Delhi NCR',
+  fundingStatus: 'Startup funded by an NRI through Foreign Direct Investment (FDI)',
+  onTimeDeploymentRate: '98%',
+  mission:
+    'To empower families across Delhi NCR with reliable, high-quality, and accessible home nursing services that preserve patient dignity, accelerate recovery, and provide absolute peace of mind.',
+  vision:
+    'To become North India’s most trusted home healthcare ecosystem, setting the benchmark for non medical excellence, ethical caregiving, and patient monitoring.',
+  refundPolicy: {
+    advanceCancellation: 'Full refund if service is canceled at least 24 hours prior to staff deployment.',
+    midServiceDiscontinuation: 'Pro-rata refund calculated for unused days, minus a 2-day administrative fee.',
+    replacementGuarantee: 'Free replacement within 24 hours if a client is unsatisfied with the assigned nurse or attendant.'
+  }
+};
+
+export const OFFICIAL_STARTING_RATES = [
+  { service: '12-Hour Shift Nursing', rate: '₹35 per hour', baseShift: '₹420 / 12h', paymentTerm: 'Advance Payment' },
+  { service: '24/7 Live-in Nursing Care', rate: '₹48 per hour', baseShift: '₹1,152 / 24h', paymentTerm: 'Advance Payment' },
+  { service: 'Post-Operative & Cardiac Care', rate: '₹56 per hour for 24 hours live-in', baseShift: '₹1,344 / 24h', paymentTerm: 'Advance Payment' },
+  { service: 'Short-Visit Procedures', rate: '₹500 / visit', baseShift: '₹500 / visit', paymentTerm: 'Advance Payment' },
+  { service: 'Physiotherapy at Home', rate: '₹700 / session for 1 hour', baseShift: '₹700 / session', paymentTerm: 'Advance Payment' }
+];
+
+// ==========================================
 // 1. SERVICES CATALOG (11 SERVICES)
 // ==========================================
 
 export const MOCK_SERVICES: Service[] = [
-  // Home Nursing
+  // 1. Chronic Disease & Palliative Care
+  {
+    id: 'srv-chronic-palliative',
+    slug: 'chronic-disease-palliative-care',
+    category: 'specialized_care',
+    name: 'Chronic Disease & Palliative Care',
+    shortDescription: 'Long-term management plans for oncology, stroke rehabilitation, advanced diabetes, and neuro-degenerative conditions.',
+    fullDescription: 'Long-term management plans for oncology, stroke rehabilitation, advanced diabetes, and neuro-degenerative conditions. Managed under the direct clinical philosophy of Smt. Ishwari (20+ years palliative and hospice expertise). Focuses on pain relief, comfortable repositioning, vital monitoring, and dignified bedside support.',
+    iconName: 'HeartPulse',
+    cardMedia: '/assets/services/core/service-chronic-palliative.webp',
+    heroMedia: '/assets/services/core/service-chronic-palliative.webp',
+    featured: true,
+    pricing: {
+      basePrice: 1500,
+      priceUnit: 'per_visit',
+      minHours: 2,
+      nightShiftSurchargePercent: 20,
+      platformCommissionPercent: 15,
+    },
+    estimatedDuration: '2 - 4 Hours / 12h Shift',
+    requiredQualifications: ['GNM / B.Sc Nursing', 'Palliative Care Certification'],
+    idealFor: ['Oncology & cancer comfort care', 'Post-stroke neurological rehabilitation', 'Advanced diabetes & neuro-degenerative management'],
+    keyInclusions: [
+      'Palliative pain assessment & symptom management',
+      'Stroke recovery neuromuscular support',
+      'Bedside blood sugar & insulin charting',
+      'Continuous 6-point vitals monitoring',
+      'Daily patient comfort report'
+    ],
+    shiftOptions: [
+      { id: 'sh-cp-visit', label: 'Clinical Visit', durationLabel: '2 Hours', hours: 2, priceMultiplier: 1.0 },
+      { id: 'sh-cp-12d', label: '12-Hour Day Shift', durationLabel: '08:00 AM - 08:00 PM', hours: 12, priceMultiplier: 3.2 },
+      { id: 'sh-cp-12n', label: '12-Hour Night Shift', durationLabel: '08:00 PM - 08:00 AM', hours: 12, priceMultiplier: 3.5 },
+      { id: 'sh-cp-24h', label: '24-Hour Continuous Care', durationLabel: 'Round the Clock (24h)', hours: 24, priceMultiplier: 5.5 }
+    ],
+    serviceAreas: ['Delhi', 'Noida', 'Gurugram', 'Faridabad', 'Ghaziabad'],
+    isActive: true,
+    active: true,
+    allowedShifts: ['12hr_day', '12hr_night', '24hr_livein', 'single_visit'],
+    allowedFrequencies: ['single', 'date_range', 'recurring'],
+  },
+
+  // 2. Post-Operative Recovery
   {
     id: 'srv-nursing-post-op',
-    slug: 'post-operative-nursing-care',
+    slug: 'post-operative-recovery',
     category: 'home_nursing',
-    name: 'Post-Operative Nursing Care',
-    shortDescription: 'Dedicated wound care, vital monitoring, and IV administration following surgery.',
-    fullDescription: 'Comprehensive post-surgical care provided by registered B.Sc Nurses. Includes sterile surgical dressing changes, medication administration, pain management monitoring, catheter care, and coordination with operating surgeon notes.',
+    name: 'Post-Operative Recovery',
+    shortDescription: 'Clinical support tailored to orthopaedic recoveries (e.g., knee/hip replacement), cardiac rehab, and general surgical procedures.',
+    fullDescription: 'Comprehensive clinical support tailored to orthopaedic recoveries (e.g., knee/hip replacement), cardiac rehab, and general surgical procedures provided by registered nurses. Includes sterile surgical dressing changes, wound drain monitoring, IV medications, and supervised early walking assistance.',
     iconName: 'Activity',
-    cardMedia: VISUAL_ASSETS.servicePostOpCard.url,
-    heroMedia: VISUAL_ASSETS.servicePostOpHero.url,
+    cardMedia: '/assets/services/core/service-post-op-recovery.webp',
+    heroMedia: '/assets/services/core/service-post-op-recovery.webp',
     featured: true,
     pricing: {
       basePrice: 1200,
@@ -50,97 +121,147 @@ export const MOCK_SERVICES: Service[] = [
     },
     estimatedDuration: '2 - 4 Hours',
     requiredQualifications: ['B.Sc Nursing', 'RN License'],
-    idealFor: ['Post-surgery recovery', 'Wound & drain management', 'Orthopedic / Cardiac post-discharge'],
+    idealFor: ['Knee/hip joint replacement recovery', 'Cardiac rehab post-discharge', 'General surgical procedure follow-up'],
     keyInclusions: [
-      'Aseptic wound dressing',
-      'Vital signs monitoring & logging',
-      'IV / IM injections administration',
-      'Drain & catheter care',
-      'Post-op recovery progress report'
-    ],
-    whoItsForList: [
-      { title: 'Post-Surgical Patients', desc: 'Patients recovering at home after cardiac, orthopedic, or abdominal surgery.', iconName: 'Activity' },
-      { title: 'Wound Care Cases', desc: 'Surgical incisions requiring daily sterile dressing and infection control.', iconName: 'ShieldPlus' },
-      { title: 'Catheter & Drain Support', desc: 'Patients needing ongoing urinary catheter or surgical drain hygiene.', iconName: 'HeartPulse' }
-    ],
-    categorizedInclusions: [
-      { category: 'Clinical Procedures', items: ['Aseptic wound dressing & suture care', 'IV fluid & antibiotic administration', 'Catheter insertion & bag flushing'] },
-      { category: 'Vital Signs & Monitoring', items: ['BP, Pulse, Temperature, SpO2 charting', 'Pain score observation', 'Surgeon progress report logging'] }
-    ],
-    exclusions: [
-      'Operating room surgical procedures',
-      'Intensive diagnostic imaging at home',
-      'Direct emergency ambulance transport (referral provided)'
+      'Aseptic surgical wound debridement & dressing',
+      'Early mobilization & walker-assisted ambulation',
+      'Surgical drain & Foley catheter hygiene',
+      'Pain medication logging & surgeon report'
     ],
     shiftOptions: [
-      { id: 'sh-short', label: 'Short Visit', durationLabel: '2 Hours', hours: 2, priceMultiplier: 1.0 },
-      { id: 'sh-half', label: 'Half Day Shift', durationLabel: '6 Hours', hours: 6, priceMultiplier: 2.2 },
-      { id: 'sh-day', label: '12-Hour Day Shift', durationLabel: '12 Hours', hours: 12, priceMultiplier: 3.5 },
-      { id: 'sh-night', label: '10-Hour Night Shift', durationLabel: '10 Hours (10 PM - 8 AM)', hours: 10, priceMultiplier: 3.2 }
+      { id: 'sh-po-short', label: 'Dressing Visit', durationLabel: '2 Hours', hours: 2, priceMultiplier: 1.0 },
+      { id: 'sh-po-12d', label: '12-Hour Day Shift', durationLabel: '12 Hours', hours: 12, priceMultiplier: 3.2 },
+      { id: 'sh-po-12n', label: '10-Hour Night Shift', durationLabel: '10 Hours', hours: 10, priceMultiplier: 3.0 },
+      { id: 'sh-po-24h', label: '24-Hour Live-in', durationLabel: '24 Hours', hours: 24, priceMultiplier: 5.0 }
     ],
-    serviceAreas: ['Delhi', 'Noida', 'Gurugram', 'Faridabad'],
-    faqList: [
-      { q: 'How quickly can a nurse arrive post-discharge?', a: 'Once your request is received, Central Operations verifies clinical requirements and dispatches an assigned in-house nurse within 2-4 hours in Delhi NCR.' },
-      { q: 'Do nurses bring dressing materials?', a: 'Nurses bring basic clinical consumables (sterile gloves, BP monitor, oximeter). Specific surgical dressing kits prescribed by your doctor should be kept ready at home.' },
-      { q: 'Can I book night shifts?', a: 'Yes, 10-hour night shifts (10:00 PM to 08:00 AM) are available with transparent night surcharge calculation at checkout.' }
-    ],
-    preparationInstructions: [
-      'Keep hospital discharge summary ready',
-      'Ensure surgeon prescribed medications are present',
-      'Provide clean workspace with bright lighting'
-    ],
+    serviceAreas: ['Delhi', 'Noida', 'Gurugram', 'Faridabad', 'Ghaziabad'],
     isActive: true,
     active: true,
     allowedShifts: ['12hr_day', '12hr_night', '24hr_livein', 'single_visit'],
     allowedFrequencies: ['single', 'date_range', 'recurring'],
-    dutyChecklist: [
-      'Sterile wound dressing & incision check',
-      'Vital signs (BP, Pulse, SpO2, Temp) charting',
-      'Prescribed medication / injection administration',
-      'Catheter / drain hygiene check',
-      'Post-op progress log entry'
-    ],
-    serviceQuestions: [
-      {
-        id: 'q_postop_reason',
-        label: 'Surgery or recovery reason',
-        type: 'text',
-        required: true,
-        active: true,
-        helpText: 'e.g. Total Knee Replacement, Abdominal Surgery, Cardiac Bypass'
-      },
-      {
-        id: 'q_postop_wound',
-        label: 'Is sterile wound dressing required?',
-        type: 'yes_no',
-        required: true,
-        active: true
-      },
-      {
-        id: 'q_postop_dressing_type',
-        label: 'Select dressing care type',
-        type: 'single_choice',
-        required: false,
-        options: ['Surgical Incision Dressing', 'Drainage Site Dressing', 'Staples / Suture Removal Prep'],
-        dependsOn: { fieldId: 'q_postop_wound', value: 'yes' },
-        active: true
-      },
-      {
-        id: 'q_postop_catheter',
-        label: 'Is urinary catheter or surgical drain care required?',
-        type: 'yes_no',
-        required: true,
-        active: true
-      },
-      {
-        id: 'q_postop_injection',
-        label: 'Is prescribed IV or IM injection administration required?',
-        type: 'yes_no',
-        required: true,
-        active: true
-      }
-    ]
   },
+
+  // 3. General Patient Attendants
+  {
+    id: 'srv-patient-attendants',
+    slug: 'general-patient-attendants',
+    category: 'caregiver_attendant',
+    name: 'General Patient Attendants',
+    shortDescription: 'Verified & Trained staff to give Non-medical support focusing on daily personal hygiene, bed baths, sponge baths, diaper changing & mobility assistance.',
+    fullDescription: 'Verified & Trained staff to give Non-medical support focusing on daily personal hygiene, bed baths, sponge baths, diaper changing & mobility assistance. 100% police verified, patient, respectful male and female caregivers helping patients maintain complete dignity.',
+    iconName: 'UserCheck',
+    cardMedia: '/assets/services/core/service-patient-attendant.webp',
+    heroMedia: '/assets/services/core/service-patient-attendant.webp',
+    featured: true,
+    pricing: {
+      basePrice: 1200,
+      priceUnit: 'per_day',
+      minHours: 12,
+      nightShiftSurchargePercent: 10,
+      platformCommissionPercent: 15,
+    },
+    estimatedDuration: '12 Hours / 24 Hours',
+    requiredQualifications: ['Certified Patient Attendant', 'Police Verification Cleared'],
+    idealFor: ['Bedridden patient hygiene', 'Daily sponge bath & diaper changes', 'Assisted mobility & wheelchair transfer'],
+    keyInclusions: [
+      'Warm sponge baths & bed-bath hygiene',
+      'Timely diaper changing & skin integrity care',
+      'Safe transfer assistance & wheelchair support',
+      'Nutritional feeding & oral medication reminders'
+    ],
+    shiftOptions: [
+      { id: 'sh-pa-12d', label: '12-Hour Day Shift', durationLabel: '08:00 AM - 08:00 PM', hours: 12, priceMultiplier: 1.0 },
+      { id: 'sh-pa-12n', label: '12-Hour Night Shift', durationLabel: '08:00 PM - 08:00 AM', hours: 12, priceMultiplier: 1.1 },
+      { id: 'sh-pa-24h', label: '24-Hour Live-in Attendant', durationLabel: '24 Hours Resident', hours: 24, priceMultiplier: 1.8 }
+    ],
+    serviceAreas: ['Delhi', 'Noida', 'Gurugram', 'Faridabad', 'Ghaziabad'],
+    isActive: true,
+    active: true,
+    allowedShifts: ['12hr_day', '12hr_night', '24hr_livein'],
+    allowedFrequencies: ['single', 'date_range', 'recurring'],
+  },
+
+  // 4. Elderly Care Assistance
+  {
+    id: 'srv-elderly-care',
+    slug: 'elderly-care-assistance',
+    category: 'caregiver_attendant',
+    name: 'Elderly Care Assistance',
+    shortDescription: 'Dedicated companions to manage medication schedules, aid in walking, prevent falls, and assist with toilet routine.',
+    fullDescription: 'Dedicated companions to manage medication schedules, aid in walking, prevent falls, and assist with toilet routine. Tailored for aging parents, dementia care, Parkinson’s support, and senior daily living assistance with profound patience and love.',
+    iconName: 'ShieldPlus',
+    cardMedia: '/assets/services/core/service-elderly-care.webp',
+    heroMedia: '/assets/services/core/service-elderly-care.webp',
+    featured: true,
+    pricing: {
+      basePrice: 1400,
+      priceUnit: 'per_day',
+      minHours: 12,
+      nightShiftSurchargePercent: 10,
+      platformCommissionPercent: 15,
+    },
+    estimatedDuration: '12 Hours / 24 Hours',
+    requiredQualifications: ['Certified Geriatric Caregiver', 'First Aid Trained'],
+    idealFor: ['Aging senior companionship', 'Fall prevention & walking support', 'Medication schedule management & toilet routine assistance'],
+    keyInclusions: [
+      'Medication schedule oversight & timely pill reminders',
+      'Walking support & continuous fall prevention vigilance',
+      'Bathroom transfers & respectful toilet routine help',
+      'Companionship, memory exercises & daily conversational engagement'
+    ],
+    shiftOptions: [
+      { id: 'sh-ec-12d', label: '12-Hour Day Companion', durationLabel: '08:00 AM - 08:00 PM', hours: 12, priceMultiplier: 1.0 },
+      { id: 'sh-ec-12n', label: '12-Hour Night Fall Watch', durationLabel: '08:00 PM - 08:00 AM', hours: 12, priceMultiplier: 1.1 },
+      { id: 'sh-ec-24h', label: '24-Hour Resident Senior Care', durationLabel: '24 Hours Continuous', hours: 24, priceMultiplier: 1.8 }
+    ],
+    serviceAreas: ['Delhi', 'Noida', 'Gurugram', 'Faridabad', 'Ghaziabad'],
+    isActive: true,
+    active: true,
+    allowedShifts: ['12hr_day', '12hr_night', '24hr_livein'],
+    allowedFrequencies: ['single', 'date_range', 'recurring'],
+  },
+
+  // 5. Newborn & Mother Care
+  {
+    id: 'srv-newborn-mother-care',
+    slug: 'newborn-mother-care',
+    category: 'specialized_care',
+    name: 'Newborn & Mother Care',
+    shortDescription: 'Specialized care for post-partum mothers and infant care including massage, bathing, and feeding assistance.',
+    fullDescription: 'Specialized care for post-partum mothers and infant care including massage, bathing, and feeding assistance. Supported by trained neonatal caregivers with deep expertise in traditional oil massage, warm bathing, latching/feeding guidance, and maternal emotional and nutritional recovery.',
+    iconName: 'HeartPulse',
+    cardMedia: '/assets/services/core/service-newborn-mother-care.webp',
+    heroMedia: '/assets/services/core/service-newborn-mother-care.webp',
+    featured: true,
+    pricing: {
+      basePrice: 1800,
+      priceUnit: 'per_day',
+      minHours: 12,
+      nightShiftSurchargePercent: 10,
+      platformCommissionPercent: 15,
+    },
+    estimatedDuration: '12 Hours / 24 Hours',
+    requiredQualifications: ['Maternal & Infant Care Specialist', 'Certified Neonatal Attendant'],
+    idealFor: ['Post-partum mother recuperation', 'Newborn baby massage & bathing', 'Infant burping, feeding & night soothing'],
+    keyInclusions: [
+      'Gentle traditional baby massage & warm sponge/tub bath',
+      'Post-partum mother comfort & recovery guidance',
+      'Feeding assistance, latching support & burping routine',
+      'Umbilical cord hygiene & baby sleep scheduling'
+    ],
+    shiftOptions: [
+      { id: 'sh-nm-12d', label: '12-Hour Day Care', durationLabel: '08:00 AM - 08:00 PM', hours: 12, priceMultiplier: 1.0 },
+      { id: 'sh-nm-12n', label: '12-Hour Night Feed Support', durationLabel: '08:00 PM - 08:00 AM', hours: 12, priceMultiplier: 1.15 },
+      { id: 'sh-nm-24h', label: '24-Hour Live-in Postpartum Care', durationLabel: '24 Hours Resident', hours: 24, priceMultiplier: 1.9 }
+    ],
+    serviceAreas: ['Delhi', 'Noida', 'Gurugram', 'Faridabad', 'Ghaziabad'],
+    isActive: true,
+    active: true,
+    allowedShifts: ['12hr_day', '12hr_night', '24hr_livein'],
+    allowedFrequencies: ['single', 'date_range', 'recurring'],
+  },
+
+  // Home Nursing
   {
     id: 'srv-nursing-elderly',
     slug: 'senior-skilled-nursing-visit',
@@ -282,7 +403,7 @@ export const MOCK_SERVICES: Service[] = [
     heroMedia: VISUAL_ASSETS.servicePhysioOrthoHero.url,
     featured: false,
     pricing: {
-      basePrice: 950,
+      basePrice: 700,
       priceUnit: 'per_session',
       minHours: 1,
       platformCommissionPercent: 15,
@@ -1486,8 +1607,8 @@ export const MOCK_PLATFORM_SETTINGS: PlatformSettings = {
   kycValidityMonths: 12,
   maxFileUploadMb: 10,
   minimumRestHours: 10,
-  supportEmail: 'support@pulsen-care.com',
-  supportPhone: '+91-80-4920-8800',
+  supportEmail: 'pulsencare@gmail.com',
+  supportPhone: '+91 92117 65429',
   demoMode: true
 };
 
