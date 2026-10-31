@@ -270,10 +270,10 @@ export const ClientDashboardPage: React.FC = () => {
               <PhoneCall className="w-4 h-4 text-brand-teal" /> Operations Hotline
             </h4>
             <p className="text-text-secondary">
-              Need immediate assistance or emergency shift changes? Contact our 24/7 Operations Command Center in Delhi.
+              Need immediate assistance or emergency shift changes? Contact our 24/7 Operations Command Center in Delhi NCR.
             </p>
             <div className="p-3 bg-canvas-secondary rounded-xl border border-border-default text-brand-teal font-extrabold text-sm flex items-center justify-between">
-              <span>+91 92117 65429</span>
+              <span>+91 921 176 5429</span>
               <span className="text-[10px] bg-emerald-100 text-emerald-900 font-bold px-2 py-0.5 rounded">24/7 ACTIVE</span>
             </div>
           </Card>

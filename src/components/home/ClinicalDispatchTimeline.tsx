@@ -246,7 +246,7 @@ export const ClinicalDispatchTimeline: React.FC = () => {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl btn-glass-frost font-bold text-xs sm:text-sm text-slate-800 cursor-pointer"
           >
             <Phone className="w-4 h-4 text-[#015498]" />
-            <span>Call Hotline: +91 92117 65429</span>
+            <span>Call Hotline: +91 921 176 5429</span>
           </a>
         </div>
 

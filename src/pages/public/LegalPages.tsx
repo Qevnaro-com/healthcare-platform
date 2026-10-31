@@ -265,7 +265,7 @@ export const PrivacyPolicyPage: React.FC = () => (
             <p><strong>Company:</strong> Pulse &amp; Care Private Limited</p>
             <p><strong>Registered Address:</strong> Aarza Square-1, Shop No-204, Second Floor, Greater Noida West Sec-4 (UP) 201013, India</p>
             <p><strong>Official Email:</strong> <a className="text-[#015498] font-bold" href="mailto:pulsencare@gmail.com">pulsencare@gmail.com</a></p>
-            <p><strong>Care Desk Hotline:</strong> <a className="text-[#015498] font-bold" href="tel:+919211765429">+91 92117 65429</a></p>
+            <p><strong>Care Desk Hotline:</strong> <a className="text-[#015498] font-bold" href="tel:+919211765429">+91 921 176 5429</a></p>
             <p className="text-slate-500 pt-1">Grievances are acknowledged promptly and resolved within 30 days as prescribed by law.</p>
           </div>
         ),

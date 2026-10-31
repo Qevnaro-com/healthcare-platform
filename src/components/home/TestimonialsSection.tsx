@@ -274,7 +274,7 @@ export const TestimonialsSection: React.FC = () => {
               className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-5 py-2.5 rounded-xl border border-white/20 transition-all text-center"
             >
               <Phone className="w-3.5 h-3.5 text-sky-300" />
-              <span>+91 92117 65429</span>
+              <span>+91 921 176 5429</span>
             </a>
 
             <a

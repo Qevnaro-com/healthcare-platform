@@ -11,7 +11,8 @@ import {
   Layers,
   Info,
   Clock,
-  FileCheck
+  FileCheck,
+  AlertCircle
 } from 'lucide-react';
 import { openWhatsApp } from '../../utils/whatsapp';
 
@@ -197,18 +198,16 @@ export const ClinicalBentoGrid3D: React.FC = () => {
                   Council-Registered &amp; Biometrically Verified
                 </h3>
                 <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                  We verify professional licensure with state nursing councils before admitting any nurse into active duty rotation.
+                  We verify professional licensure and state credentials before admitting any nurse into active duty rotation.
                 </p>
               </div>
 
               {/* Credential Verification Checklist */}
               <div className="space-y-2.5">
                 {[
-                  { label: 'Delhi Nursing Council (DNC) Registration', status: 'Mandatory Audit' },
-                  { label: 'Indian Nursing Council (INC) Affiliation', status: 'GNM / B.Sc' },
-                  { label: 'Aadhaar Biometric & Police Verification', status: '100% Cleared' },
-                  { label: 'Basic Life Support (BLS) Clinical Training', status: 'Certified' },
-                  { label: 'Uniform & Official Digital Badge', status: 'Standardized' }
+                  { label: 'Aadhaar Biometric Verification', status: '100% Verified' },
+                  { label: 'Police Verification', status: '100% Verified' },
+                  { label: 'Uniform & Official ID Badge', status: 'Provided' }
                 ].map((item, i) => (
                   <div
                     key={i}
@@ -218,15 +217,29 @@ export const ClinicalBentoGrid3D: React.FC = () => {
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                       <span className="font-bold text-slate-800">{item.label}</span>
                     </div>
-                    <span className="text-[11px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+                    <span className="text-[11px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded border border-slate-200">
                       {item.status}
                     </span>
                   </div>
                 ))}
               </div>
+
+              {/* Strict No Direct Payment Policy */}
+              <div className="p-3.5 rounded-xl bg-amber-50/90 border border-amber-300/80 flex items-start gap-2.5 text-xs text-amber-950">
+                <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-black text-amber-900 tracking-tight flex items-center gap-1.5">
+                    <span>No Direct Payment to Staff</span>
+                    <span className="text-[10px] bg-amber-200/90 text-amber-900 px-1.5 py-0.2 rounded font-extrabold uppercase">Policy</span>
+                  </p>
+                  <p className="text-[11px] text-amber-800 leading-snug">
+                    All service charges and advance payments are processed strictly through official Pulse n Care accounts. Zero direct cash or personal UPI to visiting staff.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="pt-5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
               <span className="font-semibold">Zero Unverified Freelancers</span>
               <span className="text-[#015498] font-bold">Audited Weekly</span>
             </div>

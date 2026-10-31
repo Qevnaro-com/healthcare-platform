@@ -45,7 +45,7 @@ export const PulseNCareFAQ: React.FC = () => {
     },
     {
       q: 'How do I contact the Pulse n Care team during care?',
-      a: 'Our Operations Desk hotline is active 24/7 at +91 92117 65429 or email pulsencare@gmail.com. You can also connect directly with us on WhatsApp.'
+      a: 'Our Operations Desk hotline is active 24/7 at +91 921 176 5429 or email pulsencare@gmail.com. You can also connect directly with us on WhatsApp.'
     },
     {
       q: 'Are the nurses council-verified?',

@@ -31,20 +31,20 @@ const SHIFT_RATES: Record<ShiftScheduleType, ShiftRateInfo> = {
   '12h_shift': {
     name: '12-Hour Shift Nursing',
     hours: '12 Hours (Day or Night)',
-    hourlyStarting: 35,
-    baseRate: 420,
+    hourlyStarting: 60,
+    baseRate: 720,
     unit: 'per 12h shift',
-    rateDisplay: 'Starting @ ₹35 / hr (₹420 / shift)',
+    rateDisplay: 'Starting @ ₹60 / hr (₹720 / shift)',
     desc: 'Professional bedside nursing care, vitals monitoring, medication administration, and post-operative recovery support.',
     paymentNotice: 'Advance Payment'
   },
   '24h_livein': {
     name: '24/7 Live-in Nursing Care',
     hours: '24 Hours Continuous',
-    hourlyStarting: 48,
-    baseRate: 1152,
+    hourlyStarting: 49,
+    baseRate: 1176,
     unit: 'per 24h day',
-    rateDisplay: 'Starting @ ₹48 / hr (₹1,152 / day)',
+    rateDisplay: 'Starting @ ₹49 / hr (₹1,176 / day)',
     desc: 'Round-the-clock bedside nursing care, continuous vitals tracking, lateral turning every 2 hours, and compassionate dignity.',
     paymentNotice: 'Advance Payment'
   },
@@ -390,7 +390,7 @@ Please verify available staff matching this schedule across Delhi NCR.`;
                 className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-2xl btn-glass-frost font-bold text-xs text-slate-800 cursor-pointer"
               >
                 <Phone className="w-3.5 h-3.5 text-[#015498]" />
-                <span>Call Central Operations: +91 92117 65429</span>
+                <span>Call Central Operations: +91 921 176 5429</span>
               </a>
             </div>
 

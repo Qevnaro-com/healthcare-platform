@@ -71,6 +71,64 @@ export const CareersPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Official Guarantee for Staff Section */}
+      <section className="bg-gradient-to-r from-amber-500/10 via-amber-50 to-emerald-50/80 border-2 border-amber-300/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div className="max-w-5xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/15 text-amber-900 text-xs font-black uppercase tracking-wider border border-amber-400/40">
+                <ShieldCheck className="w-4 h-4 text-amber-700" />
+                <span>Pulse n Care Official Commitment</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tight">
+                Guarantee for Staff &amp; Healthcare Workers
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-700 font-medium">
+                Ethical employment anchored in complete transparency, timely remuneration, and long-term security.
+              </p>
+            </div>
+            <div className="shrink-0">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-extrabold text-xs shadow-xs">
+                <CheckCircle2 className="w-4 h-4" />
+                100% Guaranteed on Contract
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+            <div className="bg-white/95 backdrop-blur-sm p-5 rounded-2xl border border-amber-200/80 shadow-xs space-y-2">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                <Clock className="w-5 h-5 text-amber-700" />
+              </div>
+              <h3 className="font-extrabold text-slate-900 text-sm">Timely Payment for Actual Working</h3>
+              <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                Strict 1st-of-the-month direct bank transfer calculated on actual duty hours and shifts completed, with zero arbitrary deductions.
+              </p>
+            </div>
+
+            <div className="bg-white/95 backdrop-blur-sm p-5 rounded-2xl border border-blue-200/80 shadow-xs space-y-2">
+              <div className="w-10 h-10 rounded-xl bg-blue-100 text-[#015498] flex items-center justify-center font-bold">
+                <FileCheck2 className="w-5 h-5 text-[#015498]" />
+              </div>
+              <h3 className="font-extrabold text-slate-900 text-sm">ESI &amp; PF Submission on Actual</h3>
+              <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                Statutory Employee State Insurance (ESI) and Provident Fund (PF) contributions submitted strictly on actual wages for full healthcare &amp; pension cover.
+              </p>
+            </div>
+
+            <div className="bg-white/95 backdrop-blur-sm p-5 rounded-2xl border border-emerald-200/80 shadow-xs space-y-2">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+                <Award className="w-5 h-5 text-emerald-700" />
+              </div>
+              <h3 className="font-extrabold text-slate-900 text-sm">₹10,000/- Feedback Bonus</h3>
+              <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                Direct cash reward of <strong className="text-slate-900">₹10,000/-</strong> for successful customer feedback upon completing 12 months of continuous service.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 3-Step WhatsApp Hiring Guide */}
       <section className="bg-emerald-50/80 border border-emerald-200/90 rounded-3xl p-6 sm:p-8">
         <div className="max-w-4xl mx-auto space-y-6">

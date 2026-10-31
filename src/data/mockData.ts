@@ -46,8 +46,8 @@ export const COMPANY_PROFILE = {
 };
 
 export const OFFICIAL_STARTING_RATES = [
-  { service: '12-Hour Shift Nursing', rate: '₹35 per hour', baseShift: '₹420 / 12h', paymentTerm: 'Advance Payment' },
-  { service: '24/7 Live-in Nursing Care', rate: '₹48 per hour', baseShift: '₹1,152 / 24h', paymentTerm: 'Advance Payment' },
+  { service: '12-Hour Shift Nursing', rate: '₹60 per hour', baseShift: '₹720 / 12h', paymentTerm: 'Advance Payment' },
+  { service: '24/7 Live-in Nursing Care', rate: '₹49 per hour', baseShift: '₹1,176 / 24h', paymentTerm: 'Advance Payment' },
   { service: 'Post-Operative & Cardiac Care', rate: '₹56 per hour for 24 hours live-in', baseShift: '₹1,344 / 24h', paymentTerm: 'Advance Payment' },
   { service: 'Short-Visit Procedures', rate: '₹500 / visit', baseShift: '₹500 / visit', paymentTerm: 'Advance Payment' },
   { service: 'Physiotherapy at Home', rate: '₹700 / session for 1 hour', baseShift: '₹700 / session', paymentTerm: 'Advance Payment' }
@@ -1608,7 +1608,7 @@ export const MOCK_PLATFORM_SETTINGS: PlatformSettings = {
   maxFileUploadMb: 10,
   minimumRestHours: 10,
   supportEmail: 'pulsencare@gmail.com',
-  supportPhone: '+91 92117 65429',
+  supportPhone: '+91 921 176 5429',
   demoMode: true
 };
 

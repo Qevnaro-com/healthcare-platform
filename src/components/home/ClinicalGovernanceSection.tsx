@@ -218,7 +218,7 @@ export const ClinicalGovernanceSection: React.FC = () => {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 active:bg-white/25 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all whitespace-nowrap text-center shrink-0"
               >
                 <Phone className="w-3.5 h-3.5 text-sky-300 shrink-0" />
-                <span className="font-mono whitespace-nowrap">+91 92117 65429</span>
+                <span className="font-mono whitespace-nowrap">+91 921 176 5429</span>
               </a>
 
               <button

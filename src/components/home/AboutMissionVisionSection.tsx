@@ -29,11 +29,11 @@ export const AboutMissionVisionSection: React.FC = () => {
           </div>
 
           <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-slate-900 tracking-[-0.02em] leading-tight">
-            Bridging Hospital Discharge to Complete Home Recovery
+            Hospital-Level Care. Home-Level Comfort.
           </h2>
 
           <p className="text-slate-600 text-xs sm:text-base leading-relaxed font-medium">
-            Founded in Delhi NCR, Pulse n Care provides dependable doorstep nursing and bedside care anchored in patient dignity, qualified nursing staff, and ethical transparency.
+            Pulse n Care provides dependable home nursing and bedside care in Delhi NCR.
           </p>
         </div>
 
@@ -144,7 +144,7 @@ export const AboutMissionVisionSection: React.FC = () => {
               <span>98% On-Time Deployment Rate</span>
             </div>
             <p className="text-xs text-slate-600 font-normal leading-relaxed">
-              Punctual staff arrivals across Delhi, Gurugram, Noida, Faridabad, and Ghaziabad for short procedures and long-term stays.
+              Punctual staff arrivals across Delhi NCR (Delhi, Gurugram, Noida, Faridabad, and Ghaziabad) for short procedures and long-term stays.
             </p>
           </div>
 

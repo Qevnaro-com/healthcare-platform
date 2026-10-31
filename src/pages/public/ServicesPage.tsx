@@ -123,14 +123,14 @@ export const ServicesPage: React.FC = () => {
                   {/* Subtle gradient to ensure badge readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
 
-                  {/* Top-right brand pill */}
-                  <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-200/80 shadow-md flex items-center gap-1.5">
+                  {/* Top-right brand pill (Micro-badge) */}
+                  <div className="absolute top-2.5 right-2.5 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-lg border border-slate-200/80 shadow-xs flex items-center gap-1">
                     <img loading="lazy" decoding="async"
                       src="/assets/brand/pulse-n-care/pulse-n-care-favicon-32.png"
                       alt="Pulse n Care"
-                      className="w-3.5 h-3.5 object-contain"
+                      className="w-2.5 h-2.5 object-contain"
                     />
-                    <span className="text-[10px] font-black tracking-wider text-[#015498]">PULSE N CARE</span>
+                    <span className="text-[8px] font-black tracking-wider text-[#015498]">PULSE N CARE</span>
                   </div>
 
                   {/* Leadership Badge */}

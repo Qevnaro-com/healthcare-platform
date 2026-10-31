@@ -54,7 +54,7 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       {/* SECTION 01 — FULL-WIDTH CAMPAIGN HERO                                     */}
       {/* ========================================================================= */}
-      <section className="relative min-h-[620px] sm:min-h-[680px] lg:min-h-[740px] bg-[#050F33] overflow-hidden flex flex-col justify-end items-center pb-12 sm:pb-16 pt-36 border-b border-white/10 grain">
+      <section className="relative min-h-[500px] sm:min-h-[560px] lg:min-h-[600px] bg-[#050F33] overflow-hidden flex flex-col justify-end items-center pb-8 sm:pb-10 pt-28 sm:pt-32 border-b border-white/10 grain">
         
         {/* Full-Width Official Team Campaign Photo — Dedicated Nurses & Caregivers with Official Pulse n Care Uniform Badges */}
         <img
@@ -73,10 +73,10 @@ export const HomePage: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[#050F33] via-[#050F33]/70 via-55% to-transparent z-1" />
 
         {/* Centered High-Contrast Content Container (Positioned in Lower Half) */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center pt-8 sm:pt-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center pt-4 sm:pt-6">
           
           {/* Display headline — 3-line luxury editorial typography with ambient texture & depth */}
-          <div className="relative mb-6 sm:mb-8 w-full max-w-4xl mx-auto">
+          <div className="relative mb-4 sm:mb-5 w-full max-w-4xl mx-auto">
             {/* Luminous Ambient Light Texture Glow behind headline */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[620px] lg:w-[760px] h-[180px] sm:h-[240px] bg-gradient-to-r from-[#015498]/30 via-teal-400/20 to-[#C31725]/20 rounded-full blur-[60px] sm:blur-[90px] pointer-events-none -z-1" />
 
@@ -107,7 +107,7 @@ export const HomePage: React.FC = () => {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 }}
-            className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5 max-w-3xl w-full mb-6 text-left"
+            className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5 max-w-3xl w-full mb-4 sm:mb-5 text-left"
           >
             {[
               { id: '1', title: 'Hospital Bystander', desc: 'Bedside support in hospital & transition', path: '/services/general-patient-attendants' },
@@ -142,15 +142,15 @@ export const HomePage: React.FC = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}
-            className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6"
+            className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-5"
           >
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 border border-teal-400/40 text-teal-300 text-xs font-black backdrop-blur-md shadow-md">
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-              12h Nursing from <strong className="text-white font-mono">₹35/hr</strong>
+              12h Nursing from <strong className="text-white font-mono">₹60/hr</strong>
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 border border-amber-400/40 text-amber-300 text-xs font-black backdrop-blur-md shadow-md">
               <span className="w-2 h-2 rounded-full bg-amber-400" />
-              24/7 Live-In @ <strong className="text-white font-mono">₹48/hr</strong>
+              24/7 Live-In @ <strong className="text-white font-mono">₹49/hr</strong>
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 border border-emerald-400/40 text-emerald-300 text-xs font-black backdrop-blur-md shadow-md">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />

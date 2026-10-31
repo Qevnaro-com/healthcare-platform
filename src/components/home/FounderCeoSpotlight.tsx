@@ -133,14 +133,14 @@ export const FounderCeoSpotlight: React.FC = () => {
                   className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-102"
                 />
 
-                {/* Branded Watermark Emblem */}
-                <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-md flex items-center gap-2">
+                {/* Branded Watermark Emblem (Sleek Compact Micro-Badge) */}
+                <div className="absolute top-2.5 right-2.5 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-lg border border-slate-200/80 shadow-xs flex items-center gap-1">
                   <img loading="lazy" decoding="async"
                     src="/assets/brand/pulse-n-care/pulse-n-care-favicon-32.png"
                     alt="Pulse n Care"
-                    className="w-4 h-4 object-contain"
+                    className="w-2.5 h-2.5 object-contain"
                   />
-                  <span className="text-[11px] font-black tracking-wider text-[#015498]">PULSE N CARE</span>
+                  <span className="text-[8px] font-black tracking-wider text-[#015498]">PULSE N CARE</span>
                 </div>
 
                 {/* 20+ Years Verified Pill */}
@@ -307,7 +307,7 @@ export const FounderCeoSpotlight: React.FC = () => {
                 className="inline-flex items-center gap-1.5 font-black text-slate-900 hover:text-[#015498] transition-colors"
               >
                 <Phone className="w-3.5 h-3.5 text-[#25D366]" />
-                <span>+91 92117 65429</span>
+                <span>+91 921 176 5429</span>
               </a>
               <span className="text-slate-300 hidden sm:inline">•</span>
               <a
