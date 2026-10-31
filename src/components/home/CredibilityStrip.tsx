@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, UserCheck, FileCheck2, Clock, CheckCircle2 } from 'lucide-react';
+import { UserCheck, FileCheck2, Clock, CheckCircle2 } from 'lucide-react';
 import { CountUp } from '../common/CountUp';
 
 const STATS = [
@@ -22,13 +22,13 @@ interface TrustItem {
 
 const TRUST_ITEMS: TrustItem[] = [
   {
-    id: 'fdi-funded',
-    badge: 'NRI FDI FUNDED',
-    badgeColor: 'bg-amber-50 text-amber-900 border-amber-200/80',
-    icon: <ShieldCheck className="w-5 h-5 text-amber-700" />,
-    label: 'NRI FDI-Funded Startup',
-    detail: 'Funded by an NRI through Foreign Direct Investment (FDI), upholding institutional governance and ethical caregiving.',
-    proof: 'FDI Compliant'
+    id: 'clinical-governance',
+    badge: 'DNC/INC REGISTERED',
+    badgeColor: 'bg-blue-50 text-[#015498] border-blue-200/80',
+    icon: <CheckCircle2 className="w-5 h-5 text-[#015498]" />,
+    label: 'Council-Registered Nurses',
+    detail: 'Licensed under Delhi Nursing Council (DNC) and Indian Nursing Council (INC), delivering verified clinical care at home.',
+    proof: 'Verified Licenses'
   },
   {
     id: 'on-time-dispatch',
@@ -70,7 +70,7 @@ export const CredibilityStrip: React.FC = () => {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-slate-800 uppercase tracking-wider font-black">
-              NRI FDI-Funded Healthcare Startup
+              Council-Registered Healthcare Network
             </span>
             <span className="text-slate-500 hidden sm:inline">• 98% On-Time Deployment Across Delhi NCR</span>
           </div>

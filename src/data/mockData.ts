@@ -32,7 +32,7 @@ export const COMPANY_PROFILE = {
   name: 'Pulse n Care',
   entityType: 'Home Non-Medical Healthcare Provider',
   foundedLocation: 'Delhi NCR',
-  fundingStatus: 'Startup funded by an NRI through Foreign Direct Investment (FDI)',
+  fundingStatus: 'Privately founded Delhi NCR healthcare network',
   onTimeDeploymentRate: '98%',
   mission:
     'To empower families across Delhi NCR with reliable, high-quality, and accessible home nursing services that preserve patient dignity, accelerate recovery, and provide absolute peace of mind.',

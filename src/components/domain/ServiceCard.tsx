@@ -59,13 +59,13 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
     >
       <div className="space-y-4">
         {/* 01. Visual Header Container */}
-        <div className="aspect-video w-full bg-slate-100 relative overflow-hidden flex items-center justify-center">
+        <div className="aspect-[4/3] sm:aspect-[16/10] w-full bg-slate-100 relative overflow-hidden flex items-center justify-center">
           {!imageError && service.cardMedia ? (
             <img
               src={service.cardMedia}
               alt={service.name}
               onError={() => setImageError(true)}
-              className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
+              className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-300"
             />
           ) : (
             // Designed Healthcare SVG Fallback (Never broken icon)

@@ -16,6 +16,7 @@ import {
   PhoneCall,
   RotateCcw,
   Zap,
+  ChevronRight,
 } from 'lucide-react';
 import { WhatsAppIcon } from '../common/WhatsAppButton';
 import { openWhatsApp, OFFICIAL_PHONE } from '../../utils/whatsapp';
@@ -341,34 +342,106 @@ export const ServiceDiscoverySection: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Horizontal Selector */}
-        <div className="flex lg:hidden items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-          {SERVICE_CATEGORIES.map((s, idx) => {
-            const isActive = idx === activeIndex;
-            return (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => handleSelectService(idx)}
-                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
-                  isActive
-                    ? 'bg-teal-700 text-white shadow-md'
-                    : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                <span>{s.category}</span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded font-black ${
-                  isActive ? 'bg-amber-300 text-slate-900' : 'bg-slate-100 text-slate-600'
-                }`}>
-                  {s.hourlyHighlight}
-                </span>
-              </button>
-            );
-          })}
+        {/* ======================================================================= */}
+        {/* MOBILE VIEW: ALL SERVICES DISPLAYED ONE-BY-ONE SEQUENTIALLY (lg:hidden) */}
+        {/* ======================================================================= */}
+        <div className="block lg:hidden space-y-4 pt-1">
+          <div className="flex items-center justify-between pb-1">
+            <span className="text-xs font-black uppercase tracking-wider text-slate-700">
+              All Clinical Offerings ({SERVICE_CATEGORIES.length})
+            </span>
+            <span className="text-[11px] font-bold text-teal-700 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">
+              Council Verified
+            </span>
+          </div>
+
+          {SERVICE_CATEGORIES.map((s) => (
+            <div
+              key={s.id}
+              className="bg-white rounded-2xl border border-slate-200/90 shadow-md overflow-hidden flex flex-col"
+            >
+              {/* Image Banner with Live Pricing Badges */}
+              <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-slate-100">
+                <img
+                  loading="lazy"
+                  decoding="async"
+                  src={s.image}
+                  alt={s.title}
+                  className={`w-full h-full object-cover ${s.objectPosition}`}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/15 to-transparent pointer-events-none" />
+
+                {/* Badge top-left */}
+                <div className="absolute top-3 left-3 z-10">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-slate-900 text-[10px] font-black shadow-sm">
+                    <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
+                    <span>{s.category}</span>
+                  </span>
+                </div>
+
+                {/* Pricing bottom-left */}
+                <div className="absolute bottom-2.5 left-3 right-3 z-10 flex items-end justify-between text-white">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-amber-300 block mb-0.5">Starting Rate</span>
+                    <span className="text-xl font-black font-mono text-white leading-none">{s.hourlyHighlight}</span>
+                  </div>
+                  <span className="text-[10px] font-black px-2 py-0.5 rounded bg-slate-900/80 border border-amber-400/40 text-amber-300">
+                    Advance Payment
+                  </span>
+                </div>
+              </div>
+
+              {/* Card Body */}
+              <div className="p-4 space-y-3.5">
+                <div>
+                  <h3 className="text-base font-black text-slate-900 leading-tight">
+                    {s.title}
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    {s.subtitle}
+                  </p>
+                </div>
+
+                {/* Clinical inclusions */}
+                <div className="space-y-1.5 pt-1 border-t border-slate-100">
+                  {s.inclusions.slice(0, 3).map((inc, i) => (
+                    <div key={i} className="flex items-start gap-2 text-[11px] font-semibold text-slate-700">
+                      <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5 text-emerald-700">
+                        <Check className="w-2 h-2 stroke-[3]" />
+                      </div>
+                      <span>{inc}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => openWhatsApp(`Hello Pulse n Care, I want to book ${s.category} (${s.hourlyHighlight}) at home.`)}
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-black text-xs py-2.5 px-3 rounded-xl cursor-pointer shadow-sm transition-all active:scale-[0.98]"
+                  >
+                    <WhatsAppIcon className="w-3.5 h-3.5 fill-white" />
+                    <span>Book on WhatsApp</span>
+                  </button>
+
+                  <Link
+                    to={s.path}
+                    className="flex items-center justify-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs py-2.5 px-3 rounded-xl border border-slate-200 transition-colors"
+                  >
+                    <span>Full Details</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Master Editorial 2-Column Showcase */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-6 items-start">
+        {/* ======================================================================= */}
+        {/* DESKTOP VIEW: MASTER EDITORIAL 2-COLUMN SHOWCASE (hidden lg:grid)       */}
+        {/* ======================================================================= */}
+        <div className="hidden lg:grid lg:grid-cols-12 gap-6 lg:gap-6 items-start">
           
           {/* ======================================================================= */}
           {/* LEFT SELECTOR STACK (Col 5)                                             */}
@@ -447,13 +520,13 @@ export const ServiceDiscoverySection: React.FC = () => {
                 className="flex flex-col"
               >
                 {/* 1. Aspect-Ratio Photo Frame with Floating Badges */}
-                <div className="relative w-full aspect-[16/10] sm:aspect-[16/8] lg:aspect-[16/7] overflow-hidden bg-slate-100 border-b border-slate-200/80">
+                <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/10] overflow-hidden bg-slate-100 border-b border-slate-200/80">
                   <img loading="lazy" decoding="async"
                     src={current.image}
                     alt={current.title}
                     className={`w-full h-full object-cover ${current.objectPosition} transition-transform duration-500 hover:scale-[1.02]`}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none" />
 
                   {/* Top Left Floating Credential Badge */}
                   <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-10 flex items-center gap-2">

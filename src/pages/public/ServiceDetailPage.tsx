@@ -171,11 +171,11 @@ export const ServiceDetailPage: React.FC = () => {
             {/* Right Media Display Card */}
             <div className="lg:col-span-5">
               <div className="bg-white p-6 rounded-3xl border border-border-default shadow-card space-y-4">
-                <div className="aspect-video rounded-2xl bg-canvas-teal flex items-center justify-center border border-teal-200 overflow-hidden relative">
+                <div className="aspect-[4/3] sm:aspect-[16/10] rounded-2xl bg-canvas-teal flex items-center justify-center border border-teal-200 overflow-hidden relative">
                   <img loading="lazy" decoding="async"
                     src={service.heroMedia || service.cardMedia || 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80'}
                     alt={service.name}
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full object-cover object-center"
                   />
                   <span className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full text-xs font-extrabold text-brand-teal border border-teal-200 shadow-2xs">
                     Starting ₹{service.pricing.basePrice} / {service.pricing.priceUnit.replace('per_', '')}

@@ -6,6 +6,7 @@
 
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ScrollToTop } from './components/common/ScrollToTop';
 import { AuthProvider } from './context/AuthContext';
 import { BookingProvider } from './context/BookingContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -30,6 +31,7 @@ export const App: React.FC = () => {
       <BookingProvider>
         <NotificationProvider>
           <BrowserRouter>
+            <ScrollToTop />
             <Suspense fallback={<div className="min-h-[60vh]" aria-busy="true" />}>
             <Routes>
               {/* Public Website Routes */}

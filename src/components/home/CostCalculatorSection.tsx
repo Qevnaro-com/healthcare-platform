@@ -8,7 +8,6 @@ import {
   Check,
   Phone,
   RotateCcw,
-  Sparkles,
   Award
 } from 'lucide-react';
 import { WhatsAppIcon } from '../common/WhatsAppButton';
@@ -139,9 +138,9 @@ Please verify available staff matching this schedule across Delhi NCR.`;
             </p>
           </div>
 
-          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-900 self-start md:self-end">
-            <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>NRI FDI-Funded Enterprise · 98% On-Time Deployment</span>
+          <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-50 border border-blue-200 text-xs font-bold text-[#015498] self-start md:self-end">
+            <ShieldCheck className="w-4 h-4 text-[#015498] shrink-0" />
+            <span>Council-Registered Nurses · 98% On-Time Deployment</span>
           </div>
         </div>
 

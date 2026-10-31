@@ -10,7 +10,7 @@ import { Modal } from '../../components/common/Modal';
 import { PulseLine } from '../../components/common/PulseUI';
 import { WhatsAppIcon } from '../../components/common/WhatsAppButton';
 import { openWhatsApp } from '../../utils/whatsapp';
-import { ArrowRight, CheckCircle2, Phone, Mail } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 // Newly Engineered Modular Clinical Sections
 import { CredibilityStrip } from '../../components/home/CredibilityStrip';
@@ -75,22 +75,8 @@ export const HomePage: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-[#050F33] via-[#050F33]/65 via-50% to-transparent z-1" />
 
         {/* Centered High-Contrast Content Container (Positioned in Lower Half) */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center pt-8 sm:pt-12">
           
-          {/* Eyebrow Pill */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full glass-premium text-white text-[11px] font-bold tracking-[0.18em] uppercase mb-5"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#25D366]" />
-            </span>
-            <span>NRI FDI-Funded Startup · Delhi NCR</span>
-          </motion.div>
-
           {/* Display headline — serif, word-by-word reveal */}
           <motion.h1
             variants={staggerContainer(0.12, 0.1)}
@@ -166,29 +152,6 @@ export const HomePage: React.FC = () => {
               <span>Explore Services</span>
               <ArrowRight className="w-4 h-4 text-slate-300" />
             </button>
-          </motion.div>
-
-          {/* Direct Luxury Emergency Contact Bar in Hero */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.26 }}
-            className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-6 text-xs text-white font-medium"
-          >
-            <a
-              href="tel:+919211765429"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-premium hover:bg-white/15 transition-all text-white font-bold"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#25D366]" />
-              <span>24/7 Call: +91 92117 65429</span>
-            </a>
-            <a
-              href="mailto:pulsencare@gmail.com"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-premium hover:bg-white/15 transition-all text-slate-100 hover:text-white"
-            >
-              <Mail className="w-3.5 h-3.5 text-rose-400" />
-              <span>pulsencare@gmail.com</span>
-            </a>
           </motion.div>
 
         </div>

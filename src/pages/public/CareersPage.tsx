@@ -41,7 +41,7 @@ export const CareersPage: React.FC = () => {
         <div className="relative z-10 max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/20 border border-teal-400/30 text-teal-300 text-xs font-bold uppercase tracking-wider">
             <ShieldCheck className="w-4 h-4 text-teal-400" />
-            NRI FDI Backed Healthcare Startup · Direct WhatsApp Hiring
+            Council-Registered Healthcare Network · Direct WhatsApp Hiring
           </div>
           <h1 className="text-2xl sm:text-5xl font-extrabold tracking-tight leading-tight">
             Build Your Clinical Nursing Career with <span className="text-teal-400">Pulse n Care</span>

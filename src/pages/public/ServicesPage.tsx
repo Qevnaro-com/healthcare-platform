@@ -112,20 +112,34 @@ export const ServicesPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative">
-              <PulseSurface variant="feature" padding="none" pulseAccent="top" className="p-2">
-                <div className="relative rounded-xl overflow-hidden aspect-video w-full">
+            <div className="lg:col-span-5 relative w-full flex justify-center">
+              <PulseSurface variant="feature" padding="none" pulseAccent="top" className="p-2 sm:p-2.5 w-full max-w-sm sm:max-w-md lg:max-w-none">
+                <div className="relative rounded-xl overflow-hidden aspect-[3/4] sm:aspect-[4/5] w-full bg-slate-900 shadow-inner">
                   <img loading="lazy" decoding="async"
                     src="/assets/images/founder/smt-ishwari-ceo-portrait.webp"
                     alt="Smt. Ishwari - Founder & CEO"
-                    className="w-full h-full object-cover object-top"
+                    className="w-full h-full object-cover object-[center_top]"
                   />
-                  <div className="absolute bottom-4 left-4 right-4 bg-slate-950/90 backdrop-blur-md p-3 rounded-xl border border-white/20 shadow-floating flex items-center justify-between text-white">
-                    <div>
-                      <p className="text-xs font-heading font-extrabold text-white">Smt. Ishwari | Founder & CEO</p>
+                  {/* Subtle gradient to ensure badge readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Top-right brand pill */}
+                  <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-200/80 shadow-md flex items-center gap-1.5">
+                    <img loading="lazy" decoding="async"
+                      src="/assets/brand/pulse-n-care/pulse-n-care-favicon-32.png"
+                      alt="Pulse n Care"
+                      className="w-3.5 h-3.5 object-contain"
+                    />
+                    <span className="text-[10px] font-black tracking-wider text-[#015498]">PULSE N CARE</span>
+                  </div>
+
+                  {/* Leadership Badge */}
+                  <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 bg-slate-950/90 backdrop-blur-md p-3 sm:p-3.5 rounded-xl border border-white/20 shadow-floating flex items-center justify-between text-white">
+                    <div className="min-w-0 pr-2">
+                      <p className="text-xs sm:text-sm font-heading font-extrabold text-white truncate">Smt. Ishwari | Founder & CEO</p>
                       <p className="text-[11px] text-slate-300">20+ Years Compassionate Caregiving</p>
                     </div>
-                    <span className="bg-[#25D366] text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">Clinical Leader</span>
+                    <span className="shrink-0 bg-[#25D366] text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">Clinical Leader</span>
                   </div>
                 </div>
               </PulseSurface>
@@ -239,11 +253,11 @@ export const ServicesPage: React.FC = () => {
             {/* Right Column: Dynamic Preview Surface */}
             <div className="lg:col-span-6 sticky top-8">
               <PulseSurface variant="feature" pulseAccent="top" padding="lg" className="space-y-5">
-                <div className="relative rounded-xl overflow-hidden aspect-video w-full">
+                <div className="relative rounded-xl overflow-hidden aspect-[4/3] sm:aspect-[16/10] w-full">
                   <img loading="lazy" decoding="async"
                     src={activeService.cardMedia || 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&q=80'}
                     alt={activeService.name}
-                    className="w-full h-full object-cover object-top transition-transform duration-500 hover:scale-105"
+                    className="w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105"
                   />
                   <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-brand-teal border border-brand-teal/20">
                     Category: {activeService.category.replace('_', ' ').toUpperCase()}

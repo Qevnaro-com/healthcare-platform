@@ -73,7 +73,7 @@ export const MOCK_JOB_POSTINGS: JobPosting[] = [
       'Top-tier monthly salary (₹30,000 – ₹45,000) based on experience and acuity skill.',
       '₹10,000 Sign-In Bonus upon completing initial onboarding cycle.',
       'High-acuity case allowances and travel subsidies for residential assignments.',
-      'Supportive NRI-funded healthcare startup culture with professional growth.'
+      'Supportive patient-first healthcare network culture with professional growth.'
     ],
     isOpen: true,
     applicantCount: 16,

@@ -8,8 +8,7 @@ import {
   Building2,
   HeartHandshake,
   CheckCircle2,
-  Clock,
-  Sparkles
+  Clock
 } from 'lucide-react';
 import { revealUp, staggerContainer } from '../../lib/motion';
 
@@ -34,11 +33,11 @@ export const AboutMissionVisionSection: React.FC = () => {
           </h2>
 
           <p className="text-slate-600 text-xs sm:text-base leading-relaxed font-medium">
-            Founded in Delhi NCR and funded by an NRI through Foreign Direct Investment (FDI), Pulse n Care provides dependable doorstep nursing and bedside care anchored in patient dignity and ethical transparency.
+            Founded in Delhi NCR, Pulse n Care provides dependable doorstep nursing and bedside care anchored in patient dignity, qualified nursing staff, and ethical transparency.
           </p>
         </div>
 
-        {/* Bento Grid: Story, Mission, Vision, and FDI Institutional Backing */}
+        {/* Bento Grid: Story, Mission, Vision, and Clinical Governance */}
         <motion.div
           variants={staggerContainer(0.12)}
           initial="hidden"
@@ -82,13 +81,13 @@ export const AboutMissionVisionSection: React.FC = () => {
               </div>
             </div>
 
-            {/* NRI FDI Investor Footnote */}
+            {/* Clinical Governance Footnote */}
             <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2 text-amber-900 font-bold">
-                <Sparkles className="w-4 h-4 text-amber-600" />
-                <span>NRI-Funded Startup via Foreign Direct Investment (FDI)</span>
+              <div className="flex items-center gap-2 text-[#015498] font-bold">
+                <ShieldCheck className="w-4 h-4 text-[#015498]" />
+                <span>Council-Registered Nurses &amp; Verified Caregivers</span>
               </div>
-              <span className="text-slate-500 font-medium">Global Patient Care Standards</span>
+              <span className="text-slate-500 font-medium">Delhi NCR Standard of Care</span>
             </div>
           </motion.div>
 

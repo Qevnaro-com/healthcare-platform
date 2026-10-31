@@ -98,37 +98,42 @@ export const PublicLayout: React.FC = () => {
     {
       title: 'Chronic Disease & Palliative Care',
       desc: 'Oncology, stroke rehabilitation, advanced diabetes & neuro care',
-      icon: <HeartPulse className="w-5 h-5 text-[#C31725]" />,
+      icon: <HeartPulse className="w-5 h-5 text-current transition-colors" />,
       path: '/services/chronic-disease-palliative-care',
-      badge: 'Palliative'
+      badge: 'Palliative',
+      isRose: true
     },
     {
       title: 'Post-Operative Recovery',
       desc: 'Orthopaedic knee/hip replacement, cardiac rehab & surgical support',
-      icon: <Activity className="w-5 h-5 text-[#015498]" />,
+      icon: <Activity className="w-5 h-5 text-current transition-colors" />,
       path: '/services/post-operative-recovery',
-      badge: 'Post-Op'
+      badge: 'Post-Op',
+      isRose: false
     },
     {
       title: 'General Patient Attendants',
       desc: 'Non-medical hygiene, bed-baths, sponge baths & diaper changing',
-      icon: <UserCheck className="w-5 h-5 text-[#015498]" />,
+      icon: <UserCheck className="w-5 h-5 text-current transition-colors" />,
       path: '/services/general-patient-attendants',
-      badge: 'Attendants'
+      badge: 'Attendants',
+      isRose: false
     },
     {
       title: 'Elderly Care Assistance',
       desc: 'Medication management, walking assistance, fall prevention & toilet routine',
-      icon: <ShieldPlus className="w-5 h-5 text-[#015498]" />,
+      icon: <ShieldPlus className="w-5 h-5 text-current transition-colors" />,
       path: '/services/elderly-care-assistance',
-      badge: 'Elderly'
+      badge: 'Elderly',
+      isRose: false
     },
     {
       title: 'Newborn & Mother Care',
       desc: 'Post-partum mother care, infant massage, bathing & feeding assistance',
-      icon: <HeartPulse className="w-5 h-5 text-[#C31725]" />,
+      icon: <HeartPulse className="w-5 h-5 text-current transition-colors" />,
       path: '/services/newborn-mother-care',
-      badge: 'Mother & Baby'
+      badge: 'Mother & Baby',
+      isRose: true
     }
   ];
 
@@ -186,10 +191,10 @@ export const PublicLayout: React.FC = () => {
       {/* MASTER HEALTHCARE EXECUTIVE NAVBAR (SINGLE HORIZONTAL TIER, ZERO OVERFLOW) */}
       {/* ========================================================================= */}
       <header
-        className={`sticky top-0 z-50 w-full transition-all duration-200 bg-white/92 backdrop-blur-xl border-b border-slate-200/80 ${
+        className={`sticky top-0 z-40 w-full transition-all duration-200 bg-white/95 backdrop-blur-xl border-b border-slate-200/90 ${
           isScrolled
-            ? 'h-16 shadow-[0_4px_24px_rgba(5,15,51,0.06)]'
-            : 'h-18 sm:h-20 shadow-[0_1px_4px_rgba(0,0,0,0.03),0_6px_20px_rgba(1,84,152,0.03)]'
+            ? 'h-16 shadow-[0_4px_24px_rgba(5,15,51,0.08)]'
+            : 'h-16 sm:h-20 shadow-[0_1px_4px_rgba(0,0,0,0.03),0_6px_20px_rgba(1,84,152,0.03)]'
         }`}
       >
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
@@ -297,7 +302,13 @@ export const PublicLayout: React.FC = () => {
                                     to={cat.path}
                                     className="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-all group border border-transparent hover:border-slate-200/80"
                                   >
-                                    <div className="p-2 rounded-xl bg-blue-50/80 border border-blue-100 text-[#015498] group-hover:scale-105 group-hover:bg-[#015498] group-hover:text-white transition-all shrink-0">
+                                    <div
+                                      className={`p-2 rounded-xl border transition-all shrink-0 flex items-center justify-center ${
+                                        cat.isRose
+                                          ? 'bg-rose-50 border-rose-100 text-[#C31725] group-hover:bg-[#C31725] group-hover:!text-white group-hover:border-[#C31725]'
+                                          : 'bg-blue-50 border-blue-100 text-[#015498] group-hover:bg-[#015498] group-hover:!text-white group-hover:border-[#015498]'
+                                      } group-hover:scale-105 [&>svg]:group-hover:!text-white [&>svg]:group-hover:!stroke-white`}
+                                    >
                                       {cat.icon}
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -568,7 +579,7 @@ export const PublicLayout: React.FC = () => {
       {/* ========================================================================= */}
       {/* EXECUTIVE HOSPITALITY & CLINICAL FOOTER                                  */}
       {/* ========================================================================= */}
-      <footer className="bg-[#050F33] text-white border-t border-white/10 relative overflow-hidden pt-16 pb-12 text-left">
+      <footer className="bg-[#050F33] text-white border-t border-white/10 relative overflow-hidden pt-16 pb-48 sm:pb-52 lg:pb-20 text-left">
         {/* Dual Brand Accent Line (Crimson Red + Royal Blue) */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#C31725] via-[#015498] to-[#25D366]" />
 
@@ -604,13 +615,15 @@ export const PublicLayout: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
             {/* Col 1 & 2: Brand Identity & Rigor */}
             <div className="md:col-span-2 space-y-4">
-              <img
-                src="/assets/brand/pulse-n-care/pulse-n-care-logo-horizontal-dark.webp"
-                alt="Pulse n Care"
-                className="h-10 sm:h-11 w-auto"
-              />
+              <Link to="/" className="inline-block group">
+                <img
+                  src="/assets/brand/pulse-n-care/pulse-n-care-logo-horizontal-dark.webp"
+                  alt="Pulse n Care - Nurse Care at Doorstep"
+                  className="h-11 sm:h-12 w-auto object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] group-hover:brightness-125 group-hover:scale-[1.02] transition-all"
+                />
+              </Link>
               <p className="text-xs text-slate-300 leading-relaxed max-w-sm font-medium">
-                Pulse n Care is a trusted home non-medical healthcare and doorstep nursing care provider founded in Delhi NCR. NRI-funded startup through FDI, delivering verified clinical care directly to family residences.
+                Pulse n Care is a trusted home non-medical healthcare and doorstep nursing care provider founded in Delhi NCR, delivering verified clinical nursing and caregiver care directly to family residences.
               </p>
               <div className="space-y-2 pt-1">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 text-slate-300 text-xs font-medium border border-white/10">
@@ -619,7 +632,7 @@ export const PublicLayout: React.FC = () => {
                 </div>
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 text-slate-300 text-xs font-medium border border-white/10">
                   <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0" />
-                  <span>NRI-Funded FDI Enterprise • 24×7 Central Care Desk</span>
+                  <span>Council-Registered Nurses • 24×7 Central Care Desk</span>
                 </div>
               </div>
             </div>
@@ -628,13 +641,13 @@ export const PublicLayout: React.FC = () => {
             <div className="space-y-3">
               <h2 className="text-xs font-black uppercase tracking-wider text-rose-400">Home Care Services</h2>
               <ul className="space-y-2 text-xs text-slate-300">
-                <li><Link to="/services" className="hover:text-white transition-colors">1. Chronic Disease & Palliative Care</Link></li>
-                <li><Link to="/services" className="hover:text-white transition-colors">2. Post-Operative Recovery</Link></li>
-                <li><Link to="/services" className="hover:text-white transition-colors">3. General Patient Attendants</Link></li>
-                <li><Link to="/services" className="hover:text-white transition-colors">4. Elderly Care Assistance</Link></li>
-                <li><Link to="/services" className="hover:text-white transition-colors">5. Newborn & Mother Care</Link></li>
+                <li><Link to="/services/chronic-disease-palliative-care" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">1. Chronic Disease &amp; Palliative Care</Link></li>
+                <li><Link to="/services/post-operative-recovery" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">2. Post-Operative Recovery</Link></li>
+                <li><Link to="/services/general-patient-attendants" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">3. General Patient Attendants</Link></li>
+                <li><Link to="/services/elderly-care-assistance" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">4. Elderly Care Assistance</Link></li>
+                <li><Link to="/services/newborn-mother-care" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">5. Newborn &amp; Mother Care</Link></li>
                 <li><Link to="/careers" className="hover:text-amber-300 font-bold text-amber-400 transition-colors">✨ We're Hiring Nurses (₹10,000 Bonus) →</Link></li>
-                <li><a href="/#about-us" className="hover:text-emerald-400 font-bold text-emerald-400 transition-colors">Our Mission, Vision & FDI Backing →</a></li>
+                <li><a href="/#about-us" className="hover:text-emerald-400 font-bold text-emerald-400 transition-colors">Our Mission & Clinical Vision →</a></li>
               </ul>
             </div>
 
@@ -682,12 +695,12 @@ export const PublicLayout: React.FC = () => {
           </div>
 
           {/* Bottom Copyright & Disclaimer */}
-          <div className="pt-8 border-t border-white/10 text-center sm:flex sm:justify-between text-xs text-slate-400 font-medium">
-            <p>© 2026 Pulse n Care — Home Healthcare & Doorstep Nurse Care Network. All rights reserved.</p>
-            <nav aria-label="Legal" className="mt-2 sm:mt-0 flex flex-wrap items-center gap-x-5 gap-y-1 text-slate-400">
-              <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-white transition-colors">Terms & Refund Policy</Link>
-              <Link to="/medical-disclaimer" className="hover:text-white transition-colors">Medical Disclaimer</Link>
+          <div className="pt-8 pb-8 sm:pb-2 border-t border-white/10 text-center sm:flex sm:justify-between items-center text-xs text-slate-300 font-medium relative z-20">
+            <p className="text-slate-400">© 2026 Pulse n Care — Home Healthcare & Doorstep Nurse Care Network. All rights reserved.</p>
+            <nav aria-label="Legal" className="mt-4 sm:mt-0 flex flex-wrap items-center justify-center sm:justify-end gap-x-3 sm:gap-x-5 gap-y-2 text-slate-300 font-semibold">
+              <Link to="/privacy-policy" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Terms &amp; Refund Policy</Link>
+              <Link to="/medical-disclaimer" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2 bg-white/5 rounded-lg border border-white/10 sm:border-transparent sm:bg-transparent transition-colors">Medical Disclaimer</Link>
             </nav>
           </div>
         </div>
