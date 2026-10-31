@@ -96,43 +96,51 @@ export const PublicLayout: React.FC = () => {
 
   const serviceCategories = [
     {
-      title: 'Chronic Disease & Palliative Care',
-      desc: 'Oncology, stroke rehabilitation, advanced diabetes & neuro care',
-      icon: <HeartPulse className="w-5 h-5 text-current transition-colors" />,
-      path: '/services/chronic-disease-palliative-care',
-      badge: 'Palliative',
-      isRose: true
+      title: 'Hospital Bystander & Patient Attendants',
+      desc: 'Non-medical hygiene, bed-baths, sponge baths & 24/7 bedside companion',
+      icon: <UserCheck className="w-5 h-5 text-current transition-colors" />,
+      path: '/services/general-patient-attendants',
+      badge: 'Bystander',
+      isRose: false
     },
     {
-      title: 'Post-Operative Recovery',
-      desc: 'Orthopaedic knee/hip replacement, cardiac rehab & surgical support',
+      title: 'Post Operative Patients Care',
+      desc: 'Orthopaedic knee/hip replacement, surgical recovery & wound support',
       icon: <Activity className="w-5 h-5 text-current transition-colors" />,
       path: '/services/post-operative-recovery',
       badge: 'Post-Op',
       isRose: false
     },
     {
-      title: 'General Patient Attendants',
-      desc: 'Non-medical hygiene, bed-baths, sponge baths & diaper changing',
-      icon: <UserCheck className="w-5 h-5 text-current transition-colors" />,
-      path: '/services/general-patient-attendants',
-      badge: 'Attendants',
-      isRose: false
-    },
-    {
-      title: 'Elderly Care Assistance',
-      desc: 'Medication management, walking assistance, fall prevention & toilet routine',
-      icon: <ShieldPlus className="w-5 h-5 text-current transition-colors" />,
-      path: '/services/elderly-care-assistance',
-      badge: 'Elderly',
-      isRose: false
-    },
-    {
-      title: 'Newborn & Mother Care',
-      desc: 'Post-partum mother care, infant massage, bathing & feeding assistance',
+      title: 'Newly born & Mother Care',
+      desc: 'Postpartum mother care, infant massage, bathing & feeding assistance',
       icon: <HeartPulse className="w-5 h-5 text-current transition-colors" />,
       path: '/services/newborn-mother-care',
       badge: 'Mother & Baby',
+      isRose: true
+    },
+    {
+      title: 'Chronic Disease & Palliative Care',
+      desc: 'Oncology, stroke rehabilitation, advanced diabetes & vitals monitoring',
+      icon: <HeartPulse className="w-5 h-5 text-current transition-colors" />,
+      path: '/services/chronic-disease-palliative-care',
+      badge: 'Palliative',
+      isRose: true
+    },
+    {
+      title: 'Elderly / Disabled Care',
+      desc: 'Medication management, walking assistance, fall prevention & toilet routine',
+      icon: <ShieldPlus className="w-5 h-5 text-current transition-colors" />,
+      path: '/services/elderly-care-assistance',
+      badge: 'Elderly / Disabled',
+      isRose: false
+    },
+    {
+      title: 'Hospice Care Support',
+      desc: 'Compassionate, dignified comfort care and relief for end-of-life patients',
+      icon: <HeartPulse className="w-5 h-5 text-current transition-colors" />,
+      path: '/services/chronic-disease-palliative-care',
+      badge: 'Hospice',
       isRose: true
     }
   ];

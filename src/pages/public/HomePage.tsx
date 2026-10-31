@@ -2,9 +2,8 @@ import React, { Suspense, lazy, useState } from 'react';
 import { LazySection } from '../../components/common/LazySection';
 import { usePageMeta } from '../../hooks/usePageMeta';
 import { submitCallbackLead } from '../../utils/leads';
-import { useNavigate } from 'react-router-dom';
-import { motion, useReducedMotion } from 'framer-motion';
-import { wordReveal, staggerContainer } from '../../lib/motion';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '../../components/common/Button';
 import { Modal } from '../../components/common/Modal';
 import { PulseLine } from '../../components/common/PulseUI';
@@ -28,7 +27,6 @@ const ClosingCTASection = lazy(() => import('../../components/home/ClosingCTASec
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   usePageMeta('');
-  const reduceMotion = useReducedMotion();
 
   // Callback Modal State
   const [callbackModalOpen, setCallbackModalOpen] = useState(false);
@@ -58,13 +56,13 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       <section className="relative min-h-[620px] sm:min-h-[680px] lg:min-h-[740px] bg-[#050F33] overflow-hidden flex flex-col justify-end items-center pb-12 sm:pb-16 pt-36 border-b border-white/10 grain">
         
-        {/* Full-Width Official Team Campaign Photo — Crystal Clear & Vibrant */}
+        {/* Full-Width Official Team Campaign Photo — Dedicated Nurses & Caregivers (NO DOCTORS) */}
         <img
-          src="/assets/services/home-nursing/pulse-n-care-team-banner-9.webp"
-          alt="Pulse n Care Managed Healthcare Team"
+          src="/assets/services/home-nursing/pulse-n-care-homecare-nurses-hero.webp"
+          alt="Pulse n Care Dedicated Homecare Nurses and Attendants"
           fetchPriority="high"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover object-[center_12%] opacity-90 brightness-[1.04] contrast-[1.06] saturate-[1.08] md:ken-burns"
+          className="absolute inset-0 w-full h-full object-cover object-[center_20%] opacity-90 brightness-[1.03] contrast-[1.05] saturate-[1.06] md:ken-burns"
         />
 
         {/* Ambient Spatial Lighting Spheres (Hidden on Mobile to prevent lag & overflow) */}
@@ -72,46 +70,85 @@ export const HomePage: React.FC = () => {
         <div className="hidden sm:block absolute bottom-12 right-1/4 w-[300px] lg:w-[450px] h-[300px] lg:h-[450px] bg-[#C31725]/15 rounded-full blur-[80px] lg:blur-[130px] pointer-events-none z-1" />
 
         {/* Balanced Soft Vignette Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050F33] via-[#050F33]/65 via-50% to-transparent z-1" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050F33] via-[#050F33]/70 via-55% to-transparent z-1" />
 
         {/* Centered High-Contrast Content Container (Positioned in Lower Half) */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center flex flex-col items-center pt-8 sm:pt-12">
           
-          {/* Display headline — serif, word-by-word reveal */}
-          <motion.h1
-            variants={staggerContainer(0.12, 0.1)}
-            initial={reduceMotion ? 'visible' : 'hidden'}
-            animate="visible"
-            className="font-display text-[2.5rem] sm:text-6xl lg:text-7xl font-semibold text-white tracking-[-0.02em] leading-[1.05] mb-4 [text-shadow:0_2px_30px_rgba(5,15,51,0.55)]"
+          {/* Eyebrow Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-teal-400/40 text-teal-300 text-[11px] sm:text-xs font-black tracking-wide uppercase mb-3 backdrop-blur-md shadow-lg"
           >
-            {['Nurse', 'Care', 'at'].map((w) => (
-              <motion.span key={w} variants={wordReveal} className="inline-block mr-[0.28em]">
-                {w}
-              </motion.span>
-            ))}
-            <motion.span
-              variants={wordReveal}
-              className="inline-block italic text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-rose-200"
-            >
-              Doorstep.
-            </motion.span>
+            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
+            <span>Delhi NCR Doorstep Clinical Nursing &amp; Attendant Network</span>
+          </motion.div>
+
+          {/* Display headline — serif, crystal-clear typography */}
+          <motion.h1
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.05 }}
+            className="font-display text-[2rem] sm:text-5xl lg:text-6xl font-semibold text-white tracking-[-0.02em] leading-[1.12] mb-3 [text-shadow:0_2px_30px_rgba(5,15,51,0.7)] max-w-4xl"
+          >
+            Providing Non-Medical Home Nursing Care{' '}
+            <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-rose-200 block sm:inline">
+              at Your Doorstep
+            </span>
           </motion.h1>
 
-          {/* Crisp Subtitle */}
+          {/* Lead Subtitle with Client's Exact Wording */}
           <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.1 }}
+            className="text-xs sm:text-sm md:text-base text-slate-200 max-w-2xl font-medium leading-relaxed mb-4 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]"
+          >
+            Providing non-medical home nursing care and dedicated patient attendants at your doorstep for:
+          </motion.p>
+
+          {/* 6 Core Disciplines Interactive Grid */}
+          <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.14 }}
-            className="text-sm sm:text-base text-slate-100 max-w-2xl font-medium leading-relaxed mb-5 drop-shadow-[0_4px_14px_rgba(0,0,0,0.95)]"
+            transition={{ duration: 0.4, delay: 0.15 }}
+            className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-2.5 max-w-3xl w-full mb-6 text-left"
           >
-            Bridging hospital discharge to complete home recovery with verified, qualified, and compassionate nursing care across Delhi NCR. Starting from ₹35/hr on advance payment basis.
-          </motion.p>
+            {[
+              { id: '1', title: 'Hospital Bystander', desc: 'Bedside support in hospital & transition', path: '/services/general-patient-attendants' },
+              { id: '2', title: 'Post Operative Patients Care', desc: 'Surgical recovery & mobility assist', path: '/services/post-operative-recovery' },
+              { id: '3', title: 'Newly born & Mother Care', desc: 'Postpartum care & infant handling', path: '/services/newborn-mother-care' },
+              { id: '4', title: 'Chronic Disease & Palliative Care', desc: 'Oncology, stroke & vitals care', path: '/services/chronic-disease-palliative-care' },
+              { id: '5', title: 'Elderly / Disabled Care', desc: 'Fall prevention & daily hygiene', path: '/services/elderly-care-assistance' },
+              { id: '6', title: 'Hospice Care', desc: 'Dignified comfort & supportive care', path: '/services/chronic-disease-palliative-care' },
+            ].map((item) => (
+              <Link
+                key={item.id}
+                to={item.path}
+                className="group p-2.5 sm:p-3 rounded-xl bg-slate-900/80 hover:bg-slate-900/95 border border-white/15 hover:border-teal-400/60 backdrop-blur-md transition-all flex items-start gap-2 sm:gap-2.5 shadow-lg hover:scale-[1.02]"
+              >
+                <span className="w-5 h-5 rounded-md bg-teal-500/20 text-teal-300 text-[11px] font-black flex items-center justify-center shrink-0 border border-teal-400/30 group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                  {item.id}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11.5px] sm:text-xs font-bold text-white group-hover:text-teal-300 transition-colors leading-snug">
+                    {item.title}
+                  </div>
+                  <div className="text-[10px] text-slate-300 line-clamp-1 mt-0.5 hidden sm:block">
+                    {item.desc}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </motion.div>
 
           {/* Transparent Starting Rates Pill Strip */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.18 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6"
           >
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 border border-teal-400/40 text-teal-300 text-xs font-black backdrop-blur-md shadow-md">
@@ -132,12 +169,12 @@ export const HomePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto"
           >
             <button
               type="button"
-              onClick={() => openWhatsApp('Hello Pulse n Care, I want to book verified nurse and caregiver care at home.')}
+              onClick={() => openWhatsApp('Hello Pulse n Care, I want to book verified non-medical home nursing care and patient attendant support.')}
               className="w-full sm:w-auto flex items-center justify-center gap-2.5 btn-emerald-aura btn-shimmer text-white font-black text-sm sm:text-base px-8 py-4 rounded-xl cursor-pointer shadow-[0_10px_35px_rgba(37,211,102,0.55)]"
             >
               <WhatsAppIcon className="w-5 h-5 text-white fill-white shrink-0" />
