@@ -126,7 +126,7 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
     whoItIsFor: 'Patients discharged after total knee/hip arthroplasty, bypass / cardiac surgery, abdominal procedures, or major trauma.',
     desc: 'Council-registered staff nurses providing sterile wound dressing, early mobilization assistance, surgical drain monitoring, and post-op cardiac vitals tracking.',
     path: '/services/post-operative-recovery',
-    image: '/assets/services/core/service-post-op-recovery.webp',
+    image: '/assets/services/core/service-post-op-recovery-v2.webp',
     objectPosition: 'object-center',
     inclusions: [
       'Aseptic surgical incision dressing & drain care',
@@ -157,7 +157,7 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
     whoItIsFor: 'Post-stroke patients regaining limb function, joint replacement rehabilitation, elderly mobility recovery, and sports injury relief.',
     desc: 'Qualified physiotherapists bringing clinical modalities, therapeutic exercise bands, and targeted joint mobilization techniques directly to your home.',
     path: '/services',
-    image: '/assets/services/home-nursing/pulse-n-care-mobility.webp',
+    image: '/assets/services/home-nursing/pulse-n-care-mobility-v2.webp',
     objectPosition: 'object-center',
     inclusions: [
       'Comprehensive musculoskeletal & neuro assessment',
@@ -187,7 +187,7 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
     whoItIsFor: 'Patients requiring quick clinical procedures without waiting in crowded OPD queues or paying high hospital visit charges.',
     desc: 'Sterile doorstep clinical interventions performed by registered nurses adhering strictly to hospital asepsis protocols across Delhi NCR.',
     path: '/services',
-    image: '/assets/services/home-nursing/pulse-n-care-wound-care.webp',
+    image: '/assets/services/home-nursing/pulse-n-care-wound-care-v2.webp',
     objectPosition: 'object-center',
     inclusions: [
       'Sterile IV / IM / SC injection administration',

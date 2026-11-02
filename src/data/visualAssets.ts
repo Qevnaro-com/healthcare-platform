@@ -67,7 +67,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Rehabilitation nurse guiding post-operative surgery patient with walker',
     source: 'Pulse n Care Healthcare Media',
-    url: '/assets/services/core/service-post-op-recovery.webp',
+    url: '/assets/services/core/service-post-op-recovery-v2.webp',
     reuseAllowed: false
   },
   servicePatientAttendant: {
@@ -217,7 +217,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Sterile surgical dressing kit preparation',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-wound-care.webp',
+    url: '/assets/services/home-nursing/pulse-n-care-wound-care-v2.webp',
     reuseAllowed: false
   },
   clinicalHandover: {
@@ -269,7 +269,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Wound care dressing and post-op vitals monitoring',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-wound-care.webp',
+    url: '/assets/services/home-nursing/pulse-n-care-wound-care-v2.webp',
     reuseAllowed: false
   },
   servicePostOpHero: {
@@ -313,7 +313,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'lifestyle_photography',
     subject: 'Physiotherapist guiding knee joint rehabilitation exercises',
     source: 'Pulse n Care Indian Healthcare Media',
-    url: '/assets/services/home-nursing/pulse-n-care-mobility.webp',
+    url: '/assets/services/home-nursing/pulse-n-care-mobility-v2.webp',
     reuseAllowed: false
   },
   servicePhysioOrthoHero: {

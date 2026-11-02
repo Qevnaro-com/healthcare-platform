@@ -109,8 +109,8 @@ export const MOCK_SERVICES: Service[] = [
     shortDescription: 'Clinical support tailored to orthopaedic recoveries (e.g., knee/hip replacement), cardiac rehab, and general surgical procedures.',
     fullDescription: 'Comprehensive clinical support tailored to orthopaedic recoveries (e.g., knee/hip replacement), cardiac rehab, and general surgical procedures provided by registered nurses. Includes sterile surgical dressing changes, wound drain monitoring, IV medications, and supervised early walking assistance.',
     iconName: 'Activity',
-    cardMedia: '/assets/services/core/service-post-op-recovery.webp',
-    heroMedia: '/assets/services/core/service-post-op-recovery.webp',
+    cardMedia: '/assets/services/core/service-post-op-recovery-v2.webp',
+    heroMedia: '/assets/services/core/service-post-op-recovery-v2.webp',
     featured: true,
     pricing: {
       basePrice: 1200,
