@@ -40,6 +40,8 @@ export const App: React.FC = () => {
                 <Route path="services" element={<ServicesPage />} />
                 <Route path="services/home-nursing" element={<HomeNursingServicePage />} />
                 <Route path="services/post-operative-nursing-care" element={<Navigate to="/services/post-operative-recovery" replace />} />
+                <Route path="services/hospital-bystander" element={<Navigate to="/services/general-patient-attendants" replace />} />
+                <Route path="services/hospice-care" element={<Navigate to="/services/chronic-disease-palliative-care" replace />} />
                 <Route path="services/:id" element={<ServiceDetailPage />} />
                 <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
                 <Route path="terms" element={<TermsPage />} />

@@ -230,8 +230,8 @@ export const MOCK_SERVICES: Service[] = [
     shortDescription: 'Specialized care for post-partum mothers and infant care including massage, bathing, and feeding assistance.',
     fullDescription: 'Specialized care for post-partum mothers and infant care including massage, bathing, and feeding assistance. Supported by trained neonatal caregivers with deep expertise in traditional oil massage, warm bathing, latching/feeding guidance, and maternal emotional and nutritional recovery.',
     iconName: 'HeartPulse',
-    cardMedia: '/assets/services/core/service-newborn-mother-care.webp',
-    heroMedia: '/assets/services/core/service-newborn-mother-care.webp',
+    cardMedia: '/assets/services/core/service-newborn-mother-care-v2.webp',
+    heroMedia: '/assets/services/core/service-newborn-mother-care-v2.webp',
     featured: true,
     pricing: {
       basePrice: 1800,

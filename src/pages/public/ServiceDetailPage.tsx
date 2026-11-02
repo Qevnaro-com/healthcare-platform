@@ -33,8 +33,14 @@ export const ServiceDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { services } = useBookings();
 
-  // Find service by ID or slug
-  const service: Service | undefined = services.find((s) => s.id === id || s.slug === id);
+  // Find service by ID or slug (including hospital-bystander and hospice-care aliases)
+  const service: Service | undefined = services.find(
+    (s) =>
+      s.id === id ||
+      s.slug === id ||
+      (id === 'hospital-bystander' && s.slug === 'general-patient-attendants') ||
+      (id === 'hospice-care' && s.slug === 'chronic-disease-palliative-care')
+  );
   usePageMeta(service?.name ?? 'Service', service?.shortDescription);
 
   const [selectedShift, setSelectedShift] = useState<ServiceShiftOption | null>(

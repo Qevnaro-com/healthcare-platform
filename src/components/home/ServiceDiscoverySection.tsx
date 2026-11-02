@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Stethoscope,
-  UserCheck,
   HeartPulse,
   Activity,
   ShieldPlus,
@@ -17,6 +15,9 @@ import {
   RotateCcw,
   Zap,
   ChevronRight,
+  Building2,
+  Baby,
+  HeartHandshake,
 } from 'lucide-react';
 import { WhatsAppIcon } from '../common/WhatsAppButton';
 import { openWhatsApp, OFFICIAL_PHONE } from '../../utils/whatsapp';
@@ -52,79 +53,51 @@ export interface ServiceCategoryItem {
 }
 
 export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
+  // 1. Hospital Bystander
   {
-    id: 'patient-attendants',
-    category: '12h Shift Nursing & Attendant',
+    id: 'hospital-bystander',
+    category: 'Hospital Bystander',
     tag: 'Starting @ ₹60/hr',
-    title: 'General Patient Attendants & 12h Shift Care',
-    subtitle: 'Verified & trained non-medical healthcare staff for bedside hygiene, sponge baths, diaper changing, and mobility assistance.',
+    title: 'Hospital Bystander',
+    subtitle: 'Dedicated bedside companion in hospital wards and hospital-to-home transition for bedside vigil, mobility, and family relief.',
     badge: 'Starting @ ₹60/hr (Advance Payment)',
     price: '₹720',
     priceUnit: 'per 12h shift (@₹60/hr, Advance)',
     hourlyHighlight: '₹60 / hour',
-    whoItIsFor: 'Bedridden, semi-dependent, or convalescent patients needing daily personal hygiene, bed-bound care, and attentive non-medical support.',
-    desc: 'Compassionate male and female attendants ensuring dignified hygiene, warm bed-baths, sponge bathing, diaper care, safe repositioning, and walking assistance.',
+    whoItIsFor: 'Hospitalized patients requiring dedicated bedside attention, families needing relief during overnight ward vigils, and patients transitioning from hospital to home.',
+    desc: 'Compassionate male and female attendants providing hospital bedside vigil, assistance during room stay, restroom escort, nurse coordination, and smooth hospital-to-home transition across Delhi NCR.',
     path: '/services/general-patient-attendants',
-    image: '/assets/services/core/service-patient-attendant.webp',
+    image: '/assets/services/core/service-hospital-bystander-uniform.webp',
     objectPosition: 'object-center',
     inclusions: [
-      'Daily personal hygiene, bed baths & sponge baths',
-      'Timely diaper changing, bedpan hygiene & skin care',
-      'Bed rotation & positioning to prevent pressure sores',
-      'Mobility assistance, wheelchair transfer & walking aid'
+      'Hospital room & ward bedside vigil with alert assistance',
+      'Restroom assistance, urinal/bedpan hygiene & sponge bathing',
+      'Escort to diagnostic tests, ultrasound, X-ray & lab scans',
+      'Nurse call-bell coordination & prescription errand support'
     ],
-    equipmentCarried: ['Anti-Slip Transfer Sheet', 'Hygiene Support Kit', 'Daily Routine Log'],
-    shifts: ['12h Day Shift (8 AM - 8 PM)', '12h Night Shift (8 PM - 8 AM)', '24h Live-in Attendant'],
+    equipmentCarried: ['Transfer & Mobility Support Belt', 'Bedside Hygiene & Sanitization Pack', 'Hospital Shift Handover Log'],
+    shifts: ['12h Day Hospital Duty (8 AM - 8 PM)', '12h Night Ward Vigil (8 PM - 8 AM)', '24h Full Hospital Bystander Stay'],
     shiftTiers: [
-      { id: '12h-day', name: '12h Day Attendant (8AM-8PM)', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
-      { id: '12h-night', name: '12h Night Attendant (8PM-8AM)', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
-      { id: '24h', name: '24h Full Live-In Attendant', duration: '24 Hours', price: '₹1,176', priceUnit: 'per 24h (@₹49/hr, Advance)' },
+      { id: '12h-day', name: '12h Day Hospital Duty (8AM-8PM)', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
+      { id: '12h-night', name: '12h Night Ward Vigil (8PM-8AM)', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
+      { id: '24h', name: '24h Full Hospital Bystander Stay', duration: '24 Hours', price: '₹1,176', priceUnit: 'per 24h (@₹49/hr, Advance)' },
     ],
-    icon: <UserCheck className="w-4 h-4 text-[#015498]" />
+    icon: <Building2 className="w-4 h-4 text-[#015498]" />
   },
-  {
-    id: 'chronic-palliative',
-    category: '24/7 Live-in Nursing Care',
-    tag: 'Starting @ ₹49/hr',
-    title: '24/7 Live-In & Palliative Nursing Care',
-    subtitle: 'Round-the-clock bedside nursing for post-stroke rehabilitation, oncology comfort, advanced diabetes, and neuro-care.',
-    badge: 'Starting @ ₹49/hr (Advance Payment)',
-    price: '₹1,176',
-    priceUnit: 'per 24h continuous (@₹49/hr, Advance)',
-    hourlyHighlight: '₹49 / hour',
-    whoItIsFor: 'Patients and families navigating post-stroke neurological recovery, bedridden support, and continuous bedside care.',
-    desc: 'Round-the-clock bedside nursing care, continuous vital sign oversight, patient comfort, and total family peace of mind across Delhi NCR.',
-    path: '/services/chronic-disease-palliative-care',
-    image: '/assets/services/core/service-chronic-palliative.webp',
-    objectPosition: 'object-center',
-    inclusions: [
-      '24/7 Continuous live-in bedside nursing care',
-      'Post-stroke neuromuscular rehabilitation support',
-      'Blood glucose charting, insulin & oral medications',
-      'Continuous vitals monitoring & doctor escalation'
-    ],
-    equipmentCarried: ['Digital Vitals Monitor (BP & SpO2)', 'Glucometer Kit', 'Palliative Comfort Log'],
-    shifts: ['24h Continuous Live-In', '12h Day Shift', '12h Night Shift', 'Short Clinical Visit'],
-    shiftTiers: [
-      { id: '24h', name: '24/7 Continuous Live-In Care', duration: '24 Hours', price: '₹1,176', priceUnit: 'per 24h (@₹49/hr, Advance)' },
-      { id: '12h-day', name: '12h Day Shift Nursing', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
-      { id: '12h-night', name: '12h Night Shift Nursing', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
-      { id: 'visit', name: 'Short-Visit Procedure', duration: '45-60 Mins', price: '₹500', priceUnit: 'per visit (Advance)' },
-    ],
-    icon: <HeartPulse className="w-4 h-4 text-[#C31725]" />
-  },
+
+  // 2. Post Operative Patients Care
   {
     id: 'post-op-recovery',
-    category: 'Post-Operative & Cardiac Care',
+    category: 'Post Operative Patients Care',
     tag: 'Starting @ ₹56/hr',
-    title: 'Post-Operative & Cardiac Care',
-    subtitle: 'Clinical support for orthopaedic recoveries (knee/hip replacement), cardiac rehab, and post-surgical monitoring.',
+    title: 'Post Operative Patients Care',
+    subtitle: 'Surgical recovery & mobility assist with sterile incision dressing, cardiac rehab, and vital tracking.',
     badge: 'Starting @ ₹56/hr for 24h Live-in',
     price: '₹1,344',
     priceUnit: 'per 24h (@₹56/hr, Advance)',
     hourlyHighlight: '₹56 / hour',
-    whoItIsFor: 'Patients discharged after total knee/hip arthroplasty, bypass / cardiac surgery, abdominal procedures, or major trauma.',
-    desc: 'Council-registered staff nurses providing sterile wound dressing, early mobilization assistance, surgical drain monitoring, and post-op cardiac vitals tracking.',
+    whoItIsFor: 'Patients discharged after total knee/hip replacement, cardiac bypass surgery, abdominal procedures, or major orthopaedic trauma.',
+    desc: 'Council-registered staff nurses providing sterile surgical wound dressing, early mobilization assistance, surgical drain monitoring, and post-op cardiac vitals tracking.',
     path: '/services/post-operative-recovery',
     image: '/assets/services/core/service-post-op-recovery-v2.webp',
     objectPosition: 'object-center',
@@ -134,7 +107,7 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
       'Cardiac vital signs & medication adherence logging',
       'Post-surgical pain management & infection check'
     ],
-    equipmentCarried: ['Autoclaved Dressing Tray', 'Mobility Assist Belt', 'Clinical Recovery Journal'],
+    equipmentCarried: ['Autoclaved Sterile Dressing Tray', 'Mobility Assist Belt', 'Clinical Recovery Journal'],
     shifts: ['24h Continuous Live-In', '12h Day Shift', '12h Night Shift', 'Short-Visit Dressing'],
     shiftTiers: [
       { id: '24h', name: '24h Post-Op & Cardiac Live-In', duration: '24 Hours', price: '₹1,344', priceUnit: 'per 24h (@₹56/hr, Advance)' },
@@ -144,77 +117,84 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
     ],
     icon: <Activity className="w-4 h-4 text-[#015498]" />
   },
+
+  // 3. Newly born & Mother Care
   {
-    id: 'physiotherapy',
-    category: 'Physiotherapy at Home',
-    tag: '₹700 / Session (1 Hour)',
-    title: 'Physiotherapy at Home',
-    subtitle: 'Certified physiotherapists delivering customized rehabilitation for stroke recovery, joint replacement, and mobility restoration.',
-    badge: '₹700 / Session (1 Hour, Advance)',
-    price: '₹700',
-    priceUnit: 'per 1-hour session (Advance)',
-    hourlyHighlight: '₹700 / session',
-    whoItIsFor: 'Post-stroke patients regaining limb function, joint replacement rehabilitation, elderly mobility recovery, and sports injury relief.',
-    desc: 'Qualified physiotherapists bringing clinical modalities, therapeutic exercise bands, and targeted joint mobilization techniques directly to your home.',
-    path: '/services',
-    image: '/assets/services/home-nursing/pulse-n-care-mobility-v2.webp',
-    objectPosition: 'object-center',
-    inclusions: [
-      'Comprehensive musculoskeletal & neuro assessment',
-      'Passive & active range-of-motion (ROM) exercises',
-      'Post-knee/hip replacement gait & ambulation training',
-      'Customized daily exercise regimen for family caregivers'
-    ],
-    equipmentCarried: ['Therabands & Resistance Loops', 'Goniometer', 'TENS / Muscle Stimulator (on request)'],
-    shifts: ['Single 1-Hour Session', 'Weekly Package (6 Sessions)', 'Monthly Comprehensive Rehab'],
-    shiftTiers: [
-      { id: 'single', name: '1-Hour Physiotherapy Session', duration: '1 Hour', price: '₹700', priceUnit: 'per session (Advance)' },
-      { id: 'weekly', name: '6-Session Recovery Bundle', duration: '6 Sessions', price: '₹3,900', priceUnit: '₹650/session (Advance)' },
-      { id: 'neuro', name: 'Neuro & Stroke Specialized Rehab', duration: '1 Hour', price: '₹850', priceUnit: 'per session (Advance)' },
-    ],
-    icon: <Activity className="w-4 h-4 text-[#C31725]" />
-  },
-  {
-    id: 'short-procedures',
-    category: 'Short-Visit Procedures',
-    tag: '₹500 / Visit',
-    title: 'Short-Visit Clinical Nursing Procedures',
-    subtitle: 'Doorstep visits by verified staff nurses for injections, aseptic wound dressing, catheter insertion/removal, and vitals check.',
-    badge: '₹500 / Visit (Advance Payment)',
-    price: '₹500',
-    priceUnit: 'per procedure visit (Advance)',
-    hourlyHighlight: '₹500 / visit',
-    whoItIsFor: 'Patients requiring quick clinical procedures without waiting in crowded OPD queues or paying high hospital visit charges.',
-    desc: 'Sterile doorstep clinical interventions performed by registered nurses adhering strictly to hospital asepsis protocols across Delhi NCR.',
-    path: '/services',
-    image: '/assets/services/home-nursing/pulse-n-care-wound-care-v2.webp',
-    objectPosition: 'object-center',
-    inclusions: [
-      'Sterile IV / IM / SC injection administration',
-      'Surgical wound dressing & suture / staple inspection',
-      'Foley catheter insertion, removal, or bladder wash',
-      'Ryle\'s tube / feeding tube insertion & verification'
-    ],
-    equipmentCarried: ['Autoclaved Sterile Dressing Pack', 'BP, SpO2 & Glucometer Kit', 'Sharps Disposal Container'],
-    shifts: ['Single Clinical Procedure (45-60 mins)', 'Morning Dressing Visit', 'Evening Injection Administration'],
-    shiftTiers: [
-      { id: 'single-proc', name: 'Short-Visit Procedure (Injection / Vitals)', duration: '45 Mins', price: '₹500', priceUnit: 'per visit (Advance)' },
-      { id: 'dressing', name: 'Aseptic Surgical Wound Dressing', duration: '45 Mins', price: '₹500', priceUnit: 'per visit (Advance)' },
-      { id: 'catheter', name: 'Catheter / Ryle\'s Tube Insertion', duration: '60 Mins', price: '₹600', priceUnit: 'per visit (Advance)' },
-    ],
-    icon: <Stethoscope className="w-4 h-4 text-[#015498]" />
-  },
-  {
-    id: 'elderly-care',
-    category: 'Elderly Care Assistance',
+    id: 'newborn-mother-care',
+    category: 'Newly born & Mother Care',
     tag: 'Starting @ ₹60/hr',
-    title: 'Elderly Care Assistance & Fall Prevention',
-    subtitle: 'Dedicated companions to manage medication schedules, aid in walking, prevent falls, and assist with toilet routine.',
+    title: 'Newly born & Mother Care',
+    subtitle: 'Postpartum care & infant handling by trained caregivers for gentle oil massage, warm bathing, and feeding assistance.',
     badge: 'Starting @ ₹60/hr (Advance Payment)',
     price: '₹720',
     priceUnit: 'per 12h shift (@₹60/hr, Advance)',
     hourlyHighlight: '₹60 / hour',
-    whoItIsFor: 'Aging parents and seniors who need warm companionship, fall prevention, medication oversight, and daily mobility confidence at home.',
+    whoItIsFor: 'Postpartum mothers recovering from natural or C-section birth, and newborns requiring skilled infant massage, sponge/tub bathing, and nocturnal soothing.',
+    desc: 'Specialized neonatal caregivers with deep expertise in traditional oil massage, warm bathing, latching/feeding guidance, and maternal emotional and nutritional recovery.',
+    path: '/services/newborn-mother-care',
+    image: '/assets/services/core/service-newborn-mother-care-v2.webp',
+    objectPosition: 'object-center',
+    inclusions: [
+      'Gentle traditional baby massage & warm sponge/tub bath',
+      'Postpartum mother rest, comfort & recovery guidance',
+      'Latching support, bottle sterilization & burping routine',
+      'Umbilical cord hygiene, diapering & baby sleep schedule'
+    ],
+    equipmentCarried: ['Baby-Safe Sanitization & Hygiene Kit', 'Infant Feeding & Sleep Chart', 'Maternal Recovery Wellness Log'],
+    shifts: ['12h Day Mother & Infant Care (8 AM - 8 PM)', '12h Night Feeding & Soothing Watch (8 PM - 8 AM)', '24h Full Live-in Postpartum Care'],
+    shiftTiers: [
+      { id: '12h-day', name: '12h Day Mother & Baby Care', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
+      { id: '12h-night', name: '12h Night Infant Feed Support', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
+      { id: '24h', name: '24h Full Live-in Postpartum Care', duration: '24 Hours', price: '₹1,176', priceUnit: 'per 24h (@₹49/hr, Advance)' },
+    ],
+    icon: <Baby className="w-4 h-4 text-[#C31725]" />
+  },
+
+  // 4. Chronic Disease & Palliative Care
+  {
+    id: 'chronic-palliative',
+    category: 'Chronic Disease & Palliative Care',
+    tag: 'Starting @ ₹49/hr',
+    title: 'Chronic Disease & Palliative Care',
+    subtitle: 'Oncology, stroke & vitals care with round-the-clock bedside nursing, pain relief, and continuous vital monitoring.',
+    badge: 'Starting @ ₹49/hr (Advance Payment)',
+    price: '₹1,176',
+    priceUnit: 'per 24h continuous (@₹49/hr, Advance)',
+    hourlyHighlight: '₹49 / hour',
+    whoItIsFor: 'Patients and families navigating post-stroke neurological recovery, oncology comfort, advanced diabetes, and bedridden chronic care.',
+    desc: 'Round-the-clock bedside nursing care, continuous vital sign oversight, patient comfort, pain relief, and total family peace of mind under Smt. Ishwari’s clinical philosophy.',
+    path: '/services/chronic-disease-palliative-care',
+    image: '/assets/services/core/service-chronic-palliative-uniform.webp',
+    objectPosition: 'object-center',
+    inclusions: [
+      '24/7 Continuous live-in bedside nursing care',
+      'Post-stroke neuromuscular rehabilitation support',
+      'Blood glucose charting, insulin & oral medications',
+      'Continuous vitals monitoring & doctor escalation'
+    ],
+    equipmentCarried: ['Digital Vitals Monitor (BP & SpO2)', 'Glucometer Kit & Sugar Chart', 'Palliative Comfort & Symptom Log'],
+    shifts: ['24h Continuous Live-In', '12h Day Shift', '12h Night Shift', 'Short Clinical Visit'],
+    shiftTiers: [
+      { id: '24h', name: '24/7 Continuous Live-In Care', duration: '24 Hours', price: '₹1,176', priceUnit: 'per 24h (@₹49/hr, Advance)' },
+      { id: '12h-day', name: '12h Day Shift Nursing', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
+      { id: '12h-night', name: '12h Night Shift Nursing', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
+      { id: 'visit', name: 'Short-Visit Procedure', duration: '45-60 Mins', price: '₹500', priceUnit: 'per visit (Advance)' },
+    ],
+    icon: <HeartPulse className="w-4 h-4 text-[#C31725]" />
+  },
+
+  // 5. Elderly / Disabled Care
+  {
+    id: 'elderly-care',
+    category: 'Elderly / Disabled Care',
+    tag: 'Starting @ ₹60/hr',
+    title: 'Elderly / Disabled Care',
+    subtitle: 'Fall prevention & daily hygiene with dedicated companions for mobility, medication schedules, and washroom safety.',
+    badge: 'Starting @ ₹60/hr (Advance Payment)',
+    price: '₹720',
+    priceUnit: 'per 12h shift (@₹60/hr, Advance)',
+    hourlyHighlight: '₹60 / hour',
+    whoItIsFor: 'Aging parents, seniors with mobility challenges, and individuals with physical disabilities needing dedicated companionship and fall prevention.',
     desc: 'Empathetic companions dedicated to elderly comfort, helping seniors safely navigate their home, maintain timely medication routines, stay active, and assist with washroom safety.',
     path: '/services/elderly-care-assistance',
     image: '/assets/services/core/service-elderly-care.webp',
@@ -225,14 +205,46 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
       'Washroom & toilet routine assistance with dignity',
       'Engaging companionship, cognitive chats & calm presence'
     ],
-    equipmentCarried: ['Pill Organizer & Reminder', 'Fall Prevention Support Belt', 'Emergency Escalation Card'],
-    shifts: ['12h Day Companionship', '12h Night Fall Watch', '24h Resident Care'],
+    equipmentCarried: ['Pill Organizer & Reminder Kit', 'Fall Prevention Support Belt', 'Emergency Escalation Card'],
+    shifts: ['12h Day Companionship (8 AM - 8 PM)', '12h Night Fall Watch (8 PM - 8 AM)', '24h Resident Care'],
     shiftTiers: [
       { id: '12h-day', name: '12h Day Senior Companion', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
       { id: '12h-night', name: '12h Senior Fall Watch (Night)', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
       { id: '24h', name: '24h Resident Senior Care', duration: '24 Hours', price: '₹1,176', priceUnit: 'per 24h (@₹49/hr, Advance)' },
     ],
-    icon: <ShieldPlus className="w-4 h-4 text-[#C31725]" />
+    icon: <ShieldPlus className="w-4 h-4 text-[#015498]" />
+  },
+
+  // 6. Hospice Care
+  {
+    id: 'hospice-care',
+    category: 'Hospice Care',
+    tag: 'Starting @ ₹49/hr',
+    title: 'Hospice Care',
+    subtitle: 'Dignified comfort & supportive care prioritizing pain alleviation, 2-hourly turning, mouth care, and emotional tranquility.',
+    badge: 'Starting @ ₹49/hr (Advance Payment)',
+    price: '₹1,176',
+    priceUnit: 'per 24h continuous (@₹49/hr, Advance)',
+    hourlyHighlight: '₹49 / hour',
+    whoItIsFor: 'Terminally ill patients, advanced stage palliative individuals, and families seeking compassionate end-of-life care and emotional peace.',
+    desc: 'Specialized bedside comfort focused strictly on dignity, gentle 2-hour lateral turning, oral hydration, prescribed symptom relief, and tranquil 24/7 presence.',
+    path: '/services/chronic-disease-palliative-care',
+    image: '/assets/services/core/service-hospice-care-uniform.webp',
+    objectPosition: 'object-center',
+    inclusions: [
+      '24/7 Round-the-clock dignified bedside presence & comfort care',
+      '2-hourly gentle repositioning & air-bed pressure ulcer prevention',
+      'Doctor-prescribed pain management adherence & oral hydration',
+      'Tranquil bedside support, soft communication & family emotional ease'
+    ],
+    equipmentCarried: ['Comfort Positioning Sheets & Pillow Set', 'Digital SpO2 & Oxygen Flow Tracker', 'Hospice Dignity Protocol Sheet'],
+    shifts: ['24h Continuous Hospice Comfort', '12h Day Comfort Vigil (8 AM - 8 PM)', '12h Night Peaceful Watch (8 PM - 8 AM)'],
+    shiftTiers: [
+      { id: '24h', name: '24/7 Continuous Hospice Comfort', duration: '24 Hours', price: '₹1,176', priceUnit: 'per 24h (@₹49/hr, Advance)' },
+      { id: '12h-day', name: '12h Day Comfort Vigil', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
+      { id: '12h-night', name: '12h Night Peaceful Watch', duration: '12 Hours', price: '₹720', priceUnit: 'per 12h (@₹60/hr, Advance)' },
+    ],
+    icon: <HeartHandshake className="w-4 h-4 text-[#C31725]" />
   }
 ];
 
@@ -270,15 +282,16 @@ export const ServiceDiscoverySection: React.FC = () => {
         </div>
 
         {/* ======================================================================= */}
-        {/* PRICE TRANSPARENCY MATRIX (5 FAST-CLICK CARDS HIGHLIGHTING LOW AMOUNTS) */}
+        {/* PRICE TRANSPARENCY MATRIX (6 FAST-CLICK CARDS MATCHING HERO SERVICES)   */}
         {/* ======================================================================= */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-1">
           {[
-            { idx: 0, title: '12h Nursing / Attendant', rate: '@₹60 / hr', sub: '₹720 per 12h shift', badge: 'Advance' },
-            { idx: 1, title: '24/7 Live-in Nursing', rate: '@₹49 / hr', sub: '₹1,176 per 24h', badge: 'Advance' },
-            { idx: 2, title: 'Post-Op & Cardiac', rate: '@₹56 / hr', sub: '₹1,344 per 24h live-in', badge: 'Advance' },
-            { idx: 3, title: 'Physiotherapy', rate: '₹700 / session', sub: '1-Hour certified rehab', badge: 'Advance' },
-            { idx: 4, title: 'Short Clinical Visit', rate: '₹500 / visit', sub: 'Dressing / Injections', badge: 'Advance' },
+            { idx: 0, title: 'Hospital Bystander', rate: '@₹60 / hr', sub: '₹720 per 12h shift', badge: 'Advance' },
+            { idx: 1, title: 'Post Operative Care', rate: '@₹56 / hr', sub: '₹1,344 per 24h live-in', badge: 'Advance' },
+            { idx: 2, title: 'Newborn & Mother', rate: '@₹60 / hr', sub: '₹720 per 12h shift', badge: 'Advance' },
+            { idx: 3, title: 'Chronic & Palliative', rate: '@₹49 / hr', sub: '₹1,176 per 24h', badge: 'Advance' },
+            { idx: 4, title: 'Elderly / Disabled', rate: '@₹60 / hr', sub: '₹720 per 12h shift', badge: 'Advance' },
+            { idx: 5, title: 'Hospice Comfort Care', rate: '@₹49 / hr', sub: '₹1,176 per 24h', badge: 'Advance' },
           ].map((item) => {
             const isSelected = activeIndex === item.idx;
             return (
@@ -287,8 +300,6 @@ export const ServiceDiscoverySection: React.FC = () => {
                 type="button"
                 onClick={() => handleSelectService(item.idx)}
                 className={`p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer relative overflow-hidden group ${
-                  item.idx === 4 ? 'col-span-2 sm:col-span-1' : ''
-                } ${
                   isSelected
                     ? 'bg-gradient-to-br from-teal-900 to-slate-900 text-white border-teal-700 shadow-lg shadow-teal-900/20 scale-[1.02]'
                     : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 shadow-xs hover:border-teal-400'
@@ -301,7 +312,7 @@ export const ServiceDiscoverySection: React.FC = () => {
                     {item.badge}
                   </span>
                   <span className={`text-[11px] font-bold ${isSelected ? 'text-teal-300' : 'text-slate-400'}`}>
-                    Tap to View
+                    Tap
                   </span>
                 </div>
                 <p className={`text-xs font-black truncate ${isSelected ? 'text-white' : 'text-slate-900'}`}>

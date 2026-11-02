@@ -100,7 +100,7 @@ export const VISUAL_ASSETS: Record<string, VisualAsset> = {
     visualType: 'editorial_photography',
     subject: 'Postpartum caregiver cradling infant with mother resting happily',
     source: 'Pulse n Care Healthcare Media',
-    url: '/assets/services/core/service-newborn-mother-care.webp',
+    url: '/assets/services/core/service-newborn-mother-care-v2.webp',
     reuseAllowed: false
   },
   // ==========================================
