@@ -21,7 +21,8 @@ import {
   ShieldPlus,
   HeartPulse,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  Code2
 } from 'lucide-react';
 import { DELHI_NCR_SERVICE_HUBS } from '../../data/serviceAreaMatrix';
 
@@ -703,28 +704,31 @@ export const PublicLayout: React.FC = () => {
           </div>
 
           {/* Bottom Copyright, Credits & Disclaimer */}
-          <div className="pt-8 pb-32 sm:pb-24 md:pb-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-5 text-xs text-slate-300 font-medium relative z-20">
-            <div className="space-y-1.5 text-center md:text-left">
+          <div className="pt-8 pb-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-5 text-xs text-slate-300 font-medium relative z-20">
+            <div className="text-center md:text-left">
               <p className="text-slate-400">© 2026 Pulse n Care — Home Healthcare &amp; Doorstep Nurse Care Network. All rights reserved.</p>
-              <p className="text-[11.5px] text-slate-400 flex items-center justify-center md:justify-start gap-1.5">
-                <span>Developed with</span>
-                <span className="text-rose-400 text-xs">❤️</span>
-                <span>by</span>
-                <a
-                  href="https://www.qevnaro.in"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-teal-300 hover:text-white transition-colors underline-offset-2 hover:underline tracking-tight"
-                >
-                  www.qevnaro.in
-                </a>
-              </p>
             </div>
             <nav aria-label="Legal" className="flex flex-wrap items-center justify-center md:justify-end gap-2 sm:gap-x-4 text-slate-300 font-semibold text-[11px] sm:text-xs">
               <Link to="/privacy-policy" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2.5 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">Privacy Policy</Link>
               <Link to="/terms" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2.5 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">Terms &amp; Refund Policy</Link>
               <Link to="/medical-disclaimer" className="hover:text-white underline-offset-4 hover:underline py-1.5 px-2.5 bg-white/5 hover:bg-white/10 rounded-lg border border-white/10 transition-colors">Medical Disclaimer</Link>
             </nav>
+          </div>
+
+          {/* Authentic Bottom-Center Platform Signature */}
+          <div className="pt-2 pb-32 sm:pb-24 md:pb-6 flex items-center justify-center text-center relative z-20">
+            <div className="inline-flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-[11px] sm:text-xs text-slate-400 hover:border-teal-500/30 transition-all shadow-xs">
+              <Code2 className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+              <span>Platform Architecture &amp; Engineering by</span>
+              <a
+                href="https://www.qevnaro.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-teal-300 hover:text-white transition-colors underline-offset-2 hover:underline tracking-tight"
+              >
+                www.qevnaro.in
+              </a>
+            </div>
           </div>
         </div>
       </footer>
