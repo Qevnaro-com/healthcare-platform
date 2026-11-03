@@ -72,7 +72,7 @@ export const PersonalCareSection: React.FC = () => {
               </p>
             </div>
             <div className="rounded-xl overflow-hidden aspect-video w-full border border-border-default mt-2">
-              <img loading="lazy" decoding="async" src="/assets/services/home-nursing/pulse-n-care-mobility.webp" alt="Mobility Support" className="w-full h-full object-cover object-top" />
+              <img loading="lazy" decoding="async" src="/assets/services/core/service-physiotherapy-uniform-v4.webp?v=4" alt="Mobility Support" className="w-full h-full object-cover object-top" />
             </div>
             <div className="p-2.5 bg-white rounded-xl border border-teal-200/80 text-[11px] font-bold text-teal-900 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-brand-teal shrink-0" />

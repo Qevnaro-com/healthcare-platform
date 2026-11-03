@@ -196,7 +196,7 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
     whoItIsFor: 'Post-stroke patients regaining limb function, joint replacement rehabilitation, elderly mobility recovery, and sports injury relief.',
     desc: 'Qualified physiotherapists bringing clinical modalities, therapeutic exercise bands, and targeted joint mobilization techniques directly to your home.',
     path: '/services',
-    image: '/assets/services/home-nursing/pulse-n-care-mobility-v2.webp',
+    image: '/assets/services/core/service-physiotherapy-uniform-v4.webp?v=4',
     objectPosition: 'object-center',
     inclusions: [
       'Comprehensive musculoskeletal & neuro assessment',
