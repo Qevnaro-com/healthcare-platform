@@ -8,7 +8,8 @@ import {
   Building2,
   HeartHandshake,
   CheckCircle2,
-  Clock
+  Clock,
+  ChevronRight
 } from 'lucide-react';
 import { revealUp, staggerContainer } from '../../lib/motion';
 
@@ -78,6 +79,40 @@ export const AboutMissionVisionSection: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Doctor Prescription Synced</span>
                 </div>
+              </div>
+
+              {/* Leadership Spotlight Strip */}
+              <div className="mt-3 p-3.5 rounded-2xl bg-gradient-to-r from-blue-50/80 via-slate-50 to-white border border-blue-100/90 flex items-center justify-between flex-wrap gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex -space-x-2 shrink-0">
+                    <img
+                      src="/assets/images/team/sachin-gautam-founder-ceo.jpg"
+                      alt="Sachin Gautam - Founder & CEO"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-xs"
+                    />
+                    <img
+                      src="/assets/images/founder/smt-ishwari-ceo-portrait.webp"
+                      alt="Smt. Ishwari - Co-Founder & Chief Care Specialist"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-xs"
+                    />
+                    <img
+                      src="/assets/images/team/alka-suman-operations-manager.jpg"
+                      alt="Alka Suman - Operations Manager"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-xs"
+                    />
+                  </div>
+                  <div className="text-xs">
+                    <div className="font-extrabold text-slate-900">Led by Sachin Gautam, Smt. Ishwari &amp; Alka Suman</div>
+                    <div className="text-slate-500 font-medium">Founder &amp; CEO · Co-Founder &amp; Care Specialist · Operations &amp; BD</div>
+                  </div>
+                </div>
+                <a
+                  href="#founder-ceo"
+                  className="text-xs font-bold text-[#015498] hover:text-[#013d70] hover:underline flex items-center gap-1 shrink-0"
+                >
+                  <span>Meet Leadership</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
 
